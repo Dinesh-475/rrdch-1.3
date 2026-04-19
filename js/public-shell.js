@@ -1,10 +1,9 @@
-// Shared public-site shell renderer (public pages only).
+// public-shell.js — RRDCH Shared Header + Drawer + Footer
 (function initPublicShell() {
   const LANG_KEY = "rrdch_lang";
 
   function getLang() {
-    const raw = (localStorage.getItem(LANG_KEY) || "").trim();
-    return raw === "kn" ? "kn" : "en";
+    return (localStorage.getItem(LANG_KEY) || "").trim() === "kn" ? "kn" : "en";
   }
 
   function setLang(lang) {
@@ -15,201 +14,378 @@
     return next;
   }
 
-  function ensureLangAttributeEarly() {
-    const lang = getLang();
-    document.documentElement.setAttribute("data-lang", lang);
-    document.documentElement.setAttribute("lang", lang);
+  function removeIfExists(selector) {
+    document.querySelectorAll(selector).forEach((n) => n.remove());
   }
 
-  function removeIfExists(sel) {
-    document.querySelectorAll(sel).forEach((n) => n.remove());
+  function markCurrentPath(root) {
+    const currentPath = window.location.pathname.split("/").pop() || "index.html";
+    root.querySelectorAll("a[href]").forEach((link) => {
+      const lp = (link.getAttribute("href") || "").split("#")[0];
+      if (lp && lp === currentPath) link.classList.add("active");
+    });
   }
 
   function renderShell({ pageId }) {
-    ensureLangAttributeEarly();
-    document.body.classList.add("public-page");
+    // Clean up lang
+    const lang = getLang();
+    document.documentElement.setAttribute("data-lang", lang);
+    document.documentElement.setAttribute("lang", lang);
 
-    // Remove duplicated legacy public shell pieces (we re-inject)
-    removeIfExists(".announcement-bar");
-    removeIfExists(".top-identity-header");
-    removeIfExists("nav.navbar");
+    document.body.classList.add("public-page", "public-shell-mounted");
+    if (pageId) document.body.classList.add(`page-${pageId.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`);
+
+    // Remove any previous shells
+    removeIfExists("#rrdch-public-shell");
     removeIfExists("footer.footer");
 
+    // ─────────────────────────────────────────────
+    //  SHELL HTML — Announcement ticker + Header + Drawer
+    // ─────────────────────────────────────────────
     const shell = document.createElement("div");
     shell.id = "rrdch-public-shell";
     shell.innerHTML = `
-      <div class="top-identity-header">
-        <div class="container identity-container">
-          <div class="identity-brand">
-            <img src="images/logo.png" alt="RRDCH Logo" class="identity-logo">
-            <div class="identity-text">
-              <h1 data-i18n="site_title">Rajarajeshwari Dental College and Hospital</h1>
-              <div style="font-size:0.82rem; color:#94a3b8; font-weight:600;" data-i18n="site_subtitle">Bangalore • Est. 1992 • RGUHS • DCI</div>
-            </div>
-          </div>
-          <div class="nav-actions">
-            <button class="lang-toggle" id="langToggle">
-              <span id="lang-en">EN</span> | <span id="lang-kn">ಕನ್ನಡ</span>
-            </button>
+
+
+      <!-- Minimal Sticky Header -->
+      <header class="header-minimal" id="siteHeader">
+        <a href="index.html" class="header-brand">
+          <img src="images/logo.png" alt="RRDCH Logo">
+        </a>
+        <div class="header-actions">
+          <a href="patients.html" class="header-book-btn">Book Appointment</a>
+          <button
+            class="menu-trigger-cu"
+            id="menuToggleBtn"
+            type="button"
+            aria-controls="siteDrawer"
+            aria-expanded="false"
+            aria-label="Open main menu"
+          >
+            MENU
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="6"  x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Drawer Backdrop -->
+      <div class="cu-drawer-backdrop" id="drawerBackdrop"></div>
+
+      <!-- Split-Screen Drawer -->
+      <div class="cu-drawer-container" id="siteDrawer" role="dialog" aria-modal="true" aria-label="Main navigation menu" aria-hidden="true">
+
+        <!-- LEFT: Icon Grid -->
+        <div class="cu-drawer-left" id="drawerLeft">
+          <div class="cu-grid-nav">
+            <a href="admission_enquiry.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </div>
+              ADMISSION
+            </a>
+            <a href="departments.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              </div>
+              EXAMINATION
+            </a>
+            <a href="students.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </div>
+              ONLINE CLASSES
+            </a>
+            <a href="departments.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2z"/></svg>
+              </div>
+              DOCTORAL
+            </a>
+            <a href="students.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              </div>
+              STUDENT COUNCIL
+            </a>
+            <a href="students.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+              </div>
+              PLACEMENTS
+            </a>
+            <a href="contact.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </div>
+              HOSTEL &amp; DINING
+            </a>
+            <a href="contact.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/><path d="M2 12h20"/></svg>
+              </div>
+              ALUMNI
+            </a>
+            <a href="departments.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+              </div>
+              LIBRARY
+            </a>
+            <a href="departments.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+              </div>
+              CENTRES
+            </a>
+            <a href="about.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+              </div>
+              ACCREDITATIONS
+            </a>
+            <a href="contact.html" class="cu-grid-item">
+              <div class="cu-grid-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              </div>
+              SDG CELL
+            </a>
           </div>
         </div>
-      </div>
 
-      <div class="nav-shell-wrap" id="navShellWrap">
-      <nav class="navbar" id="mainPublicNav">
-        <a href="index.html" class="nav-brand">
-          <img src="images/logo.png" alt="RRDCH Logo" class="nav-logo">
-        </a>
-        <button class="mobile-toggle" id="mobileToggle" type="button" aria-label="Open menu">☰</button>
-        <ul class="nav-links unified-nav">
-          <li class="nav-item"><a href="index.html" class="nav-link" data-i18n="nav_home">Home</a></li>
+        <!-- RIGHT: Nav Menu -->
+        <div class="cu-drawer-right" id="drawerRight">
+          <div class="cu-drawer-header">
+            <h2>MAIN MENU</h2>
+            <button class="cu-drawer-close" id="drawerCloseBtn" type="button" aria-label="Close menu">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
 
-          <li class="nav-item popup-nav-item">
-            <a href="#" class="nav-link has-popup" data-i18n="nav_about">About Us</a>
-            <div class="popup-menu">
-              <a href="about.html#trust" class="popup-item" data-i18n="about_trust">Trust</a>
-              <a href="about.html#management" class="popup-item" data-i18n="about_management">Management</a>
-              <a href="about.html#governing" class="popup-item" data-i18n="about_governing">Governing Council</a>
-              <a href="about.html#vision" class="popup-item" data-i18n="about_vision">Vision and Mission</a>
+          <div class="cu-drawer-actions">
+            <a href="admissions.html"      class="cu-drawer-btn admission">ADMISSION</a>
+            <a href="departments.html"     class="cu-drawer-btn examination">DEPARTMENTS</a>
+          </div>
+
+          <div class="cu-drawer-links">
+            <div class="cu-accordion">
+              <a href="index.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Home
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
             </div>
-          </li>
-
-          <li class="nav-item popup-nav-item">
-            <a href="departments.html" class="nav-link has-popup" data-i18n="nav_departments">Departments</a>
-            <div class="popup-menu mega-menu">
-              <a href="departments.html" class="popup-item" data-i18n="dept_omr">Oral Medicine and Radiology</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_pros">Prosthodontics and Crown & Bridge</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_omfs">Oral and Maxillofacial Surgery</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_perio">Periodontology</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_endo">Conservative Dentistry and Endodontics</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_ortho">Orthodontics and Dentofacial Orthopedics</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_phd">Public Health Dentistry</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_path">Oral and Maxillofacial Pathology</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_implant">Implantology</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_research">Research and Publications</a>
-              <a href="departments.html" class="popup-item" data-i18n="dept_pain">Orofacial Pain</a>
+            <div class="cu-accordion">
+              <a href="about.html" class="cu-accordion-btn" style="text-decoration:none;">
+                About Us
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
             </div>
-          </li>
-
-          <li class="nav-item popup-nav-item">
-            <a href="admissions.html" class="nav-link has-popup" data-i18n="nav_academics">Academics</a>
-            <div class="popup-menu">
-              <a href="admission_enquiry.html" class="popup-item" data-i18n="nav_admission_enquiry">Admission Enquiry (2026–2027)</a>
-              <a href="admissions.html" class="popup-item" data-i18n="nav_admissions">Admissions</a>
+            <div class="cu-accordion">
+              <a href="departments.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Academics &amp; Departments
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
             </div>
-          </li>
-
-          <li class="nav-item"><a href="admissions.html" class="nav-link" data-i18n="nav_admissions">Admissions</a></li>
-          <li class="nav-item"><a href="contact.html" class="nav-link" data-i18n="nav_contact">Contact</a></li>
-
-          <li class="nav-item popup-nav-item">
-            <a href="#" class="nav-link has-popup" data-i18n="nav_portal">Portal</a>
-            <div class="popup-menu">
-              <a href="students.html" class="popup-item" data-i18n="nav_students">Student</a>
-              <a href="patients.html" class="popup-item" data-i18n="nav_patients">Patient</a>
-              <a href="doctors.html" class="popup-item" data-i18n="nav_doctors">Doctor</a>
+            <div class="cu-accordion">
+              <a href="admissions.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Admissions 2026–27
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
             </div>
-          </li>
-        </ul>
-      </nav>
+            <div class="cu-accordion">
+              <a href="patients.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Patient Portal
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
+            </div>
+            <div class="cu-accordion">
+              <a href="students.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Student Portal
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
+            </div>
+            <div class="cu-accordion">
+              <a href="doctors.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Doctor Dashboard
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
+            </div>
+            <div class="cu-accordion">
+              <a href="contact.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Contact Us
+                <span class="icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <a href="contact.html#careers" class="cu-career-btn">CAREERS (JOB OPENINGS)</a>
+        </div>
       </div>
     `;
 
-    // Footer
+    // ─────────────────────────────────────────────
+    //  FOOTER HTML
+    // ─────────────────────────────────────────────
     const footer = document.createElement("footer");
     footer.className = "footer";
     footer.innerHTML = `
       <div class="footer-grid">
         <div class="footer-brand">
           <img src="images/logo.png" alt="RRDCH Logo" class="footer-logo">
-          <p data-i18n="footer_address">No. 14, Ramohalli Cross, Kumbalgodu,<br>Mysore Road, Bangalore - 560074.</p>
-          <div style="margin-top: 1rem;">
-            <strong data-i18n="footer_ph">Ph:</strong> +91 80 2843 7150<br>
-            <strong data-i18n="footer_email">Email:</strong> principalrrdch@gmail.com
+          <p>No. 14, Ramohalli Cross, Kumbalgodu,<br>Mysore Road, Bangalore - 560074.</p>
+          <div class="footer-contact-meta">
+            <strong>Ph:</strong> +91 80 2843 7150<br>
+            <strong>Email:</strong> principalrrdch@gmail.com
           </div>
         </div>
         <div class="footer-links">
-          <h4 data-i18n="footer_academics">Academics</h4>
+          <h4>Academics</h4>
           <ul>
-            <li><a href="admissions.html" data-i18n="nav_admissions">Admissions</a></li>
-            <li><a href="departments.html" data-i18n="nav_departments">Departments</a></li>
-            <li><a href="students.html" data-i18n="nav_students_portal">Student Portal</a></li>
+            <li><a href="admissions.html">Admissions</a></li>
+            <li><a href="admission_enquiry.html">Admission Enquiry</a></li>
+            <li><a href="departments.html">Departments</a></li>
           </ul>
         </div>
         <div class="footer-links">
-          <h4 data-i18n="footer_hospital">Hospital Services</h4>
+          <h4>Hospital</h4>
           <ul>
-            <li><a href="patients.html" data-i18n="footer_book">Book Appointment</a></li>
-            <li><a href="patients.html" data-i18n="nav_patients">Patient Portal</a></li>
-            <li><a href="doctors.html" data-i18n="footer_doctor">Doctor Dashboard</a></li>
+            <li><a href="patients.html">Book Appointment</a></li>
+            <li><a href="patients.html">Patient Care</a></li>
+            <li><a href="doctors.html">Doctor Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="students.html">Student Portal</a></li>
+            <li><a href="contact.html">Contact</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p data-i18n="footer_copy">&copy; 2026 Rajarajeshwari Dental College and Hospital. All rights reserved.</p>
+        <p>© 2026 Rajarajeshwari Dental College and Hospital. All rights reserved.</p>
       </div>
     `;
 
-    // Insert shell and footer around existing content
+    // ─── Inject into DOM ───
     document.body.prepend(shell);
     document.body.appendChild(footer);
 
-    // Active nav highlight
-    const currentPath = window.location.pathname.split("/").pop() || "index.html";
-    document.querySelectorAll(".nav-links .nav-link").forEach((a) => {
-      const linkPath = (a.getAttribute("href") || "").split("#")[0];
-      if (linkPath && linkPath === currentPath) a.classList.add("active");
+    markCurrentPath(shell);
+    markCurrentPath(footer);
+
+    // ─────────────────────────────────────────────
+    //  DRAWER OPEN / CLOSE LOGIC
+    // ─────────────────────────────────────────────
+    const menuBtn      = shell.querySelector("#menuToggleBtn");
+    const drawer       = shell.querySelector("#siteDrawer");
+    const backdrop     = shell.querySelector("#drawerBackdrop");
+    const closeBtn     = shell.querySelector("#drawerCloseBtn");
+    const drawerLeft   = shell.querySelector("#drawerLeft");
+    const drawerRight  = shell.querySelector("#drawerRight");
+
+    function openDrawer() {
+      document.body.classList.add("nav-drawer-open");
+      drawer.setAttribute("aria-hidden", "false");
+      menuBtn.setAttribute("aria-expanded", "true");
+      // Focus trap — focus first link inside drawer
+      setTimeout(() => {
+        drawerRight.querySelector("a, button")?.focus();
+      }, 420);
+    }
+
+    function closeDrawer() {
+      document.body.classList.remove("nav-drawer-open");
+      drawer.setAttribute("aria-hidden", "true");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.focus();
+    }
+
+    menuBtn?.addEventListener("click", () => {
+      if (document.body.classList.contains("nav-drawer-open")) closeDrawer();
+      else openDrawer();
     });
 
-    // Toggle state + persistence
-    const toggleBtn = document.getElementById("langToggle");
-    const applyToggleUI = () => {
-      const lang = getLang();
-      document.getElementById("lang-en")?.classList.toggle("active", lang === "en");
-      document.getElementById("lang-kn")?.classList.toggle("active", lang === "kn");
-    };
-    applyToggleUI();
-    toggleBtn?.addEventListener("click", () => {
-      const next = getLang() === "en" ? "kn" : "en";
-      setLang(next);
-      applyToggleUI();
-      window.RRDCH_I18N?.apply();
+    closeBtn?.addEventListener("click", closeDrawer);
+    backdrop?.addEventListener("click", closeDrawer);
+
+    // Close on any link click inside drawer
+    drawer.querySelectorAll("a[href]").forEach((link) => {
+      link.addEventListener("click", () => setTimeout(closeDrawer, 80));
     });
 
-    // Mobile toggle (simple)
-    const mobileToggle = document.getElementById("mobileToggle");
-    const navLinks = shell.querySelector(".nav-links");
-    mobileToggle?.addEventListener("click", () => navLinks?.classList.toggle("open"));
-
-    // Popup menu wiring
-    document.querySelectorAll(".has-popup").forEach((toggle) => {
-      toggle.addEventListener("click", (e) => {
-        e.preventDefault();
-        const parent = toggle.parentElement;
-        document.querySelectorAll(".popup-nav-item.open").forEach((item) => {
-          if (item !== parent) item.classList.remove("open");
-        });
-        parent.classList.toggle("open");
-      });
-    });
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".popup-nav-item")) {
-        document.querySelectorAll(".popup-nav-item.open").forEach((item) => item.classList.remove("open"));
+    // Keyboard: Escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && document.body.classList.contains("nav-drawer-open")) {
+        closeDrawer();
       }
     });
 
-    // Allow page to opt-in to a11y/chat injection via existing script.js hooks.
+    // ─────────────────────────────────────────────
+    //  SCROLL FX — deepen header shadow on scroll
+    // ─────────────────────────────────────────────
+    const header = shell.querySelector("#siteHeader");
+    let scrollTicking = false;
+    window.addEventListener("scroll", () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY || 0;
+        if (header) {
+          header.style.boxShadow = y > 20
+            ? "0 4px 28px rgba(0,0,0,0.14)"
+            : "0 2px 12px rgba(0,0,0,0.06)";
+        }
+        scrollTicking = false;
+      });
+    }, { passive: true });
+
+    // ─────────────────────────────────────────────
+    //  RE-INIT LUCIDE icons for dynamically created shell
+    // ─────────────────────────────────────────────
+    if (window.lucide) {
+      window.lucide.createIcons();
+    } else {
+      window.addEventListener("load", () => {
+        if (window.lucide) window.lucide.createIcons();
+      });
+    }
+
+    // ─── Expose API ───
     window.RRDCH_PUBLIC_SHELL = window.RRDCH_PUBLIC_SHELL || {};
-    window.RRDCH_PUBLIC_SHELL.pageId = pageId || "";
+    window.RRDCH_PUBLIC_SHELL.pageId      = pageId || "";
+    window.RRDCH_PUBLIC_SHELL.openDrawer  = openDrawer;
+    window.RRDCH_PUBLIC_SHELL.closeDrawer = closeDrawer;
   }
 
-  // Expose
+  // ─── Public API ───
   window.RRDCH_PUBLIC_SHELL = window.RRDCH_PUBLIC_SHELL || {};
-  window.RRDCH_PUBLIC_SHELL.render = renderShell;
+  window.RRDCH_PUBLIC_SHELL.render  = renderShell;
   window.RRDCH_PUBLIC_SHELL.getLang = getLang;
   window.RRDCH_PUBLIC_SHELL.setLang = setLang;
 
-  // Set language attribute as early as possible even before DOMContentLoaded.
-  ensureLangAttributeEarly();
+  // Apply lang early
+  const _lang = getLang();
+  document.documentElement.setAttribute("data-lang", _lang);
+  document.documentElement.setAttribute("lang", _lang);
 })();
-

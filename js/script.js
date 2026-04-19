@@ -14,12 +14,18 @@ const translations = {
     nav_departments: "Departments",
     nav_academics: "Academics",
     nav_admission_enquiry: "Admission Enquiry (2026–2027)",
+    nav_admission_enquiry_short: "Admission Enquiry",
     nav_contact: "Contact",
     nav_portal: "Portal",
     nav_patients: "Patient",
+    nav_patient_care: "Patient Care",
     nav_students: "Student",
     nav_doctors: "Doctor",
     nav_students_portal: "Student Portal",
+    nav_explore: "Explore",
+    nav_menu: "Menu",
+    nav_main_menu: "Main Menu",
+    nav_close: "Close",
     btn_book: "Book Appointment",
     ticker_opd: "🦷 OPD queue updates available in Patient Portal",
     ticker_symposium: "📅 Annual Dental Symposium – Registrations Open",
@@ -89,12 +95,18 @@ const translations = {
     nav_departments: "ವಿಭಾಗಗಳು",
     nav_academics: "ಶೈಕ್ಷಣಿಕ",
     nav_admission_enquiry: "ಪ್ರವೇಶ ವಿಚಾರಣೆ (2026–2027)",
+    nav_admission_enquiry_short: "ಪ್ರವೇಶ ವಿಚಾರಣೆ",
     nav_contact: "ಸಂಪರ್ಕ",
     nav_portal: "ಪೋರ್ಟಲ್",
     nav_patients: "ರೋಗಿ",
+    nav_patient_care: "ರೋಗಿ ಸೇವೆಗಳು",
     nav_students: "ವಿದ್ಯಾರ್ಥಿ",
     nav_doctors: "ವೈದ್ಯ",
     nav_students_portal: "ವಿದ್ಯಾರ್ಥಿ ಪೋರ್ಟಲ್",
+    nav_explore: "ಅನ್ವೇಷಿಸಿ",
+    nav_menu: "ಮೆನು",
+    nav_main_menu: "ಮುಖ್ಯ ಮೆನು",
+    nav_close: "ಮುಚ್ಚಿ",
     btn_book: "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ",
     ticker_opd: "🦷 OPD ಕ್ಯೂ ಅಪ್ಡೇಟ್‌ಗಳು ರೋಗಿ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಲಭ್ಯ",
     ticker_symposium: "📅 ವಾರ್ಷಿಕ ದಂತ ಸಮ್ಮೇಳನ – ನೋಂದಣಿ ಆರಂಭ",
@@ -187,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ════════ NAVIGATION ════════
 function initActiveNav() {
   const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-links .nav-link').forEach(link => {
+  document.querySelectorAll('.nav-links .nav-link, [data-nav-link]').forEach(link => {
     const linkPath = link.getAttribute('href')?.split('#')[0];
     if (linkPath === currentPath && linkPath !== '') link.classList.add('active');
   });
@@ -231,10 +243,20 @@ function initCarousel() {
 // ════════ SCROLL ANIMATIONS ════════
 function initAnimations() {
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('is-visible'); });
-  }, { threshold: 0.1 });
+    entries.forEach(entry => { 
+      if(entry.isIntersecting) {
+        entry.target.classList.add('is-visible'); 
+        observer.unobserve(entry.target); // Run once
+      }
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+  
   document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    initAnimations();
+});
 
 // ════════ LANGUAGE ════════
 function initLanguageToggle() {
@@ -434,14 +456,16 @@ function restoreA11yPreferences() {
 }
 
 function initPublicNavScrollFX() {
-  const nav = document.getElementById("mainPublicNav");
-  const wrap = document.getElementById("navShellWrap");
-  if (!nav || !wrap) return;
+  const nav = document.querySelector(".header-minimal");
+  if (!nav) return;
   function onScroll() {
     const y = window.scrollY || document.documentElement.scrollTop;
-    const scrolled = y > 16;
-    nav.classList.toggle("is-scrolled", scrolled);
-    wrap.classList.toggle("is-scrolled", scrolled);
+    nav.classList.toggle("is-scrolled", y > 16);
+    if (y > 16) {
+      nav.style.boxShadow = '0 4px 24px rgba(0,0,0,0.12)';
+    } else {
+      nav.style.boxShadow = '';
+    }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
