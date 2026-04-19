@@ -3,54 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admissions | RRDCH</title>
+    <title>Admissions 2026–27 | RRDCH</title>
+    <meta name="description" content="Apply to Rajarajeshwari Dental College & Hospital — BDS, MDS, PhD, and Certificate Programs. NEET-Based admissions, RGUHS affiliated.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cu-theme.css">
     <script>
       (function(){ try { const l = localStorage.getItem('rrdch_lang'); const lang = (l==='kn')?'kn':'en'; document.documentElement.setAttribute('data-lang', lang); document.documentElement.setAttribute('lang', lang);} catch(e) {} })();
     </script>
+    <style>
+      .adm-hero { background: linear-gradient(135deg, var(--cu-blue-dark) 0%, var(--cu-blue) 60%, #2b61a3 100%); padding: 9rem 5% 6rem; position: relative; overflow: hidden; }
+      .adm-hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 500px; height: 500px; border-radius: 50%; background: rgba(195,156,91,0.08); }
+      .adm-hero::after { content: ''; position: absolute; bottom: -100px; left: -60px; width: 400px; height: 400px; border-radius: 50%; background: rgba(195,156,91,0.05); }
+      .adm-hero h1 { color: white; font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 800; margin: 0 0 1rem; }
+      .adm-hero p { color: rgba(255,255,255,0.8); font-size: 1.15rem; max-width: 560px; line-height: 1.6; }
+      .adm-hero-tag { background: var(--cu-gold); color: #111; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 0.4rem 1rem; border-radius: 20px; display: inline-block; margin-bottom: 1.5rem; }
+
+      .adm-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.75rem; max-width: 1200px; margin: 3rem auto; padding: 0 5%; }
+      .adm-card { background: white; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.07); border: 1px solid rgba(226,232,240,0.8); overflow: hidden; transition: transform 0.35s ease, box-shadow 0.35s ease; }
+      .adm-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px rgba(0,0,0,0.12); }
+      .adm-card-head { height: 8px; }
+      .adm-card-head.ug { background: linear-gradient(90deg, #22c55e, #16a34a); }
+      .adm-card-head.pg { background: linear-gradient(90deg, var(--cu-gold), #d4ad6b); }
+      .adm-card-head.phd { background: linear-gradient(90deg, var(--cu-blue), var(--cu-blue-light)); }
+      .adm-card-head.cert { background: linear-gradient(90deg, #f97316, #ea580c); }
+      .adm-card-body { padding: 1.75rem; }
+      .adm-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 20px; margin-bottom: 1rem; }
+      .adm-badge.ug { background: #dcfce7; color: #166534; }
+      .adm-badge.pg { background: #fef9c3; color: #854d0e; }
+      .adm-badge.phd { background: #dbeafe; color: #1e40af; }
+      .adm-badge.cert { background: #ffedd5; color: #c2410c; }
+      .adm-card h3 { font-size: 1.2rem; font-weight: 700; color: var(--cu-blue-dark); margin: 0 0 0.75rem; }
+      .adm-card p { font-size: 0.9rem; color: #64748b; line-height: 1.6; margin-bottom: 1.5rem; }
+      .adm-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+      .adm-meta-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.3rem 0.75rem; font-size: 0.78rem; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 0.4rem; }
+      .adm-card .btn-row { display: flex; gap: 0.75rem; }
+      .adm-card .btn-row a, .adm-card .btn-row button { flex: 1; padding: 0.75rem; border-radius: 8px; font-weight: 600; font-size: 0.88rem; text-align: center; text-decoration: none; border: none; cursor: pointer; transition: all 0.25s; }
+      .adm-card .btn-primary { background: var(--cu-blue); color: white; }
+      .adm-card .btn-primary:hover { background: var(--cu-blue-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(17,40,75,0.25); }
+      .adm-card .btn-outline { background: white; color: var(--cu-blue); border: 1.5px solid var(--cu-blue) !important; }
+      .adm-card .btn-outline:hover { background: var(--cu-blue); color: white; }
+
+      .adm-timeline { max-width: 900px; margin: 0 auto 5rem; padding: 0 5%; }
+      .adm-timeline h2 { font-size: 1.8rem; font-weight: 700; color: var(--cu-blue-dark); text-align: center; margin-bottom: 2.5rem; }
+      .timeline-track { position: relative; padding-left: 2rem; border-left: 3px solid var(--cu-border); }
+      .timeline-item { position: relative; margin-bottom: 2rem; padding-left: 1.5rem; }
+      .timeline-item::before { content: ''; position: absolute; left: -2.65rem; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--cu-gold); border: 3px solid white; box-shadow: 0 0 0 3px var(--cu-gold); }
+      .timeline-item h4 { font-size: 1rem; font-weight: 700; color: var(--cu-blue-dark); margin: 0 0 0.3rem; }
+      .timeline-item span { font-size: 0.85rem; color: #64748b; }
+
+      .adm-cta { background: linear-gradient(135deg, var(--cu-blue-dark), var(--cu-blue)); padding: 4rem 5%; text-align: center; color: white; }
+      .adm-cta h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+      .adm-cta p { opacity: 0.8; max-width: 500px; margin: 0 auto 2rem; }
+      .adm-cta .cta-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+      .adm-cta .cta-btns a { padding: 0.9rem 2.5rem; border-radius: 8px; font-weight: 700; text-decoration: none; transition: all 0.25s; }
+      .adm-cta .cta-btns .btn-gold { background: var(--cu-gold); color: #111; }
+      .adm-cta .cta-btns .btn-gold:hover { background: #d4ad6b; transform: translateY(-2px); }
+      .adm-cta .cta-btns .btn-wh { background: rgba(255,255,255,0.1); color: white; border: 1.5px solid rgba(255,255,255,0.3); }
+      .adm-cta .cta-btns .btn-wh:hover { background: white; color: var(--cu-blue); }
+    </style>
 </head>
 <body data-public-page="true" data-page-id="admissions">
 
-    <header class="dashboard-header" style="background: linear-gradient(135deg, #1e293b, #0f172a); margin-bottom: -4rem; padding-bottom: 8rem;">
-        <h1 data-i18n="admissions_title">Admissions 2026-27</h1>
-        <p data-i18n="admissions_subtitle">Join our prestigious institution and shape the future of healthcare.</p>
-    </header>
+    <!-- Hero -->
+    <div class="adm-hero">
+        <div class="adm-hero-tag">Admissions Open — 2026–27</div>
+        <h1>Shape the Future<br>of Dental Medicine</h1>
+        <p>Join Rajarajeshwari Dental College & Hospital — one of South India's leading dental institutions, affiliated with RGUHS and recognized by DCI.</p>
+    </div>
 
-    <div class="container" style="position: relative; z-index: 10; margin-bottom: 5rem;">
-        <div class="grid-2">
-            <div class="card animate-on-scroll">
-                <div class="badge badge-success" style="margin-bottom: 1rem;">Undergraduate</div>
-                <h3 class="card-title">Bachelor of Dental Surgery (BDS)</h3>
-                <p class="card-body" style="margin-top: 1rem; margin-bottom: 2rem;">A comprehensive 5-year program (including 1 year internship) recognized by the Dental Council of India. Admissions are based on NEET-UG scores.</p>
-                <div style="display: flex; gap: 1rem;">
-                    <a href="contact.html" class="btn btn-primary" style="flex: 1;" data-i18n="admissions_enquiry_btn">Admission Enquiry</a>
-                    <button class="btn btn-outline" style="flex: 1;" data-i18n="admissions_fee_btn">Fee Structure</button>
+    <!-- Program Cards -->
+    <div class="adm-cards">
+        <div class="adm-card animate-on-scroll">
+            <div class="adm-card-head ug"></div>
+            <div class="adm-card-body">
+                <span class="adm-badge ug">Undergraduate</span>
+                <h3>Bachelor of Dental Surgery (BDS)</h3>
+                <p>A comprehensive 5-year program (including 1-year internship) recognized by the Dental Council of India. Admissions based on NEET-UG scores.</p>
+                <div class="adm-meta">
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg> 5 Years</span>
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> NEET-UG</span>
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg> RGUHS</span>
+                </div>
+                <div class="btn-row">
+                    <a href="admission_enquiry.html" class="btn-primary">Enquire Now</a>
+                    <button class="btn-outline" onclick="alert('Fee structure PDF available on request. Call 080-28437150')">Fee Structure</button>
                 </div>
             </div>
+        </div>
 
-            <div class="card animate-on-scroll" style="transition-delay: 0.1s">
-                <div class="badge badge-warning" style="margin-bottom: 1rem;">Postgraduate</div>
-                <h3 class="card-title">Master of Dental Surgery (MDS)</h3>
-                <p class="card-body" style="margin-top: 1rem; margin-bottom: 2rem;">A 3-year specialization program spanning 9 specific domains of dentistry. Admissions mandate NEET-MDS qualification.</p>
-                <div style="display: flex; gap: 1rem;">
-                    <a href="contact.html" class="btn btn-primary" style="flex: 1;" data-i18n="admissions_enquiry_btn">Admission Enquiry</a>
-                    <button class="btn btn-outline" style="flex: 1;" data-i18n="admissions_fee_btn">Fee Structure</button>
+        <div class="adm-card animate-on-scroll" style="transition-delay:0.1s">
+            <div class="adm-card-head pg"></div>
+            <div class="adm-card-body">
+                <span class="adm-badge pg">Postgraduate</span>
+                <h3>Master of Dental Surgery (MDS)</h3>
+                <p>A 3-year specialization across 9 dental domains. Admissions via NEET-MDS qualification. Includes PG research and clinical hours.</p>
+                <div class="adm-meta">
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg> 3 Years</span>
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> NEET-MDS</span>
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h4"/></svg> 9 Specialties</span>
+                </div>
+                <div class="btn-row">
+                    <a href="admission_enquiry.html" class="btn-primary">Enquire Now</a>
+                    <button class="btn-outline" onclick="alert('Fee structure PDF available on request. Call 080-28437150')">Fee Structure</button>
                 </div>
             </div>
+        </div>
 
-            <div class="card animate-on-scroll" style="transition-delay: 0.2s">
-                <div class="badge" style="background: rgba(42, 111, 151, 0.15); color: var(--primary); margin-bottom: 1rem;">Doctorate</div>
-                <h3 class="card-title">Ph.D Program</h3>
-                <p class="card-body" style="margin-top: 1rem; margin-bottom: 2rem;">Research-focused academic tracks affiliated with RGUHS for candidates dedicated to elevating dental science and innovation.</p>
-                <a href="contact.html" class="btn btn-primary" style="width: 100%;" data-i18n="admissions_view_notification">View Notification</a>
+        <div class="adm-card animate-on-scroll" style="transition-delay:0.2s">
+            <div class="adm-card-head phd"></div>
+            <div class="adm-card-body">
+                <span class="adm-badge phd">Doctorate</span>
+                <h3>Ph.D Program</h3>
+                <p>Research-focused doctoral tracks affiliated with RGUHS for candidates dedicated to advancing dental science and publishing innovation.</p>
+                <div class="adm-meta">
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg> 3–5 Years</span>
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Research</span>
+                </div>
+                <div class="btn-row">
+                    <a href="contact.html" class="btn-primary">View Notification</a>
+                </div>
             </div>
+        </div>
 
-            <div class="card animate-on-scroll" style="transition-delay: 0.3s">
-                <div class="badge" style="background: rgba(42, 111, 151, 0.15); color: var(--primary); margin-bottom: 1rem;">Fellowship</div>
-                <h3 class="card-title">Certificate Course in Implantology</h3>
-                <p class="card-body" style="margin-top: 1rem; margin-bottom: 2rem;">Advanced clinical training course for practitioners. Applications invited for 2026-27 batch.</p>
-                <a href="contact.html" class="btn btn-primary" style="width: 100%;" data-i18n="admissions_apply_now">Apply Now</a>
+        <div class="adm-card animate-on-scroll" style="transition-delay:0.3s">
+            <div class="adm-card-head cert"></div>
+            <div class="adm-card-body">
+                <span class="adm-badge cert">Fellowship</span>
+                <h3>Certificate Course in Implantology</h3>
+                <p>Advanced clinical training for dental practitioners. Applications now open for the 2026–27 batch. Contact pgrrdc@gmail.com for details.</p>
+                <div class="adm-meta">
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg> 1 Year</span>
+                    <span class="adm-meta-chip"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> DCI Approved</span>
+                </div>
+                <div class="btn-row">
+                    <a href="admission_enquiry.html" class="btn-primary">Apply Now</a>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Admission Timeline -->
+    <div class="adm-timeline">
+        <h2>Admission Process</h2>
+        <div class="timeline-track">
+            <div class="timeline-item animate-on-scroll">
+                <h4>Step 1 — NEET Qualification</h4>
+                <span>Appear for NEET-UG (BDS) or NEET-MDS (MDS) conducted by NTA / NBE.</span>
+            </div>
+            <div class="timeline-item animate-on-scroll">
+                <h4>Step 2 — Counselling by RGUHS / KEA</h4>
+                <span>Attend state/central counselling. RRDCH participates via RGUHS round for Karnataka students.</span>
+            </div>
+            <div class="timeline-item animate-on-scroll">
+                <h4>Step 3 — Document Verification</h4>
+                <span>Produce 10th, 12th, NEET scorecard, community certificate, and photographs at RRDCH admissions office.</span>
+            </div>
+            <div class="timeline-item animate-on-scroll">
+                <h4>Step 4 — Fee Payment & Enrollment</h4>
+                <span>Complete fee payment, hostel booking, and receive your college ID and timetable.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Band -->
+    <div class="adm-cta">
+        <h2>Ready to Begin Your Journey?</h2>
+        <p>Connect with our admissions office for personalized guidance on programs, eligibility, and fee structure.</p>
+        <div class="cta-btns">
+            <a href="admission_enquiry.html" class="btn-gold">Fill Enquiry Form</a>
+            <a href="tel:08028437150" class="btn-wh">Call: 080-2843 7150</a>
         </div>
     </div>
 

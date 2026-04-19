@@ -35,9 +35,81 @@
     document.body.classList.add("public-page", "public-shell-mounted");
     if (pageId) document.body.classList.add(`page-${pageId.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`);
 
+    // ─────────────────────────────────────────────
+    //  NEWTON'S CRADLE LOADER — inject on all shell pages (skip if index.html already has one)
+    // ─────────────────────────────────────────────
+    if (!document.getElementById("global-skeleton")) {
+      const spinnerStyle = document.createElement("style");
+      spinnerStyle.textContent = `
+        #global-skeleton {
+          position: fixed; inset: 0; z-index: 999999;
+          background: rgba(12, 26, 52, 0.97);
+          display: flex; align-items: center; justify-content: center;
+          pointer-events: all;
+          transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), visibility 0.7s ease;
+        }
+        #global-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .rrdch-newtons-cradle {
+          --uib-size: 80px; --uib-speed: 1.2s; --uib-color: #c39c5b;
+          position: relative; display: flex;
+          align-items: center; justify-content: center;
+          width: var(--uib-size); height: var(--uib-size);
+        }
+        .rrdch-newtons-cradle__dot {
+          position: relative; display: flex; align-items: center;
+          height: 100%; width: 25%; transform-origin: center top;
+        }
+        .rrdch-newtons-cradle__dot::after {
+          content: ''; display: block; width: 100%; height: 25%;
+          border-radius: 50%; background-color: var(--uib-color);
+        }
+        .rrdch-newtons-cradle__dot:first-child { animation: rrdch-swing var(--uib-speed) linear infinite; }
+        .rrdch-newtons-cradle__dot:last-child  { animation: rrdch-swing2 var(--uib-speed) linear infinite; }
+        @keyframes rrdch-swing {
+          0%  { transform: rotate(0deg);  animation-timing-function: ease-out; }
+          25% { transform: rotate(70deg); animation-timing-function: ease-in;  }
+          50% { transform: rotate(0deg);  animation-timing-function: linear;   }
+        }
+        @keyframes rrdch-swing2 {
+          0%  { transform: rotate(0deg);   animation-timing-function: linear;   }
+          50% { transform: rotate(0deg);   animation-timing-function: ease-out; }
+          75% { transform: rotate(-70deg); animation-timing-function: ease-in;  }
+        }
+      `;
+      document.head.appendChild(spinnerStyle);
+
+      const spinnerEl = document.createElement("div");
+      spinnerEl.id = "global-skeleton";
+      spinnerEl.innerHTML = `
+        <div class="rrdch-newtons-cradle">
+          <div class="rrdch-newtons-cradle__dot"></div>
+          <div class="rrdch-newtons-cradle__dot"></div>
+          <div class="rrdch-newtons-cradle__dot"></div>
+          <div class="rrdch-newtons-cradle__dot"></div>
+        </div>
+      `;
+      document.body.insertBefore(spinnerEl, document.body.firstChild);
+
+      const hideSkeleton = () => setTimeout(() => {
+        const skel = document.getElementById("global-skeleton");
+        if (skel) skel.classList.add("hidden");
+      }, 450);
+
+      if (document.readyState === "complete") {
+        hideSkeleton();
+      } else {
+        window.addEventListener("load", hideSkeleton);
+      }
+      setTimeout(() => {
+        const skel = document.getElementById("global-skeleton");
+        if (skel) skel.classList.add("hidden");
+      }, 6000);
+    }
+
     // Remove any previous shells
     removeIfExists("#rrdch-public-shell");
     removeIfExists("footer.footer");
+
 
     // ─────────────────────────────────────────────
     //  SHELL HTML — Announcement ticker + Header + Drawer
@@ -47,15 +119,34 @@
     shell.innerHTML = `
 
 
-      <!-- Minimal Sticky Header -->
-      <header class="header-minimal" id="siteHeader">
-        <a href="index.html" class="header-brand">
+      <!-- Top Micro-bar -->
+      <div class="cu-micro-bar">
+        <span>Rajarajeshwari Dental College & Hospital | Bengaluru Campus</span>
+        <div class="micro-links">
+          <a href="contact.html">Contact</a> | <a href="admission_enquiry.html">Admissions</a> | <a href="portal.html" class="login-btn-micro">LOGIN</a>
+        </div>
+      </div>
+
+      <!-- Social Media Floating Strip -->
+      <div class="social-media-strip">
+        <a href="#" aria-label="Facebook"><i data-lucide="facebook" width="18" height="18"></i></a>
+        <a href="#" aria-label="X (Twitter)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+        </a>
+        <a href="#" aria-label="YouTube"><i data-lucide="youtube" width="18" height="18"></i></a>
+        <a href="#" aria-label="Instagram"><i data-lucide="instagram" width="18" height="18"></i></a>
+        <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin" width="18" height="18"></i></a>
+      </div>
+
+      <!-- Floating Header (Slanted Logo + Floating Buttons) -->
+      <header class="header-floating" id="siteHeader">
+        <a href="index.html" class="header-brand-slanted">
           <img src="images/logo.png" alt="RRDCH Logo">
         </a>
         <div class="header-actions">
-          <a href="patients.html" class="header-book-btn">Book Appointment</a>
+          <a href="portal.html" class="header-login-btn">LOGIN</a>
           <button
-            class="menu-trigger-cu"
+            class="menu-trigger-odd"
             id="menuToggleBtn"
             type="button"
             aria-controls="siteDrawer"
@@ -255,6 +346,15 @@
           <div class="footer-contact-meta">
             <strong>Ph:</strong> +91 80 2843 7150<br>
             <strong>Email:</strong> principalrrdch@gmail.com
+          </div>
+          <div style="margin-top:24px; display:flex; gap:16px;">
+            <a href="https://facebook.com/rrdch" style="color:rgba(255,255,255,0.7); transition:color 0.2s;" onmouseover="this.style.color=\'var(--cu-gold)\';" onmouseout="this.style.color=\'rgba(255,255,255,0.7)\';"><i data-lucide="facebook" width="22" height="22"></i></a>
+            <a href="https://twitter.com/rrdch" style="color:rgba(255,255,255,0.7); transition:color 0.2s;" onmouseover="this.style.color=\'var(--cu-gold)\';" onmouseout="this.style.color=\'rgba(255,255,255,0.7)\';">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+            </a>
+            <a href="https://youtube.com/rrdch" style="color:rgba(255,255,255,0.7); transition:color 0.2s;" onmouseover="this.style.color=\'var(--cu-gold)\';" onmouseout="this.style.color=\'rgba(255,255,255,0.7)\';"><i data-lucide="youtube" width="22" height="22"></i></a>
+            <a href="https://instagram.com/rrdch" style="color:rgba(255,255,255,0.7); transition:color 0.2s;" onmouseover="this.style.color=\'var(--cu-gold)\';" onmouseout="this.style.color=\'rgba(255,255,255,0.7)\';"><i data-lucide="instagram" width="22" height="22"></i></a>
+            <a href="https://linkedin.com/company/rrdch" style="color:rgba(255,255,255,0.7); transition:color 0.2s;" onmouseover="this.style.color=\'var(--cu-gold)\';" onmouseout="this.style.color=\'rgba(255,255,255,0.7)\';"><i data-lucide="linkedin" width="22" height="22"></i></a>
           </div>
         </div>
         <div class="footer-links">

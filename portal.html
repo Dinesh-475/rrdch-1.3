@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Access | RRDCH — Rajarajeshwari Dental College & Hospital</title>
+    <meta name="description" content="Secure login portal for Patients, Doctors, and Administration at RRDCH Bangalore.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --blue: #1c4578; --blue-dark: #0f2d52; --gold: #c39c5b;
+            --text: #1a1a2e; --muted: #64748b; --border: #e2e8f0;
+        }
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* Top Nav */
+        .top-nav { background: var(--blue-dark); padding: 1.1rem 5%; display: flex; align-items: center; justify-content: space-between; }
+        .top-nav .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; }
+        .top-nav .brand img { height: 50px; background: white; padding: 6px 14px; border-radius: 6px; object-fit: contain; }
+        .top-nav .brand-text { color: white; }
+        .top-nav .brand-text strong { display: block; font-size: 1rem; font-weight: 700; }
+        .top-nav .brand-text span { font-size: 0.75rem; opacity: 0.65; }
+        .top-nav a.back-link { color: rgba(255,255,255,0.65); font-size: 0.88rem; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+        .top-nav a.back-link:hover { color: var(--gold); }
+
+        /* Main Layout */
+        .portal-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 4rem 5%; }
+        .portal-center { width: 100%; max-width: 1000px; }
+        .portal-heading { text-align: center; margin-bottom: 3rem; }
+        .portal-heading .badge-chip { display: inline-block; background: var(--blue-dark); color: var(--gold); font-size: 0.72rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 0.4rem 1.2rem; border-radius: 20px; margin-bottom: 1.25rem; }
+        .portal-heading h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 800; color: var(--blue-dark); margin-bottom: 0.75rem; }
+        .portal-heading p { color: var(--muted); font-size: 1.05rem; max-width: 480px; margin: 0 auto; }
+
+        /* Portal Cards */
+        .portal-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.75rem; }
+        .pcard { background: white; border-radius: 20px; border: 1px solid var(--border); padding: 0; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.06); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; cursor: pointer; text-decoration: none; display: block; position: relative; }
+        .pcard:hover { transform: translateY(-10px); box-shadow: 0 24px 56px rgba(0,0,0,0.14); }
+        .pcard-stripe { height: 6px; }
+        .pcard.patient .pcard-stripe { background: linear-gradient(90deg, #0284c7, #38bdf8); }
+        .pcard.doctor .pcard-stripe { background: linear-gradient(90deg, #16a34a, #4ade80); }
+        .pcard.admin .pcard-stripe { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+        .pcard-body { padding: 2rem 2rem 1.5rem; }
+        .pcard-icon { width: 64px; height: 64px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+        .pcard.patient .pcard-icon { background: #e0f2fe; color: #0284c7; }
+        .pcard.doctor .pcard-icon { background: #dcfce7; color: #16a34a; }
+        .pcard.admin .pcard-icon { background: #ede9fe; color: #7c3aed; }
+        .pcard h2 { font-size: 1.35rem; font-weight: 800; color: var(--blue-dark); margin-bottom: 0.5rem; }
+        .pcard .role { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 1rem; }
+        .pcard.patient .role { color: #0284c7; }
+        .pcard.doctor .role { color: #16a34a; }
+        .pcard.admin .role { color: #7c3aed; }
+        .pcard p { font-size: 0.9rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.75rem; }
+        .pcard-features { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem; }
+        .pcard-features .feat { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: #374151; font-weight: 500; }
+        .pcard-features .feat svg { flex-shrink: 0; color: var(--gold); }
+        .pcard-btn { display: block; width: 100%; text-align: center; padding: 0.9rem 1.5rem; border-radius: 10px; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; border: none; cursor: pointer; transition: all 0.3s ease; text-decoration: none; }
+        .pcard.patient .pcard-btn { background: #0284c7; color: white; }
+        .pcard.patient .pcard-btn:hover { background: #0369a1; box-shadow: 0 8px 20px rgba(2,132,199,0.3); }
+        .pcard.doctor .pcard-btn { background: #16a34a; color: white; }
+        .pcard.doctor .pcard-btn:hover { background: #15803d; box-shadow: 0 8px 20px rgba(22,163,74,0.3); }
+        .pcard.admin .pcard-btn { background: #7c3aed; color: white; }
+        .pcard.admin .pcard-btn:hover { background: #6d28d9; box-shadow: 0 8px 20px rgba(124,58,237,0.3); }
+
+        /* Security Note */
+        .security-note { text-align: center; margin-top: 3rem; color: var(--muted); font-size: 0.82rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .security-note svg { color: #22c55e; }
+
+        /* Footer Strip */
+        .portal-foot { background: var(--blue-dark); color: rgba(255,255,255,0.55); text-align: center; padding: 1.25rem; font-size: 0.78rem; }
+
+        @media (max-width:640px) {
+            .portal-cards { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Nav -->
+    <nav class="top-nav">
+        <a href="index.html" class="brand">
+            <img src="images/logo.png" alt="RRDCH Logo">
+            <div class="brand-text">
+                <strong>Rajarajeshwari Dental</strong>
+                <span>College & Hospital, Bengaluru</span>
+            </div>
+        </a>
+        <a href="index.html" class="back-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+            Back to Website
+        </a>
+    </nav>
+
+    <!-- Main -->
+    <div class="portal-wrap">
+        <div class="portal-center">
+            <div class="portal-heading">
+                <div class="badge-chip">Secure Access</div>
+                <h1>RRDCH Portal Login</h1>
+                <p>Choose your role to access the appropriate dashboard and services.</p>
+            </div>
+
+            <div class="portal-cards">
+
+                <!-- Patient Portal -->
+                <a href="patients.html" class="pcard patient">
+                    <div class="pcard-stripe"></div>
+                    <div class="pcard-body">
+                        <div class="pcard-icon">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <div class="role">Patient Portal</div>
+                        <h2>Patient Access</h2>
+                        <p>Book appointments, track your OPD queue, view treatment history, and interact with our AI health assistant.</p>
+                        <div class="pcard-features">
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Book & Track Appointments</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Live OPD Queue Status</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> AI Symptom Checker</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Cost Estimator & Billing</div>
+                        </div>
+                        <div class="pcard-btn">Login as Patient</div>
+                    </div>
+                </a>
+
+                <!-- Doctor Portal -->
+                <a href="doctor-portal.html" class="pcard doctor">
+                    <div class="pcard-stripe"></div>
+                    <div class="pcard-body">
+                        <div class="pcard-icon">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                        </div>
+                        <div class="role">Doctor Dashboard</div>
+                        <h2>Doctor Access</h2>
+                        <p>Manage your patient queue, view today's schedule, update case notes, and monitor OPD analytics.</p>
+                        <div class="pcard-features">
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Today's Patient Queue</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Update Visit Status</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Case Notes & Prescriptions</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Department Analytics</div>
+                        </div>
+                        <div class="pcard-btn">Login as Doctor</div>
+                    </div>
+                </a>
+
+                <!-- Admin Portal -->
+                <a href="students.html" class="pcard admin">
+                    <div class="pcard-stripe"></div>
+                    <div class="pcard-body">
+                        <div class="pcard-icon">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <div class="role">Admin / Student</div>
+                        <h2>Staff & Student Access</h2>
+                        <p>For administrative staff and students — access results, schedules, notices, library resources, and college management tools.</p>
+                        <div class="pcard-features">
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Exam Results & Notices</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Timetable & Schedule</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Library & Resources</div>
+                            <div class="feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Admission Management</div>
+                        </div>
+                        <div class="pcard-btn">Login as Staff / Student</div>
+                    </div>
+                </a>
+
+            </div>
+
+            <div class="security-note">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                All portals are protected by end-to-end encryption. Your data remains private and secure.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="portal-foot">
+        &copy; 2026 Rajarajeswari Dental College & Hospital, Bangalore. All rights reserved.
+    </div>
+</body>
+</html>

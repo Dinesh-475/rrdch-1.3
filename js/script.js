@@ -27,10 +27,10 @@ const translations = {
     nav_main_menu: "Main Menu",
     nav_close: "Close",
     btn_book: "Book Appointment",
-    ticker_opd: "🦷 OPD queue updates available in Patient Portal",
-    ticker_symposium: "📅 Annual Dental Symposium – Registrations Open",
-    ticker_emergency: "🚨 Emergency Dental Care is Available 24/7",
-    ticker_implant: "📋 Certificate Course in Implantology (2026–2027) — pgrrdc@gmail.com",
+    ticker_opd: "OPD queue updates available in Patient Portal",
+    ticker_symposium: "Annual Dental Symposium – Registrations Open",
+    ticker_emergency: "Emergency Dental Care is Available 24/7",
+    ticker_implant: "Certificate Course in Implantology (2026–2027) — pgrrdc@gmail.com",
     ticker_admission: "Admission Enquiry (2026–2027) — Apply Now",
     about_trust: "Trust",
     about_management: "Management",
@@ -108,10 +108,10 @@ const translations = {
     nav_main_menu: "ಮುಖ್ಯ ಮೆನು",
     nav_close: "ಮುಚ್ಚಿ",
     btn_book: "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ",
-    ticker_opd: "🦷 OPD ಕ್ಯೂ ಅಪ್ಡೇಟ್‌ಗಳು ರೋಗಿ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಲಭ್ಯ",
-    ticker_symposium: "📅 ವಾರ್ಷಿಕ ದಂತ ಸಮ್ಮೇಳನ – ನೋಂದಣಿ ಆರಂಭ",
-    ticker_emergency: "🚨 24/7 ತುರ್ತು ದಂತ ಚಿಕಿತ್ಸೆ ಲಭ್ಯ",
-    ticker_implant: "📋 ಇಂಪ್ಲಾಂಟಾಲಜಿ ಪ್ರಮಾಣಪತ್ರ ಕೋರ್ಸ್ (2026–2027) — pgrrdc@gmail.com",
+    ticker_opd: "OPD ಕ್ಯೂ ಅಪ್ಡೇಟ್‌ಗಳು ರೋಗಿ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಲಭ್ಯ",
+    ticker_symposium: "ವಾರ್ಷಿಕ ದಂತ ಸಮ್ಮೇಳನ – ನೋಂದಣಿ ಆರಂಭ",
+    ticker_emergency: "24/7 ತುರ್ತು ದಂತ ಚಿಕಿತ್ಸೆ ಲಭ್ಯ",
+    ticker_implant: "ಇಂಪ್ಲಾಂಟಾಲಜಿ ಪ್ರಮಾಣಪತ್ರ ಕೋರ್ಸ್ (2026–2027) — pgrrdc@gmail.com",
     ticker_admission: "ಪ್ರವೇಶ ವಿಚಾರಣೆ (2026–2027) — ಈಗ ಅರ್ಜಿ ಸಲ್ಲಿಸಿ",
     about_trust: "ಟ್ರಸ್ಟ್",
     about_management: "ನಿರ್ವಹಣೆ",
@@ -374,18 +374,27 @@ function initAnimatedStats() {
       if (entry.isIntersecting) {
         entry.target.querySelectorAll('.stat-number').forEach(el => {
           const target = +el.getAttribute('data-target');
-          let count = 0;
-          const updateCount = () => {
-            const inc = target / 50;
-            if (count < target) { count += inc; el.innerText = Math.ceil(count); setTimeout(updateCount, 30); }
-            else el.innerText = target;
+          const duration = 2000; // 2 seconds
+          let startTimestamp = null;
+          
+          const easeOutQuad = (t) => t * (2 - t);
+          
+          const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            el.innerText = Math.floor(easeOutQuad(progress) * target);
+            if (progress < 1) {
+              requestAnimationFrame(step);
+            } else {
+              el.innerText = target;
+            }
           };
-          updateCount();
+          requestAnimationFrame(step);
         });
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.5, rootMargin: "0px 0px -50px 0px" });
   sections.forEach(sec => observer.observe(sec));
 }
 
@@ -456,15 +465,17 @@ function restoreA11yPreferences() {
 }
 
 function initPublicNavScrollFX() {
-  const nav = document.querySelector(".header-minimal");
-  if (!nav) return;
+  const header = document.querySelector(".header-floating");
+  const microBar = document.querySelector(".cu-micro-bar");
+  
   function onScroll() {
     const y = window.scrollY || document.documentElement.scrollTop;
-    nav.classList.toggle("is-scrolled", y > 16);
-    if (y > 16) {
-      nav.style.boxShadow = '0 4px 24px rgba(0,0,0,0.12)';
+    if (y > 50) {
+      if (header) header.classList.add("header-vanished");
+      if (microBar) microBar.classList.add("header-vanished");
     } else {
-      nav.style.boxShadow = '';
+      if (header) header.classList.remove("header-vanished");
+      if (microBar) microBar.classList.remove("header-vanished");
     }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -512,7 +523,6 @@ function injectChatWidget() {
       #chatBubble { position:fixed; bottom:24px; right:24px; width:64px; height:64px; background:linear-gradient(145deg,#1e3a5f,#2A6F97); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 10px 28px rgba(15,23,42,0.35), 0 0 0 1px rgba(255,255,255,0.12) inset; z-index:9999; transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease; color:white; touch-action:manipulation; -webkit-tap-highlight-color:transparent; }
       #chatBubble:hover { transform:scale(1.06) translateY(-4px); box-shadow:0 14px 36px rgba(42,111,151,0.45); }
       #chatBubble:active { transform:scale(0.96); }
-      #chatBubble .chatbot-mark { width:38px; height:38px; display:block; object-fit:contain; border-radius:10px; filter:drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
       #chatPanel { display:none; opacity:0; pointer-events:none; position:fixed; bottom:100px; right:24px; width:380px; max-height:80vh; height:550px; background:white; border-radius:24px; box-shadow:0 15px 50px rgba(0,0,0,0.15); z-index:9998; flex-direction:column; overflow:hidden; border:1px solid rgba(226,232,240,0.8); transform:translateY(20px) scale(0.95); transition:all 0.3s cubic-bezier(0.4,0,0.2,1); }
       #chatPanel.active { opacity:1; pointer-events:all; transform:translateY(0) scale(1); }
       .chat-header { background:linear-gradient(135deg,#1A365D,#2A6F97); color:white; padding:1.25rem 1.5rem; display:flex; justify-content:space-between; align-items:center; }
@@ -541,7 +551,7 @@ function injectChatWidget() {
   const bubble = document.createElement('div');
   bubble.id = 'chatBubble';
   bubble.title = 'Ask RRDCH AI Assistant';
-  bubble.innerHTML = '<img class="chatbot-mark" src="images/chat-assistant-robot.png" width="38" height="38" alt="" role="presentation">';
+  bubble.innerHTML = '<img class="chatbot-mark" src="images/chat-robot.png" width="44" height="44" alt="" role="presentation" style="object-fit:contain;">';
   bubble.onclick = toggleChatPanel;
   document.body.appendChild(bubble);
 
@@ -551,7 +561,7 @@ function injectChatWidget() {
   panel.innerHTML = `
     <div class="chat-header">
       <div style="display:flex;align-items:center;gap:0.65rem;">
-        <img src="images/chat-assistant-robot.png" width="36" height="36" alt="" style="border-radius:10px;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+        <img src="images/chat-robot.png" width="42" height="42" alt="" style="object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.2));">
         <div>
         <div style="font-weight:700; font-size:1.05rem;">RRDCH Assistant</div>
         <div style="font-size:0.78rem; opacity:0.85; margin-top:2px;">AI guide • Campus &amp; services</div>
@@ -608,32 +618,40 @@ window.sendChatMessage = async function() {
 
   try {
     let text = "";
-    if (window.RRDCH_AI && typeof window.RRDCH_AI.askText === "function") {
-      text = await window.RRDCH_AI.askText("RRDCH site assistant", window._chatHistory);
+    
+    // Simulate thinking delay
+    await new Promise(r => setTimeout(r, 1200));
+
+    // Simple keyword mapping for demo chatbot
+    const lowerMsg = msg.toLowerCase();
+    const pageText = document.body.innerText.toLowerCase();
+
+    if (lowerMsg.includes('admissions') || lowerMsg.includes('apply')) {
+      text = "For Admissions (2026-2027), you can check our Admissions page or email us at pgrrdc@gmail.com. We offer BDS, MDS, PhD, and Certificate programs.";
+    } else if (lowerMsg.includes('appointment') || lowerMsg.includes('book') || lowerMsg.includes('doctor')) {
+      text = "To book an appointment, please use the Patient Portal or click the 'Book Appointment' button at the top of the page. Emergency dental care is available 24/7.";
+    } else if (lowerMsg.includes('contact') || lowerMsg.includes('phone') || lowerMsg.includes('call')) {
+      text = "You can reach us at No. 14, Ramohalli Cross, Mysore Road, Bangalore - 560074. Contact number: 080-28437150.";
+    } else if (lowerMsg.includes('departments') || lowerMsg.includes('courses')) {
+      text = "We have 11 specialized departments including Prosthodontics, Orthodontics, Oral Pathology, and more. Use the Department search to explore specific faculty and facilities.";
     } else {
-      const ep = (function () {
-        if (window.RRDCH_BACKEND && window.RRDCH_BACKEND.API_BASE) {
-          return String(window.RRDCH_BACKEND.API_BASE).replace(/\/$/, "") + "/gemini";
-        }
-        const isLocal = !window.location.hostname || window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:";
-        return (isLocal ? "http://localhost:3000" : "") + "/api/gemini";
-      })();
-      const res = await fetch(ep, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: "site-assistant", input: msg })
-      });
-      const data = await res.json();
-      if (!res.ok || data.ok === false) throw new Error(data.msg || "AI unavailable");
-      text = String(data.data?.text || "").trim();
+      // Feed data of the pages: check if word exists in page text
+      const words = lowerMsg.split(' ').filter(w => w.length > 4);
+      const matches = words.some(w => pageText.includes(w));
+      if (matches) {
+        text = `I found some information related to your query on this page! Please check the relevant sections or let me know if you need help navigating to specific details like Faculty, Admissions, or Contact info.`;
+      } else {
+        text = "I'm still learning! If you couldn't find what you are looking for, please feel free to navigate our Main Menu or contact the hospital reception directly.";
+      }
     }
+
     loader.remove();
-    appendChatMsg(text || "I could not generate a response right now.", "bot");
+    appendChatMsg(text, "bot");
     window._chatHistory.push({ role: "model", parts: [{ text: text }] });
     if (window._chatHistory.length > 10) window._chatHistory = window._chatHistory.slice(-10);
   } catch (e) {
     loader.remove();
-    appendChatMsg("I'm having trouble connecting right now. Please try again or call 080-28437150.", "bot");
+    appendChatMsg("I'm offline right now. Please try again or call 080-28437150.", "bot");
     window._chatHistory.pop();
   }
 };

@@ -15,41 +15,145 @@
     </script>
 </head>
 <body data-public-page="true" data-page-id="home">
+    <!-- Newton's Cradle Loader -->
+    <style>
+      #global-skeleton {
+        position: fixed; inset: 0; z-index: 999999;
+        background: rgba(12, 26, 52, 0.97);
+        display: flex; align-items: center; justify-content: center;
+        pointer-events: all;
+        transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), visibility 0.7s ease;
+      }
+      #global-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+      .newtons-cradle {
+        --uib-size: 80px;
+        --uib-speed: 1.2s;
+        --uib-color: #c39c5b;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--uib-size);
+        height: var(--uib-size);
+      }
+      .newtons-cradle__dot {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        width: 25%;
+        transform-origin: center top;
+      }
+      .newtons-cradle__dot::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 25%;
+        border-radius: 50%;
+        background-color: var(--uib-color);
+      }
+      .newtons-cradle__dot:first-child {
+        animation: swing var(--uib-speed) linear infinite;
+      }
+      .newtons-cradle__dot:last-child {
+        animation: swing2 var(--uib-speed) linear infinite;
+      }
+      @keyframes swing {
+        0%  { transform: rotate(0deg);  animation-timing-function: ease-out; }
+        25% { transform: rotate(70deg); animation-timing-function: ease-in;  }
+        50% { transform: rotate(0deg);  animation-timing-function: linear;   }
+      }
+      @keyframes swing2 {
+        0%  { transform: rotate(0deg);   animation-timing-function: linear;   }
+        50% { transform: rotate(0deg);   animation-timing-function: ease-out; }
+        75% { transform: rotate(-70deg); animation-timing-function: ease-in;  }
+      }
+    </style>
+    <div id="global-skeleton">
+        <div class="newtons-cradle">
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+            <div class="newtons-cradle__dot"></div>
+        </div>
+    </div>
+    <script>
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const skel = document.getElementById('global-skeleton');
+                if (skel) skel.classList.add('hidden');
+            }, 500);
+        });
+        setTimeout(() => {
+            const skel = document.getElementById('global-skeleton');
+            if (skel) skel.classList.add('hidden');
+        }, 6000);
+    </script>
     <!-- Public shell injects header, drawer, footer via public-shell.js -->
 
-    <!-- ══════════════════════════════════════════════
-         HERO SECTION
-    ══════════════════════════════════════════════════ -->
-    <header class="hero-full-width">
-        <div class="hero-image-container" style="width:100%;height:100%;position:relative;">
-            <img src="images/new_hero_bg.png" alt="RRDCH Campus Building" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.6);">
 
-            <div class="hero-overlay-content">
-                <div class="container text-center">
-                    <span class="hero-tag logo-chip">
-                        <img src="images/logo.png" alt="RRDCH logo badge">
-                        Excellence in Dental Education &amp; Care
-                    </span>
-                    <h1 class="hero-title hero-title-light" data-i18n="hero_title1">
-                        Rajarajeshwari Dental<br>
-                        <span data-i18n="hero_title2">College &amp; Hospital</span>
-                    </h1>
-                    <p class="hero-desc hero-desc-light" data-i18n="hero_desc">
-                        Established to provide premier dental education and unparalleled patient care, fostering the next generation of healthcare professionals.
-                    </p>
-                    <div class="hero-actions hero-actions-center">
-                        <a href="patients.html" class="btn btn-primary" data-i18n="btn_book">Book Appointment</a>
-                        <a href="about.html" class="btn btn-outline-light">About College</a>
-                    </div>
+
+
+    <!-- ══════════════════════════════════════════════
+         HERO SECTION (Floating Aesthetics)
+    ══════════════════════════════════════════════════ -->
+    <header class="hero-full-width" style="height: 100vh; position: relative;">
+        <!-- Sliding Background -->
+        <div class="hero-image-container" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1;">
+            <img src="images/new_hero_bg.png" alt="RRDCH Campus Building" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.65);">
+            
+            <!-- Carousel Arrows -->
+        <!-- Hero Content -->
+        <div class="hero-overlay-content">
+            <div class="container text-center">
+                <h1 class="hero-title hero-title-light" data-i18n="hero_title1">
+                    Rajarajeshwari Dental<br>
+                    <span data-i18n="hero_title2">College &amp; Hospital</span>
+                </h1>
+                <p class="hero-desc hero-desc-light" data-i18n="hero_desc">
+                    Established to provide premier dental education and unparalleled patient care, fostering the next generation of healthcare professionals.
+                </p>
+                <div class="hero-actions">
+                    <a href="patients.html" class="btn btn-primary" data-i18n="btn_book">Book Appointment</a>
+                    <a href="about.html" class="btn btn-outline-light">About College</a>
                 </div>
             </div>
+        </div>
 
-            <button type="button" class="hero-scroll-cue" data-scroll-target="#degree-section" aria-label="Scroll down">
-                <span class="hero-scroll-cue__text">Explore</span>
-                <span class="hero-scroll-cue__chev" aria-hidden="true"></span>
-            </button>
+        <!-- WhatsApp Floating Icon -->
+        <a href="https://wa.me/1234567890" class="whatsapp-float" aria-label="Chat on WhatsApp">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M17.498 14.382c-.301-.15-1.767-.867-2.04-.966-.273-.101-.473-.15-.673.15-.197.295-.771.964-.944 1.162-.175.195-.349.21-.646.06-.301-.15-1.265-.462-2.406-1.474-.889-.788-1.488-1.761-1.663-2.062-.175-.3-.018-.462.132-.612.135-.133.301-.349.451-.523.146-.176.2-.3.298-.501.101-.197.051-.375-.025-.525-.075-.15-.672-1.62-.922-2.206-.24-.584-.487-.51-.672-.51-.172-.015-.371-.015-.571-.015-.2 0-.523.074-.797.359-.273.301-1.045 1.02-1.045 2.475s1.071 2.865 1.219 3.075c.149.195 2.105 3.195 5.1 4.485.714.3 1.27.48 1.704.629.714.227 1.365.195 1.88.121.574-.09 1.767-.721 2.016-1.426.251-.705.251-1.29.176-1.425-.075-.134-.275-.224-.575-.374m-5.493 6.168h-.004c-1.171 0-2.32-.315-3.328-.908l-.238-.142-2.476.65.662-2.414-.156-.246c-.652-1.026-.995-2.214-.995-3.418 0-3.568 2.906-6.471 6.476-6.471 1.73 0 3.355.674 4.577 1.897a6.438 6.438 0 011.894 4.576c-.001 3.567-2.906 6.476-6.417 6.476M12.004 2a10.016 10.016 0 00-9.991 10.005c0 1.58.411 3.123 1.196 4.488L1.65 22.35l6.012-1.578c1.319.728 2.805 1.111 4.331 1.111h.004C21.996 21.884 22 17.404 22 12.005A9.957 9.957 0 0019.07 4.93a9.972 9.972 0 00-7.066-2.93"/></svg>
+        </a>
+
+        <!-- Bottom Campuses/Facilities Bar -->
+        <div class="hero-bottom-bar">
+            <div class="bottom-bar-label">Our Facilities</div>
+            <a href="#">Main Hospital</a>
+            <a href="#">Super Speciality Center</a>
+            <a href="#">Dental OPD Clinics</a>
+            <a href="#">PG Research Labs</a>
+            <a href="#">Hostels &amp; Dining</a>
         </div>
     </header>
+
+    <!-- SVG filter defs for hand-drawn button distortion -->
+    <svg width="0" height="0" style="position:absolute;overflow:hidden;" aria-hidden="true">
+        <defs>
+            <filter id="hdn1" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="1" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+            <filter id="hdn2" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
 
     <!-- ══════════════════════════════════════════════
          FIND YOUR DEGREE
@@ -75,6 +179,8 @@
                             <i data-lucide="search" width="20" height="20"></i>
                         </button>
                     </div>
+                    <!-- Dynamic injection point for courses -->
+                    <div id="degreeContent" class="degree-content-area" style="margin-top: 1.5rem; min-height: 120px;"></div>
                 </div>
             </div>
         </div>
@@ -104,40 +210,6 @@
             <a href="#" class="logo-item" title="International Accreditation Organization">
                 <img src="images/media__1776163089970.png" alt="IAO Accreditation">
             </a>
-        </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         STATS COUNTER
-    ══════════════════════════════════════════════════ -->
-    <section class="container" style="padding-top:0;padding-bottom:4rem;">
-        <div class="stats-section animate-on-scroll">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-number" data-target="32">0</span><span class="stat-suffix">+</span>
-                    <p class="stat-label">Years of Excellence</p>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="250">0</span><span class="stat-suffix">+</span>
-                    <p class="stat-label">Dental Chair Units</p>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="15000">0</span><span class="stat-suffix">+</span>
-                    <p class="stat-label">Patients Annually</p>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="11">0</span>
-                    <p class="stat-label">Departments</p>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="150">0</span><span class="stat-suffix">+</span>
-                    <p class="stat-label">Faculty &amp; Staff</p>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-number" data-target="98">0</span><span class="stat-suffix">%</span>
-                    <p class="stat-label">Patient Satisfaction</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -240,10 +312,10 @@
 
             <div class="vignette-wrapper animate-on-scroll" style="transition-delay:0.2s;">
                 <article class="vignette-card v-square">
-                    <img src="pictures/home page images/slider_3.jpg" alt="Clinical Floors">
+                    <img src="pictures/home page images/media__1776159199583.jpg" alt="Surgery Floor">
                     <div class="vignette-arrow"><i data-lucide="arrow-up-right" width="18" height="18"></i></div>
                 </article>
-                <div class="vignette-title">Raconteur</div>
+                <div class="vignette-title">Surgical Precision</div>
             </div>
 
             <div class="vignette-wrapper animate-on-scroll" style="transition-delay:0.3s;align-self:flex-end;">
@@ -260,6 +332,46 @@
                     <div class="vignette-arrow"><i data-lucide="arrow-up-right" width="18" height="18"></i></div>
                 </article>
                 <div class="vignette-title">Fame to Frame</div>
+            </div>
+
+            <div class="vignette-wrapper animate-on-scroll" style="transition-delay:0.1s;align-self:center;">
+                <article class="vignette-card v-short">
+                    <img src="pictures/home page images/slider_6.jpg" alt="Student Life">
+                    <div class="vignette-arrow"><i data-lucide="arrow-up-right" width="18" height="18"></i></div>
+                </article>
+                <div class="vignette-title">Vibrant Life</div>
+            </div>
+
+            <div class="vignette-wrapper animate-on-scroll" style="transition-delay:0.2s;">
+                <article class="vignette-card v-tall">
+                    <img src="pictures/home page images/im10.jpg" alt="Dental Care">
+                    <div class="vignette-arrow"><i data-lucide="arrow-up-right" width="18" height="18"></i></div>
+                </article>
+                <div class="vignette-title">Endless Care</div>
+            </div>
+
+            <div class="vignette-wrapper animate-on-scroll" style="transition-delay:0.3s;align-self:flex-end;">
+                <article class="vignette-card v-square">
+                    <img src="pictures/home page images/media__1776159199698.jpg" alt="Laboratories">
+                    <div class="vignette-arrow"><i data-lucide="arrow-up-right" width="18" height="18"></i></div>
+                </article>
+                <div class="vignette-title">Innovation</div>
+            </div>
+
+            <div class="vignette-wrapper animate-on-scroll" style="transition-delay:0.4s;align-self:center;">
+                <article class="vignette-card v-short">
+                    <img src="pictures/home page images/media__1776159199631.jpg" alt="Research">
+                    <div class="vignette-arrow"><i data-lucide="arrow-up-right" width="18" height="18"></i></div>
+                </article>
+                <div class="vignette-title">Discovery</div>
+            </div>
+
+            <div class="vignette-wrapper animate-on-scroll" style="transition-delay:0.5s;">
+                <article class="vignette-card v-tall-alt">
+                    <img src="pictures/home page images/slider_7.jpg" alt="RRDCH Legacy">
+                    <div class="vignette-arrow"><i data-lucide="arrow-up-right" width="18" height="18"></i></div>
+                </article>
+                <div class="vignette-title">The Legacy</div>
             </div>
         </div>
     </section>
@@ -653,14 +765,69 @@
             if (window.lucide) lucide.createIcons();
         });
 
-        // Degree tab interactivity
+        // Degree tab mapping and interactivity
         document.addEventListener('DOMContentLoaded', () => {
+            const courseData = {
+                'DOCTORAL (PhD)': [
+                    { name: "Ph.D in Oral & Maxillofacial Surgery", dur: "3 Years" },
+                    { name: "Ph.D in Periodontology", dur: "3 Years" },
+                    { name: "Ph.D in Prosthodontics", dur: "3 Years" },
+                    { name: "Ph.D in Orthodontics", dur: "3 Years" }
+                ],
+                'POSTGRADUATE (MDS)': [
+                    { name: "MDS - Conservative Dentistry", dur: "3 Years" },
+                    { name: "MDS - Oral Pathology", dur: "3 Years" },
+                    { name: "MDS - Paedodontics", dur: "3 Years" },
+                    { name: "MDS - Public Health Dentistry", dur: "3 Years" }
+                ],
+                'UNDERGRADUATE (BDS)': [
+                    { name: "Bachelor of Dental Surgery (BDS)", dur: "4 Years + 1 Yr Internship" }
+                ],
+                'CERTIFICATE COURSES': [
+                    { name: "Certificate Course in Implantology", dur: "1 Year" },
+                    { name: "Aesthetic Dentistry Certification", dur: "6 Months" }
+                ]
+            };
+
+            const contentArea = document.getElementById('degreeContent');
+            const searchInput = document.getElementById('degreeSearch');
+
+            function renderCourses(term, tabName) {
+                if(!contentArea) return;
+                const courses = tabName ? courseData[tabName] : Object.values(courseData).flat();
+                const filtered = courses.filter(c => c.name.toLowerCase().includes((term || '').toLowerCase()));
+                
+                if(filtered.length === 0) {
+                    contentArea.innerHTML = '<div style="color:var(--cu-text-muted); padding:1rem 0;">No matching courses found.</div>';
+                    return;
+                }
+                
+                contentArea.innerHTML = filtered.map(c => `
+                    <div style="background:white; border:1px solid var(--cu-border); padding:1rem 1.25rem; border-radius:8px; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); animation: fadeUp 0.3s ease;">
+                        <span style="font-weight:700; color:var(--cu-blue); font-size:0.95rem;">${c.name}</span>
+                        <span style="font-size:0.8rem; color:#64748b; font-weight:600; background:var(--cu-bg); padding:0.3rem 0.8rem; border-radius:4px;">${c.dur}</span>
+                    </div>
+                `).join('');
+            }
+
             document.querySelectorAll('.degree-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     document.querySelectorAll('.degree-tab').forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
+                    searchInput.value = '';
+                    renderCourses('', tab.innerText.trim());
                 });
             });
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    document.querySelectorAll('.degree-tab').forEach(t => t.classList.remove('active'));
+                    renderCourses(e.target.value, null);
+                });
+            }
+
+            // Init default
+            renderCourses('', 'UNDERGRADUATE (BDS)');
         });
 
         // Review rating

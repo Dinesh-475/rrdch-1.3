@@ -172,29 +172,35 @@
     </style>
 </head>
 <body>
-<!-- Login Screen -->
-    <div id="erpLogin" class="erp-login">
-        <div class="login-nav">
-            <img src="images/logo.png" alt="RRDCH" style="height: 50px; background: white; border-radius: 8px; padding: 10px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); object-fit: contain;">
-            <a href="index.html" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;"><i data-lucide="arrow-left" width="18"></i> Back to Website</a>
-        </div>
+    <div id="erpLogin" class="portal-login-overlay">
+        <a href="index.html" class="logo-box">
+            <img src="images/logo.png" alt="RRDCH">
+            <div style="display:flex; flex-direction:column;">
+                <strong style="color:#0f2d52; font-size:1rem; line-height:1.2;">RRDCH</strong>
+                <span style="font-size:0.7rem; color:#64748b;">Return to Website</span>
+            </div>
+        </a>
         
-        <div class="login-card">
-            <h2 style="display:flex; align-items:center; justify-content:center; gap:0.5rem;"><i data-lucide="lock" style="color:var(--primary);"></i> Student Portal</h2>
-            <p>Access your personalized university dashboard</p>
-            <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
-                <div style="text-align: left; margin-bottom: 1.2rem;">
-                    <label style="font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem; display: block;">University Registration Number (USN)</label>
-                    <input type="text" id="usnInput" class="form-control" placeholder="1RR24MDS001 OR 1RR24BDS002" required style="font-family: monospace; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase;">
-                </div>
-                <div style="text-align: left; margin-bottom: 1.5rem;">
-                    <label style="font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem; display: block;">Secure Password</label>
-                    <input type="password" id="passInput" class="form-control" placeholder="••••••••" required style="font-family: monospace; font-size: 1.1rem;">
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Authenticate & Login</button>
-                <div id="loginError"><i data-lucide="alert-circle" width="16" style="display:inline; vertical-align:-3px;"></i> Invalid USN format. (Use 1RR24MDSxxx or 1RR24BDSxxx)</div>
-            </form>
-        </div>
+        <form class="form_main" id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+            <p class="heading">Student Portal</p>
+            
+            <div class="inputContainer">
+                <i data-lucide="user" class="inputIcon" width="16"></i>
+                <input type="text" id="usnInput" class="inputField" placeholder="USN (e.g., 1RR24MDS001)" required>
+            </div>
+            
+            <div class="inputContainer">
+                <i data-lucide="lock" class="inputIcon" width="16"></i>
+                <input type="password" id="passInput" class="inputField" placeholder="Password" required>
+            </div>
+            
+            <div class="loginError" id="loginError">
+                <i data-lucide="alert-circle" width="14"></i> Invalid USN format.
+            </div>
+            
+            <button id="button" type="submit">Authenticate</button>
+            <a class="forgotLink" href="#">Forgot Password?</a>
+        </form>
     </div>
 
     <!-- ERP Dashboard Interface -->

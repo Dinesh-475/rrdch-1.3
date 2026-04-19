@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard | RRDCH</title>
+    <meta name="description" content="RRDCH Doctor Portal — manage patient queues, schedules, and case notes.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --blue: #1c4578; --blue-dark: #0f2d52; --blue-light: #2b61a3;
+            --gold: #c39c5b; --green: #16a34a; --red: #dc2626;
+            --border: #e2e8f0; --bg: #f8fafc; --text: #0f172a; --muted: #64748b;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* Portal Nav */
+        .doc-nav { background: white; border-bottom: 1px solid var(--border); padding: 0 3%; display: flex; align-items: center; gap: 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04); height: 64px; }
+        .doc-nav .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; margin-right: auto; }
+        .doc-nav .brand img { height: 40px; background: white; border-radius: 6px; padding: 4px 10px; border: 1px solid var(--border); object-fit: contain; }
+        .portal-badge { background: #dcfce7; color: var(--green); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 20px; }
+        .doc-nav .nav-links { display: flex; align-items: center; gap: 0.5rem; margin-right: 1.5rem; }
+        .doc-nav .nav-links a { color: var(--muted); font-size: 0.88rem; font-weight: 600; padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s; }
+        .doc-nav .nav-links a:hover { background: #f8fafc; color: var(--blue); }
+        .doc-nav .nav-links a.active { background: #f0f4ff; color: var(--blue); }
+        .doc-nav .exit-btn { background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
+        .doc-nav .exit-btn:hover { border-color: var(--red); color: var(--red); }
+
+        /* Layout */
+        .doc-layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 64px); }
+        .doc-sidebar { background: white; border-right: 1px solid var(--border); padding: 1.5rem 1rem; }
+        .doc-main { padding: 2rem 2.5rem; overflow-y: auto; }
+
+        /* Sidebar Doctor Card */
+        .doc-profile { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; color: white; text-align: center; }
+        .doc-profile .avatar { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; font-weight: 700; }
+        .doc-profile h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .doc-profile p { font-size: 0.78rem; opacity: 0.7; }
+        .doc-profile .status-pill { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.15); padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-top: 0.75rem; }
+        .doc-profile .status-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: pulse-dot 2s infinite; }
+        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+        /* Sidebar Nav */
+        .sidebar-nav { display: flex; flex-direction: column; gap: 0.25rem; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 0.8rem; padding: 0.7rem 1rem; border-radius: 10px; color: var(--muted); font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+        .sidebar-nav a:hover { background: var(--bg); color: var(--blue); }
+        .sidebar-nav a.active { background: #f0f4ff; color: var(--blue); }
+        .sidebar-nav .section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #94a3b8; padding: 1rem 1rem 0.5rem; }
+
+        /* Top stats row */
+        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+        .stat-card { background: white; border-radius: 14px; border: 1px solid var(--border); padding: 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .stat-ico { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .stat-ico.blue { background: #dbeafe; color: var(--blue); }
+        .stat-ico.green { background: #dcfce7; color: var(--green); }
+        .stat-ico.amber { background: #fef9c3; color: #c2870c; }
+        .stat-ico.red { background: #fee2e2; color: var(--red); }
+        .stat-num { font-size: 1.75rem; font-weight: 800; color: var(--text); line-height: 1; }
+        .stat-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; margin-top: 0.2rem; }
+
+        /* Cards */
+        .d-card { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .d-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+        .d-card-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 0.6rem; }
+        .d-card-header .badge { font-size: 0.72rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 12px; background: #f1f5f9; color: var(--muted); }
+
+        /* Queue Table */
+        .queue-table { width: 100%; border-collapse: collapse; }
+        .queue-table th { text-align: left; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 0rem 1rem 0.75rem 0; border-bottom: 1px solid var(--border); }
+        .queue-table td { padding: 1rem 1rem 1rem 0; border-bottom: 1px solid #f8fafc; font-size: 0.9rem; vertical-align: middle; }
+        .queue-table tr:last-child td { border: none; }
+        .token-badge { background: var(--blue-dark); color: white; font-weight: 800; font-size: 0.85rem; padding: 0.35rem 0.8rem; border-radius: 8px; display: inline-block; }
+        .status-tag { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px; }
+        .status-tag.waiting { background: #fef9c3; color: #854d0e; }
+        .status-tag.ongoing { background: #dcfce7; color: #166534; }
+        .status-tag.called { background: #dbeafe; color: #1e40af; }
+        .status-tag.done { background: #f1f5f9; color: var(--muted); }
+        .action-btns { display: flex; gap: 0.5rem; }
+        .btn-sm { border: none; padding: 0.4rem 0.9rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .btn-call { background: #dbeafe; color: var(--blue); }
+        .btn-call:hover { background: var(--blue); color: white; }
+        .btn-done { background: #dcfce7; color: var(--green); }
+        .btn-done:hover { background: var(--green); color: white; }
+
+        /* Notes Area */
+        .notes-area { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .notes-form textarea { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 1rem; font-family: inherit; font-size: 0.9rem; resize: vertical; min-height: 120px; transition: 0.2s; }
+        .notes-form textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(28,69,120,0.1); }
+        .btn-save { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 0.75rem 1.75rem; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.25s; margin-top: 0.75rem; }
+        .btn-save:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(17,40,75,0.25); }
+
+        /* Schedule */
+        .schedule-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .sched-item { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1rem; background: var(--bg); border-radius: 10px; border-left: 4px solid var(--border); }
+        .sched-item.upcoming { border-left-color: var(--blue); }
+        .sched-item.emergency { border-left-color: var(--red); background: #fff5f5; }
+        .sched-time { font-size: 0.85rem; font-weight: 700; color: var(--muted); min-width: 80px; }
+        .sched-name { font-weight: 600; font-size: 0.9rem; }
+        .sched-dept { font-size: 0.78rem; color: var(--muted); }
+
+        @media (max-width: 1024px) {
+            .doc-layout { grid-template-columns: 1fr; }
+            .doc-sidebar { display: none; }
+            .stat-row { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 640px) {
+            .stat-row { grid-template-columns: 1fr 1fr; }
+            .notes-area { grid-template-columns: 1fr; }
+            .doc-main { padding: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dr Portal Nav -->
+    <nav class="doc-nav">
+        <a href="index.html" class="brand">
+            <img src="images/logo.png" alt="RRDCH">
+            <span class="portal-badge">Doctor Portal</span>
+        </a>
+        <div class="nav-links">
+            <a href="#" class="active"><i data-lucide="layout-dashboard" width="16"></i> Dashboard</a>
+            <a href="#"><i data-lucide="users" width="16"></i> Patients</a>
+            <a href="#"><i data-lucide="calendar" width="16"></i> Schedule</a>
+            <a href="#"><i data-lucide="bar-chart-2" width="16"></i> Analytics</a>
+        </div>
+        <a href="portal.html" class="exit-btn">
+            <i data-lucide="log-out" width="16"></i> Exit
+        </a>
+    </nav>
+
+    <div class="doc-layout">
+        <!-- Sidebar -->
+        <aside class="doc-sidebar">
+            <div class="doc-profile">
+                <div class="avatar">DR</div>
+                <h3>Dr. Roshan M.</h3>
+                <p>Oral Surgery Dept.</p>
+                <div class="status-pill"><span class="dot"></span> On Duty</div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="section-label">Main</div>
+                <a href="#" class="active"><i data-lucide="layout-dashboard" width="17"></i> Dashboard</a>
+                <a href="#"><i data-lucide="list-ordered" width="17"></i> Today's Queue</a>
+                <a href="#"><i data-lucide="stethoscope" width="17"></i> Patient Records</a>
+                <a href="#"><i data-lucide="file-text" width="17"></i> Case Notes</a>
+                <div class="section-label">Management</div>
+                <a href="#"><i data-lucide="calendar-days" width="17"></i> My Schedule</a>
+                <a href="#"><i data-lucide="bell" width="17"></i> Notifications</a>
+                <a href="#"><i data-lucide="settings" width="17"></i> Settings</a>
+                <div class="section-label">Quick Links</div>
+                <a href="patients.html"><i data-lucide="clipboard-list" width="17"></i> Patient Portal</a>
+                <a href="departments.html"><i data-lucide="building-2" width="17"></i> Departments</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="doc-main">
+
+            <!-- Stats Row -->
+            <div class="stat-row">
+                <div class="stat-card">
+                    <div class="stat-ico blue"><i data-lucide="users" width="22"></i></div>
+                    <div>
+                        <div class="stat-num" id="statTotal">14</div>
+                        <div class="stat-label">Today's Patients</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-ico green"><i data-lucide="check-circle" width="22"></i></div>
+                    <div>
+                        <div class="stat-num" id="statDone">6</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-ico amber"><i data-lucide="clock" width="22"></i></div>
+                    <div>
+                        <div class="stat-num" id="statWaiting">8</div>
+                        <div class="stat-label">Waiting</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-ico red"><i data-lucide="alert-triangle" width="22"></i></div>
+                    <div>
+                        <div class="stat-num">2</div>
+                        <div class="stat-label">Urgent Cases</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's Queue -->
+            <div class="d-card">
+                <div class="d-card-header">
+                    <h2><i data-lucide="list-ordered" width="20"></i> Today's Patient Queue</h2>
+                    <span class="badge" id="queueTime">Live — Updated just now</span>
+                </div>
+                <table class="queue-table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Patient Name</th>
+                            <th>Visit Reason</th>
+                            <th>Time Slot</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="queueBody">
+                        <tr>
+                            <td><span class="token-badge">#41</span></td>
+                            <td><strong>Ananya R.</strong><br><span style="font-size:0.78rem;color:var(--muted);">9845112233</span></td>
+                            <td>Tooth extraction</td>
+                            <td>09:00 AM</td>
+                            <td><span class="status-tag done">Done</span></td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><span class="token-badge">#42</span></td>
+                            <td><strong>Ravi Kumar</strong><br><span style="font-size:0.78rem;color:var(--muted);">9900556677</span></td>
+                            <td>Post-op checkup</td>
+                            <td>10:30 AM</td>
+                            <td><span class="status-tag ongoing">Ongoing</span></td>
+                            <td><div class="action-btns"><button class="btn-sm btn-done" onclick="markDone(this)">Mark Done</button></div></td>
+                        </tr>
+                        <tr>
+                            <td><span class="token-badge">#43</span></td>
+                            <td><strong>Meera Sharma</strong><br><span style="font-size:0.78rem;color:var(--muted);">9876543210</span></td>
+                            <td>Wisdom tooth pain</td>
+                            <td>11:00 AM</td>
+                            <td><span class="status-tag called">Called</span></td>
+                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Start</button></div></td>
+                        </tr>
+                        <tr>
+                            <td><span class="token-badge">#44</span></td>
+                            <td><strong>Farhan Iqbal</strong><br><span style="font-size:0.78rem;color:var(--muted);">9123456789</span></td>
+                            <td>Braces tightening</td>
+                            <td>11:30 AM</td>
+                            <td><span class="status-tag waiting">Waiting</span></td>
+                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Call</button></div></td>
+                        </tr>
+                        <tr>
+                            <td><span class="token-badge">#45</span></td>
+                            <td><strong>Lakshmi D.</strong><br><span style="font-size:0.78rem;color:var(--muted);">9988776655</span></td>
+                            <td>Gum bleeding</td>
+                            <td>12:00 PM</td>
+                            <td><span class="status-tag waiting">Waiting</span></td>
+                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Call</button></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Notes + Schedule Grid -->
+            <div class="notes-area">
+                <!-- Case Notes -->
+                <div class="d-card" style="margin:0;">
+                    <div class="d-card-header">
+                        <h2><i data-lucide="file-text" width="20"></i> Quick Case Note</h2>
+                    </div>
+                    <div class="notes-form">
+                        <div style="margin-bottom:0.75rem;">
+                            <label style="font-size:0.8rem;font-weight:700;color:var(--muted);display:block;margin-bottom:0.4rem;">Token / Patient</label>
+                            <input type="text" placeholder="e.g. #42 — Ravi Kumar" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;font-size:0.88rem;font-family:inherit;" />
+                        </div>
+                        <div style="margin-bottom:0.75rem;">
+                            <label style="font-size:0.8rem;font-weight:700;color:var(--muted);display:block;margin-bottom:0.4rem;">Diagnosis</label>
+                            <input type="text" placeholder="e.g. Pericoronitis, mandibular 3rd molar" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;font-size:0.88rem;font-family:inherit;" />
+                        </div>
+                        <label style="font-size:0.8rem;font-weight:700;color:var(--muted);display:block;margin-bottom:0.4rem;">Notes / Prescription</label>
+                        <textarea placeholder="Add clinical observations, treatment plan, medication details..."></textarea>
+                        <button class="btn-save" onclick="saveNote(this)"><i data-lucide="save" width="16"></i> Save Case Note</button>
+                    </div>
+                </div>
+
+                <!-- Today's Schedule -->
+                <div class="d-card" style="margin:0;">
+                    <div class="d-card-header">
+                        <h2><i data-lucide="calendar-days" width="20"></i> Today's Schedule</h2>
+                        <span class="badge">Sunday, 20 Apr</span>
+                    </div>
+                    <div class="schedule-list">
+                        <div class="sched-item upcoming">
+                            <div class="sched-time">09:00 AM</div>
+                            <div><div class="sched-name">Ananya R. — Tooth Extraction</div><div class="sched-dept">Oral Surgery • Done</div></div>
+                        </div>
+                        <div class="sched-item upcoming" style="border-left-color:#c39c5b">
+                            <div class="sched-time">10:30 AM</div>
+                            <div><div class="sched-name">Ravi Kumar — Post-Op Review</div><div class="sched-dept">Oral Surgery • Ongoing</div></div>
+                        </div>
+                        <div class="sched-item upcoming">
+                            <div class="sched-time">11:00 AM</div>
+                            <div><div class="sched-name">Meera Sharma — Wisdom Tooth</div><div class="sched-dept">Oral Surgery • Called</div></div>
+                        </div>
+                        <div class="sched-item emergency">
+                            <div class="sched-time">02:00 PM</div>
+                            <div><div class="sched-name" style="color:var(--red);">Walk-in Emergency</div><div class="sched-dept">Trauma / Urgent — TBD</div></div>
+                        </div>
+                        <div class="sched-item">
+                            <div class="sched-time">04:00 PM</div>
+                            <div><div class="sched-name">Department Meeting</div><div class="sched-dept">Oral Surgery + HOD — OT Block, Rm 3</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function markDone(btn) {
+            const row = btn.closest('tr');
+            const statusCell = row.querySelector('.status-tag');
+            statusCell.className = 'status-tag done';
+            statusCell.textContent = 'Done';
+            btn.closest('.action-btns').innerHTML = '—';
+            const statDone = document.getElementById('statDone');
+            const statWaiting = document.getElementById('statWaiting');
+            statDone.textContent = parseInt(statDone.textContent) + 1;
+            statWaiting.textContent = Math.max(0, parseInt(statWaiting.textContent) - 1);
+        }
+
+        function callNext(btn) {
+            const row = btn.closest('tr');
+            const statusCell = row.querySelector('.status-tag');
+            statusCell.className = 'status-tag ongoing';
+            statusCell.textContent = 'Ongoing';
+            btn.textContent = 'Mark Done';
+            btn.className = 'btn-sm btn-done';
+            btn.onclick = function() { markDone(this); };
+        }
+
+        function saveNote(btn) {
+            btn.textContent = 'Saved!';
+            btn.style.background = 'var(--green)';
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="save" width="16"></i> Save Case Note';
+                btn.style.background = '';
+                lucide.createIcons();
+            }, 2000);
+        }
+
+        // Live time
+        setInterval(() => {
+            const el = document.getElementById('queueTime');
+            if (el) el.textContent = 'Live — ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        }, 30000);
+    </script>
+</body>
+</html>
