@@ -43,14 +43,14 @@
       spinnerStyle.textContent = `
         #global-skeleton {
           position: fixed; inset: 0; z-index: 999999;
-          background: rgba(12, 26, 52, 0.97);
+          background: #ffffff; /* Black & White Theme */
           display: flex; align-items: center; justify-content: center;
           pointer-events: all;
           transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), visibility 0.7s ease;
         }
         #global-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
         .rrdch-newtons-cradle {
-          --uib-size: 80px; --uib-speed: 1.2s; --uib-color: #c39c5b;
+          --uib-size: 80px; --uib-speed: 1.2s; --uib-color: #000000; /* Black & White Theme */
           position: relative; display: flex;
           align-items: center; justify-content: center;
           width: var(--uib-size); height: var(--uib-size);
@@ -140,11 +140,7 @@
 
       <!-- Floating Header (Slanted Logo + Floating Buttons) -->
       <header class="header-floating" id="siteHeader">
-        <a href="index.html" class="header-brand-slanted">
-          <img src="images/logo.png" alt="RRDCH Logo">
-        </a>
         <div class="header-actions">
-          <a href="portal.html" class="header-login-btn">LOGIN</a>
           <button
             class="menu-trigger-odd"
             id="menuToggleBtn"
@@ -153,14 +149,18 @@
             aria-expanded="false"
             aria-label="Open main menu"
           >
-            MENU
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <line x1="3" y1="6"  x2="21" y2="6"/>
               <line x1="3" y1="12" x2="21" y2="12"/>
               <line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
+            MENU
           </button>
+          <a href="portal.html" class="header-login-btn">LOGIN</a>
         </div>
+        <a href="index.html" class="header-brand-slanted right-slanted">
+          <img src="images/logo.png" alt="RRDCH Logo" class="animated-logo">
+        </a>
       </header>
 
       <!-- Drawer Backdrop -->

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard | RRDCH</title>
-    <meta name="description" content="RRDCH Doctor Portal — manage patient queues, schedules, and case notes.">
+    <title>Admin Dashboard | RRDCH</title>
+    <meta name="description" content="RRDCH Admin Portal — manage hospital, staff, and student data.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -125,21 +125,21 @@
             </div>
         </a>
         
-        <form class="form_main" id="doctorLoginForm" onsubmit="event.preventDefault(); document.getElementById('doctorAuthOverlay').classList.add('hidden'); setTimeout(()=>document.getElementById('doctorAuthOverlay').style.display='none',400);">
-            <p class="heading">Doctor Login</p>
+        <form class="form_main" id="adminLoginForm" onsubmit="event.preventDefault(); document.getElementById('doctorAuthOverlay').classList.add('hidden'); setTimeout(()=>document.getElementById('doctorAuthOverlay').style.display='none',400);">
+            <p class="heading">Admin Access</p>
             
             <div class="inputContainer">
                 <i data-lucide="user" class="inputIcon" width="16"></i>
-                <input type="text" class="inputField" placeholder="Staff ID or Email" required>
+                <input type="text" class="inputField" placeholder="Admin ID or Auth Key" required>
             </div>
             
             <div class="inputContainer">
                 <i data-lucide="lock" class="inputIcon" width="16"></i>
-                <input type="password" class="inputField" placeholder="Password" required>
+                <input type="password" class="inputField" placeholder="Master Password" required>
             </div>
             
-            <button id="button" type="submit">Secure Login</button>
-            <a class="forgotLink" href="#">IT Support</a>
+            <button id="button" type="submit">Unlock System</button>
+            <a class="forgotLink" href="#">Request Access Reset</a>
         </form>
     </div>
 
@@ -147,13 +147,12 @@
     <nav class="doc-nav">
         <a href="index.html" class="brand">
             <img src="images/logo.png" alt="RRDCH">
-            <span class="portal-badge">Doctor Portal</span>
+            <span class="portal-badge" style="background:#ede9fe; color:#7c3aed;">Admin Portal</span>
         </a>
         <div class="nav-links">
-            <a href="#" class="active"><i data-lucide="layout-dashboard" width="16"></i> Dashboard</a>
-            <a href="#"><i data-lucide="users" width="16"></i> Patients</a>
-            <a href="#"><i data-lucide="calendar" width="16"></i> Schedule</a>
-            <a href="#"><i data-lucide="bar-chart-2" width="16"></i> Analytics</a>
+            <a href="#" class="active"><i data-lucide="layout-dashboard" width="16"></i> Main Center</a>
+            <a href="#"><i data-lucide="users-2" width="16"></i> Staff Ctrl</a>
+            <a href="#"><i data-lucide="database" width="16"></i> Database</a>
         </div>
         <a href="portal.html" class="exit-btn">
             <i data-lucide="log-out" width="16"></i> Exit
@@ -163,25 +162,24 @@
     <div class="doc-layout">
         <!-- Sidebar -->
         <aside class="doc-sidebar">
-            <div class="doc-profile">
-                <div class="avatar">DR</div>
-                <h3>Dr. Roshan M.</h3>
-                <p>Oral Surgery Dept.</p>
-                <div class="status-pill"><span class="dot"></span> On Duty</div>
+            <div class="doc-profile" style="background: linear-gradient(135deg, #4c1d95, #7c3aed);">
+                <div class="avatar">SA</div>
+                <h3>System Admin</h3>
+                <p>IT & Management Div.</p>
+                <div class="status-pill"><span class="dot"></span> Root Access</div>
             </div>
             <nav class="sidebar-nav">
-                <div class="section-label">Main</div>
-                <a href="#" class="active"><i data-lucide="layout-dashboard" width="17"></i> Dashboard</a>
-                <a href="#"><i data-lucide="list-ordered" width="17"></i> Today's Queue</a>
-                <a href="#"><i data-lucide="stethoscope" width="17"></i> Patient Records</a>
-                <a href="#"><i data-lucide="file-text" width="17"></i> Case Notes</a>
-                <div class="section-label">Management</div>
-                <a href="#"><i data-lucide="calendar-days" width="17"></i> My Schedule</a>
-                <a href="#"><i data-lucide="bell" width="17"></i> Notifications</a>
-                <a href="#"><i data-lucide="settings" width="17"></i> Settings</a>
-                <div class="section-label">Quick Links</div>
-                <a href="patients.html"><i data-lucide="clipboard-list" width="17"></i> Patient Portal</a>
-                <a href="departments.html"><i data-lucide="building-2" width="17"></i> Departments</a>
+                <div class="section-label">Central Node</div>
+                <a href="#" class="active"><i data-lucide="activity" width="17"></i> System Status</a>
+                <a href="#"><i data-lucide="shield" width="17"></i> Auth Logs</a>
+                <div class="section-label">Management Modules</div>
+                <a href="#"><i data-lucide="users" width="17"></i> Manage Patients</a>
+                <a href="#"><i data-lucide="user-plus" width="17"></i> Manage Staff/Doctors</a>
+                <a href="#"><i data-lucide="graduation-cap" width="17"></i> Manage Students</a>
+                <div class="section-label">Shortcuts</div>
+                <a href="patients.html"><i data-lucide="chevron-right" width="17"></i> Launch Patient Portal</a>
+                <a href="doctor-portal.html"><i data-lucide="chevron-right" width="17"></i> Launch Doctor Portal</a>
+                <a href="students.html"><i data-lucide="chevron-right" width="17"></i> Launch Student Portal</a>
             </nav>
         </aside>
 
@@ -191,92 +189,72 @@
             <!-- Stats Row -->
             <div class="stat-row">
                 <div class="stat-card">
-                    <div class="stat-ico blue"><i data-lucide="users" width="22"></i></div>
+                    <div class="stat-ico blue"><i data-lucide="stethoscope" width="22"></i></div>
                     <div>
-                        <div class="stat-num" id="statTotal">14</div>
-                        <div class="stat-label">Today's Patients</div>
+                        <div class="stat-num">42</div>
+                        <div class="stat-label">Active Doctors</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-ico green"><i data-lucide="check-circle" width="22"></i></div>
+                    <div class="stat-ico green"><i data-lucide="user-check" width="22"></i></div>
                     <div>
-                        <div class="stat-num" id="statDone">6</div>
-                        <div class="stat-label">Completed</div>
+                        <div class="stat-num">315</div>
+                        <div class="stat-label">OPD Patients (Live)</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-ico amber"><i data-lucide="clock" width="22"></i></div>
+                    <div class="stat-ico amber"><i data-lucide="graduation-cap" width="22"></i></div>
                     <div>
-                        <div class="stat-num" id="statWaiting">8</div>
-                        <div class="stat-label">Waiting</div>
+                        <div class="stat-num">450</div>
+                        <div class="stat-label">Students Logged In</div>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-ico red"><i data-lucide="alert-triangle" width="22"></i></div>
+                    <div class="stat-ico" style="background:#ede9fe; color:#7c3aed;"><i data-lucide="server" width="22"></i></div>
                     <div>
-                        <div class="stat-num">2</div>
-                        <div class="stat-label">Urgent Cases</div>
+                        <div class="stat-num">99.9%</div>
+                        <div class="stat-label">Server Uptime</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Today's Queue -->
+            <!-- Admin Logs -->
             <div class="d-card">
                 <div class="d-card-header">
-                    <h2><i data-lucide="list-ordered" width="20"></i> Today's Patient Queue</h2>
+                    <h2><i data-lucide="activity" width="20"></i> System Access Logs</h2>
                     <span class="badge" id="queueTime">Live — Updated just now</span>
                 </div>
                 <table class="queue-table">
                     <thead>
                         <tr>
-                            <th>Token</th>
-                            <th>Patient Name</th>
-                            <th>Visit Reason</th>
-                            <th>Time Slot</th>
-                            <th>Status</th>
+                            <th>User ID</th>
+                            <th>Role</th>
                             <th>Action</th>
+                            <th>Timestamp</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody id="queueBody">
                         <tr>
-                            <td><span class="token-badge">#41</span></td>
-                            <td><strong>Ananya R.</strong><br><span style="font-size:0.78rem;color:var(--muted);">9845112233</span></td>
-                            <td>Tooth extraction</td>
+                            <td><span class="token-badge" style="background:#0284c7;">P-9382</span></td>
+                            <td>Patient</td>
+                            <td>Booked Appointment</td>
                             <td>09:00 AM</td>
-                            <td><span class="status-tag done">Done</span></td>
-                            <td>—</td>
+                            <td><span class="status-tag done">Success</span></td>
                         </tr>
                         <tr>
-                            <td><span class="token-badge">#42</span></td>
-                            <td><strong>Ravi Kumar</strong><br><span style="font-size:0.78rem;color:var(--muted);">9900556677</span></td>
-                            <td>Post-op checkup</td>
+                            <td><span class="token-badge" style="background:#16a34a;">D-42</span></td>
+                            <td>Doctor</td>
+                            <td>Updated Case Notes</td>
                             <td>10:30 AM</td>
-                            <td><span class="status-tag ongoing">Ongoing</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-done" onclick="markDone(this)">Mark Done</button></div></td>
+                            <td><span class="status-tag done">Success</span></td>
                         </tr>
                         <tr>
-                            <td><span class="token-badge">#43</span></td>
-                            <td><strong>Meera Sharma</strong><br><span style="font-size:0.78rem;color:var(--muted);">9876543210</span></td>
-                            <td>Wisdom tooth pain</td>
+                            <td><span class="token-badge" style="background:#c39c5b;">S-1RR24</span></td>
+                            <td>Student</td>
+                            <td>Downloaded Syllabus</td>
                             <td>11:00 AM</td>
-                            <td><span class="status-tag called">Called</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Start</button></div></td>
-                        </tr>
-                        <tr>
-                            <td><span class="token-badge">#44</span></td>
-                            <td><strong>Farhan Iqbal</strong><br><span style="font-size:0.78rem;color:var(--muted);">9123456789</span></td>
-                            <td>Braces tightening</td>
-                            <td>11:30 AM</td>
-                            <td><span class="status-tag waiting">Waiting</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Call</button></div></td>
-                        </tr>
-                        <tr>
-                            <td><span class="token-badge">#45</span></td>
-                            <td><strong>Lakshmi D.</strong><br><span style="font-size:0.78rem;color:var(--muted);">9988776655</span></td>
-                            <td>Gum bleeding</td>
-                            <td>12:00 PM</td>
-                            <td><span class="status-tag waiting">Waiting</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Call</button></div></td>
+                            <td><span class="status-tag done">Success</span></td>
                         </tr>
                     </tbody>
                 </table>

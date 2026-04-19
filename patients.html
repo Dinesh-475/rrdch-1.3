@@ -88,6 +88,33 @@
     </style>
 </head>
 <body>
+    <!-- Secure Access Gateway -->
+    <div id="patientAuthOverlay" class="portal-login-overlay">
+        <a href="index.html" class="logo-box">
+            <img src="images/logo.png" alt="RRDCH">
+            <div style="display:flex; flex-direction:column;">
+                <strong style="color:#0f2d52; font-size:1rem; line-height:1.2;">RRDCH</strong>
+                <span style="font-size:0.7rem; color:#64748b;">Return to Website</span>
+            </div>
+        </a>
+        
+        <form class="form_main" id="patientLoginForm" onsubmit="event.preventDefault(); document.getElementById('patientAuthOverlay').classList.add('hidden'); setTimeout(()=>document.getElementById('patientAuthOverlay').style.display='none',400);">
+            <p class="heading">Patient Access</p>
+            
+            <div class="inputContainer">
+                <i data-lucide="user" class="inputIcon" width="16"></i>
+                <input type="text" class="inputField" placeholder="Patient ID or Phone No." required>
+            </div>
+            
+            <div class="inputContainer">
+                <i data-lucide="lock" class="inputIcon" width="16"></i>
+                <input type="password" class="inputField" placeholder="PIN / Password" required>
+            </div>
+            
+            <button id="button" type="submit">Verify & Login</button>
+            <a class="forgotLink" href="#">Forgot PIN?</a>
+        </form>
+    </div>
 <!-- Unified Top Nav -->
     <nav class="portal-nav">
         <a href="index.html" class="nav-brand">
