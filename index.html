@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RRDCH | Smart Healthcare & Education</title>
+    <meta name="description" content="Rajarajeshwari Dental College and Hospital - Excellence in Dental Care & Education">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+      (function(){ try { const l = localStorage.getItem('rrdch_lang'); const lang = (l==='kn')?'kn':'en'; document.documentElement.setAttribute('data-lang', lang); document.documentElement.setAttribute('lang', lang);} catch(e) {} })();
+    </script>
+    <style>
+        .chat-msg { padding:0.75rem 1rem; border-radius:12px; font-size:0.88rem; line-height:1.5; max-width:85%; }
+        .chat-msg.bot { background:white; border:1px solid #e2e8f0; align-self:flex-start; color:#1e293b; border-radius:12px 12px 12px 2px; }
+        .chat-msg.user { background:#2A6F97; color:white; align-self:flex-end; border-radius:12px 12px 2px 12px; }
+        .chat-msg.loading { background:white; border:1px solid #e2e8f0; color:#94a3b8; font-style:italic; }
+    </style>
+</head>
+<body data-public-page="true" data-page-id="home">
+    <!-- Public shell injects announcement, identity header, navbar, footer -->
+
+    <!-- Hero Section with Full Width Carousel -->
+    <header class="hero-full-width">
+
+        <div class="hero-image-container" style="width: 100%; height: 100%; position: relative;">
+            <img src="images/new_hero_bg.png" alt="RRDCH Campus Building" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65);">
+            
+            <div class="hero-overlay-content">
+                <div class="container text-center">
+                    <span class="hero-tag logo-chip"><img src="images/logo.png" alt="RRDCH logo badge"> Excellence in Dental Education & Care</span>
+                    <h1 class="hero-title hero-title-light">
+                        <span data-i18n="hero_title1">Rajarajeshwari Dental</span><br>
+                        <div data-i18n="hero_title2">College & Hospital</div>
+                    </h1>
+                    <p class="hero-desc hero-desc-light" data-i18n="hero_desc">
+                        Established to provide premier dental education and unparalleled patient care, fostering the next generation of healthcare professionals.
+                    </p>
+                    <div class="hero-actions hero-actions-center">
+                        <a href="patients.html" class="btn btn-primary" data-i18n="btn_book">Book Appointment</a>
+                        <a href="about.html" class="btn btn-outline-light">About College</a>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="hero-scroll-cue" data-scroll-target="#about" aria-label="Scroll to content">
+                <span class="hero-scroll-cue__text">Explore</span>
+                <span class="hero-scroll-cue__chev" aria-hidden="true"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Accreditations & Key Links -->
+    <section class="container animate-on-scroll" style="padding-top: 1rem; padding-bottom: 2rem;">
+        <h3 style="text-align: center; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 2rem;">Accreditations & Institutional Access</h3>
+        <div class="accreditation-logos">
+            <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/09/RRDCH-NABH-accredited.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="NABH"><img src="images/media__1776162900120.png" alt="NABH Accreditation"></a>
+            <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2013/08/Certificate-of-Accreditation.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="NAAC"><img src="images/media__1776162900148.png" alt="NAAC Accreditation"></a>
+            <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2026/02/ISO-certificate-of-registration-12.05.2027.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="ISO"><img src="images/media__1776162900187.png" alt="ISO Certification"></a>
+            
+            <!-- Further Accreditations -->
+            <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/07/SLMC.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="Sri Lanka Medical Council"><img src="images/media__1776163089873.png" alt="SLMC Accreditation"></a>
+            <a href="#" class="logo-item" title="Royal College of Physicians and Surgeons of Glasgow"><img src="images/media__1776163089935.png" alt="RCPSG Accreditation"></a>
+            <a href="#" class="logo-item" title="International Accreditation Organization"><img src="images/media__1776163089970.png" alt="IAO Accreditation"></a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section container animate-on-scroll">
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-number" data-target="32">0</span><span class="stat-suffix">+</span><p class="stat-label">Years of Excellence</p></div>
+        <div class="stat-card"><span class="stat-number" data-target="250">0</span><span class="stat-suffix">+</span><p class="stat-label">Dental Chair Units</p></div>
+        <div class="stat-card"><span class="stat-number" data-target="15000">0</span><span class="stat-suffix">+</span><p class="stat-label">Patients Treated Annually</p></div>
+        <div class="stat-card"><span class="stat-number" data-target="11">0</span><span class="stat-suffix"></span><p class="stat-label">Speciality Departments</p></div>
+        <div class="stat-card"><span class="stat-number" data-target="150">0</span><span class="stat-suffix">+</span><p class="stat-label">Faculty & Staff</p></div>
+        <div class="stat-card"><span class="stat-number" data-target="98">0</span><span class="stat-suffix">%</span><p class="stat-label">Patient Satisfaction</p></div>
+      </div>
+    </section>
+
+    <!-- About College -->
+    <section id="about" class="container">
+        <div class="grid-2" style="align-items: center;">
+            <div class="animate-on-scroll">
+                <h2 class="section-title" style="text-align: left;">About RRDCH</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Established in 1992, Rajarajeshwari Dental College and Hospital has grown into a premier institution of dental education and research in India. Affiliated to Rajiv Gandhi University of Health Sciences (RGUHS) and recognized by the Dental Council of India (DCI).</p>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Our mission is to foster comprehensive dental care, innovative research, and produce distinguished dental professionals.</p>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem; color: var(--text-main); font-weight: 500; margin-bottom: 2rem;">
+                    <li>✓ Recognized by Dental Council of India (DCI)</li>
+                    <li>✓ Affiliated to RGUHS, Karnataka</li>
+                    <li>✓ ISO 9001:2015 Certified Institution</li>
+                </ul>
+                <a href="about.html" class="btn btn-outline">Read Full History</a>
+            </div>
+            <div class="animate-on-scroll" style="transition-delay: 0.2s;">
+                <img src="images/media__1776159199603.jpg" alt="Medical Team" class="card" style="width: 100%; border-radius: var(--radius-xl); padding: 0; aspect-ratio: 4/3; object-fit: cover;">
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Slider -->
+    <div class="hero-slider-container" style="height: 450px; margin-top: 4rem; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 1100px; margin-left: auto; margin-right: auto;">
+        <div class="slide active">
+            <img src="images/media__1776159199583.jpg" alt="RRDCH Campus Image 1" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776159199603.jpg" alt="RRDCH Campus Image 2" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776159199631.jpg" alt="RRDCH Campus Image 3" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776159199698.jpg" alt="RRDCH Campus Image 4" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776159199722.jpg" alt="RRDCH Campus Image 5" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776164032199.jpg" alt="RRDCH Campus Image 6" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776164032379.jpg" alt="RRDCH Campus Image 7" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776164032415.jpg" alt="RRDCH Campus Image 8" style="filter: none;">
+        </div>
+        <div class="slide">
+            <img src="images/media__1776164032480.jpg" alt="RRDCH Campus Image 9" style="filter: none;">
+        </div>
+        <div class="slider-controls">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <section class="container" style="margin-top:3rem; margin-bottom:0.5rem;">
+        <h2 class="section-title">Campus Highlights</h2>
+        <p class="section-subtitle">A quick visual tour of facilities, student life, and patient care spaces.</p>
+        <div class="image-showcase-grid">
+            <article class="image-showcase-card animate-on-scroll">
+                <img src="pictures/home page images/slider_1.jpg" alt="RRDCH main campus block">
+                <div class="image-showcase-caption">
+                    <h4>Main Campus</h4>
+                    <p>Modern teaching and clinical infrastructure in one integrated space.</p>
+                </div>
+            </article>
+            <article class="image-showcase-card animate-on-scroll" style="transition-delay:0.06s;">
+                <img src="pictures/home page images/library.jpg" alt="RRDCH library and study area">
+                <div class="image-showcase-caption">
+                    <h4>Digital Library</h4>
+                    <p>Quiet academic environment with access to journals and references.</p>
+                </div>
+            </article>
+            <article class="image-showcase-card animate-on-scroll" style="transition-delay:0.12s;">
+                <img src="pictures/home page images/hospital.jpg" alt="RRDCH hospital patient treatment floor">
+                <div class="image-showcase-caption">
+                    <h4>Clinical Floors</h4>
+                    <p>High-volume patient care setup with specialized dental units.</p>
+                </div>
+            </article>
+            <article class="image-showcase-card animate-on-scroll" style="transition-delay:0.18s;">
+                <img src="pictures/home page images/auditorium.jpg" alt="RRDCH auditorium interior">
+                <div class="image-showcase-caption">
+                    <h4>Academic Events</h4>
+                    <p>Large auditorium for workshops, CDE programs, and conferences.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+
+
+
+    <!-- Achievements -->
+    <section class="container" style="background: var(--secondary); border-radius: var(--radius-xl); padding: 4rem; margin-top: 2rem;">
+        <h2 class="section-title">Institutional Prestige</h2>
+        <div class="grid-3" style="text-align: center; margin-top: 3rem;">
+            <div class="animate-on-scroll">
+                <div style="font-size: 3rem; color: var(--primary); font-weight: 800; margin-bottom: 0.5rem">NAAC</div>
+                <div style="font-weight: 600">A Grade Accredited</div>
+            </div>
+            <div class="animate-on-scroll" style="transition-delay: 0.1s">
+                <div style="font-size: 3rem; color: var(--primary); font-weight: 800; margin-bottom: 0.5rem">250+</div>
+                <div style="font-weight: 600">Modern Dental Units</div>
+            </div>
+            <div class="animate-on-scroll" style="transition-delay: 0.2s">
+                <div style="font-size: 3rem; color: var(--primary); font-weight: 800; margin-bottom: 0.5rem">30+</div>
+                <div style="font-weight: 600">Years of Academic Legacy</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campus Tour -->
+    <section class="container" style="margin-top: 2rem;">
+        <h2 class="section-title">Campus Tour</h2>
+        <p style="text-align:center; color: var(--text-muted); margin-bottom: 2.5rem; font-size: 1rem;">Experience RRDCH like never before — explore our campus in 360° or watch our institutional tour video.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); position: relative;">
+                <div style="background: #0f172a; color: white; padding: 0.75rem 1.25rem; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+                    360° Street View — RRDCH Campus
+                </div>
+                <iframe src="https://www.google.com/maps/embed?pb=!4v1776281365595!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJQ0txcW45RlE.!2m2!1d12.8872363070956!2d77.4508580774884!3f284.27121207218994!4f-15.702741423491702!5f0.4000000000000002" width="100%" height="380" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); position: relative;">
+                <div style="background: #c00; color: white; padding: 0.75rem 1.25rem; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    Institutional Tour Video
+                </div>
+                <iframe src="https://www.youtube.com/embed/ktmSY1X4Gls?si=DSTFUw3p_bQUXsJL" width="100%" height="380" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="RRDCH Campus Tour"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Unified Portals Overview -->
+    <section id="portals" class="container" style="margin-top: 5rem;">
+        <h2 class="section-title">Seamless Access</h2>
+        <p class="section-subtitle">Dedicated portals for our community</p>
+
+        <div class="grid-3">
+            <a href="patients.html" class="card animate-on-scroll">
+                <div class="card-header">
+                    <div class="card-icon"><i data-lucide="users" width="32" height="32" color="#2A6F97"></i></div>
+                    <h3 class="card-title" data-i18n="card_patients">Patient Portal</h3>
+                </div>
+                <p class="card-body" data-i18n="card_patients_desc">Book appointments, track queue status, and access records.</p>
+                <div style="margin-top: 1.5rem; color: var(--primary); font-weight: 600; font-size: 0.9rem;">Go to Dashboard →</div>
+            </a>
+
+            <a href="students.html" class="card animate-on-scroll" style="transition-delay: 0.1s">
+                <div class="card-header">
+                    <div class="card-icon"><i data-lucide="graduation-cap" width="32" height="32" color="#2A6F97"></i></div>
+                    <h3 class="card-title" data-i18n="card_students">Student Portal</h3>
+                </div>
+                <p class="card-body" data-i18n="card_students_desc">Access syllabus, complain to hostel, and view events.</p>
+                 <div style="margin-top: 1.5rem; color: var(--primary); font-weight: 600; font-size: 0.9rem;">Go to Dashboard →</div>
+            </a>
+
+            <a href="doctors.html" class="card animate-on-scroll" style="transition-delay: 0.2s">
+                <div class="card-header">
+                    <div class="card-icon"><i data-lucide="stethoscope" width="32" height="32" color="#2A6F97"></i></div>
+                    <h3 class="card-title" data-i18n="card_doctors">Doctor Dashboard</h3>
+                </div>
+                <p class="card-body" data-i18n="card_doctors_desc">Manage patient schedules, track live updates, and follow-ups.</p>
+                 <div style="margin-top: 1.5rem; color: var(--primary); font-weight: 600; font-size: 0.9rem;">Go to Dashboard →</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Departments Preview -->
+    <section id="departments" class="container" style="margin-top: 6rem;">
+        <h2 class="section-title">Academic Excellence</h2>
+        <p class="section-subtitle">Explore our specialized dental departments</p>
+        <div class="dept-grid">
+            <div class="dept-card animate-on-scroll">
+                <div class="dept-icon"><i data-lucide="scan-line" width="36" height="36" color="#2A6F97"></i></div>
+                <h4>Oral Medicine & Radiology</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Diagnosis, medical management of oral diseases, and advanced imaging.</p>
+            </div>
+            <div class="dept-card animate-on-scroll" style="transition-delay: 0.1s">
+                <div class="dept-icon"><i data-lucide="scissors" width="36" height="36" color="#2A6F97"></i></div>
+                <h4>Oral & Maxillofacial Surgery</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Surgical treatment of diseases, injuries and defects in the head, neck, face.</p>
+            </div>
+            <div class="dept-card animate-on-scroll" style="transition-delay: 0.2s">
+                <div class="dept-icon"><i data-lucide="microscope" width="36" height="36" color="#2A6F97"></i></div>
+                <h4>Prosthetics & Crown Bridge</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Restoration and maintenance of oral function, comfort, and appearance.</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="departments.html" class="btn btn-outline">View All 12 Departments</a>
+        </div>
+    </section>
+
+    <!-- Events & Announcements -->
+    <section id="events" class="container" style="background: rgba(42,111,151,0.03); border-radius: var(--radius-xl); padding: 4rem;">
+        <h2 class="section-title">News & Events</h2>
+        <div class="grid-2" style="margin-top: 3rem;">
+            <div class="event-list">
+                <div class="event-card-wide animate-on-scroll">
+                    <div class="event-date-box">
+                        <span class="day">10</span>
+                        <span class="month">Apr</span>
+                    </div>
+                    <div class="event-details">
+                        <span class="badge badge-success">Outreach</span>
+                        <h3 style="margin-top: 0.5rem">World Health Day Camp</h3>
+                        <p>Dental screening and treatment camp organized by the Department of Public Health Dentistry.</p>
+                    </div>
+                </div>
+                <div class="event-card-wide animate-on-scroll" style="transition-delay: 0.1s">
+                    <div class="event-date-box">
+                        <span class="day">02</span>
+                        <span class="month">Apr</span>
+                    </div>
+                    <div class="event-details">
+                        <span class="badge badge-warning">Workshop</span>
+                        <h3 style="margin-top: 0.5rem">Zygomatic Implant Workshop</h3>
+                        <p>A Hands-on Workshop and Live Surgical Demonstration by Department of Implantology.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="animate-on-scroll" style="display:flex; align-items:center; justify-content:center;">
+                <div class="card" style="width:100%; border:1px solid var(--primary); text-align:center;">
+                    <h3 style="color:var(--primary); margin-bottom:1rem;">Have an Inquiry?</h3>
+                    <p style="color:var(--text-muted); margin-bottom:2rem;">Explore admissions for BDS, MDS, PhD, and Certificate Courses for 2026-27.</p>
+                    <a href="admissions.html" class="btn btn-primary">Admissions Info</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ── Community Feedback Section ── -->
+    <section class="container" style="margin-top:2rem; padding:4rem 0;">
+        <h2 class="section-title">What Patients &amp; Students Say</h2>
+        <p style="text-align:center; color:var(--text-muted); margin-bottom:2.5rem; font-size:1rem;">Based on real community feedback from patients, students, and faculty.</p>
+
+        <!-- Overall Rating Row -->
+        <div style="display:flex; align-items:center; gap:3rem; background:white; border:1px solid #e2e8f0; border-radius:16px; padding:2.5rem 3rem; margin-bottom:2rem; box-shadow:0 4px 12px rgba(0,0,0,0.04); flex-wrap:wrap;">
+            <div style="text-align:center; min-width:120px;">
+                <div style="font-size:4.5rem; font-weight:900; color:#1A365D; line-height:1;">4.0</div>
+                <div style="color:#f59e0b; font-size:1.5rem; letter-spacing:2px; margin:0.5rem 0;">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                <div style="font-size:0.85rem; color:#64748b; font-weight:600;">20,847 Ratings</div>
+            </div>
+            <div style="flex:1; min-width:200px;">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.6rem;">
+                    <span style="font-size:0.85rem; font-weight:600; color:#475569; width:40px;">5 &#9733;</span>
+                    <div style="flex:1; height:10px; background:#e2e8f0; border-radius:5px; overflow:hidden;"><div style="width:38%; height:100%; background:#22c55e; border-radius:5px;"></div></div>
+                    <span style="font-size:0.8rem; color:#64748b; width:35px;">38%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.6rem;">
+                    <span style="font-size:0.85rem; font-weight:600; color:#475569; width:40px;">4 &#9733;</span>
+                    <div style="flex:1; height:10px; background:#e2e8f0; border-radius:5px; overflow:hidden;"><div style="width:42%; height:100%; background:#86efac; border-radius:5px;"></div></div>
+                    <span style="font-size:0.8rem; color:#64748b; width:35px;">42%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.6rem;">
+                    <span style="font-size:0.85rem; font-weight:600; color:#475569; width:40px;">3 &#9733;</span>
+                    <div style="flex:1; height:10px; background:#e2e8f0; border-radius:5px; overflow:hidden;"><div style="width:12%; height:100%; background:#fbbf24; border-radius:5px;"></div></div>
+                    <span style="font-size:0.8rem; color:#64748b; width:35px;">12%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.6rem;">
+                    <span style="font-size:0.85rem; font-weight:600; color:#475569; width:40px;">2 &#9733;</span>
+                    <div style="flex:1; height:10px; background:#e2e8f0; border-radius:5px; overflow:hidden;"><div style="width:5%; height:100%; background:#fb923c; border-radius:5px;"></div></div>
+                    <span style="font-size:0.8rem; color:#64748b; width:35px;">5%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <span style="font-size:0.85rem; font-weight:600; color:#475569; width:40px;">1 &#9733;</span>
+                    <div style="flex:1; height:10px; background:#e2e8f0; border-radius:5px; overflow:hidden;"><div style="width:3%; height:100%; background:#f87171; border-radius:5px;"></div></div>
+                    <span style="font-size:0.8rem; color:#64748b; width:35px;">3%</span>
+                </div>
+            </div>
+            <div style="min-width:200px; display:flex; flex-direction:column; gap:0.75rem;">
+                <div style="background:#f0fdf4; border-radius:8px; padding:1rem; text-align:center;">
+                    <div style="font-size:1.5rem; font-weight:800; color:#16a34a;">96%</div>
+                    <div style="font-size:0.78rem; color:#64748b;">Would Recommend</div>
+                </div>
+                <div style="background:#eff6ff; border-radius:8px; padding:1rem; text-align:center;">
+                    <div style="font-size:1.5rem; font-weight:800; color:#2563eb;">4.3</div>
+                    <div style="font-size:0.78rem; color:#64748b;">Facilities Rating</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Cards -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1.25rem; margin-bottom:2.5rem;">
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:12px; padding:1.5rem; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:#1A365D; color:white; display:flex; align-items:center; justify-content:center; font-weight:700;">R</div>
+                    <div><div style="font-weight:700; font-size:0.95rem;">Rekha M.</div><div style="font-size:0.78rem; color:#64748b;">Patient • Mar 2026</div></div>
+                    <div style="margin-left:auto; color:#f59e0b; font-size:1.1rem;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                </div>
+                <p style="color:#475569; font-size:0.9rem; line-height:1.6; margin:0;">Excellent dental care. The orthodontics team was very patient and the facilities are world-class. Highly recommended!</p>
+            </div>
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:12px; padding:1.5rem; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:#2A6F97; color:white; display:flex; align-items:center; justify-content:center; font-weight:700;">A</div>
+                    <div><div style="font-weight:700; font-size:0.95rem;">Arjun S.</div><div style="font-size:0.78rem; color:#64748b;">Student (BDS) • Jan 2026</div></div>
+                    <div style="margin-left:auto; color:#f59e0b; font-size:1.1rem;">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+                </div>
+                <p style="color:#475569; font-size:0.9rem; line-height:1.6; margin:0;">Great college with qualified faculty. The digital library and lab facilities are very well equipped. The ERP system is a huge plus.</p>
+            </div>
+            <div style="background:white; border:1px solid #e2e8f0; border-radius:12px; padding:1.5rem; box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:#166534; color:white; display:flex; align-items:center; justify-content:center; font-weight:700;">P</div>
+                    <div><div style="font-weight:700; font-size:0.95rem;">Priya N.</div><div style="font-size:0.78rem; color:#64748b;">Parent • Feb 2026</div></div>
+                    <div style="margin-left:auto; color:#f59e0b; font-size:1.1rem;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                </div>
+                <p style="color:#475569; font-size:0.9rem; line-height:1.6; margin:0;">My daughter was treated here for braces. The entire team was professional and kind. The online appointment system made everything seamless.</p>
+            </div>
+        </div>
+
+        <!-- Submit Review Form -->
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:2.5rem; max-width:700px; margin:0 auto;">
+            <h3 style="font-size:1.2rem; color:#0f172a; margin-bottom:0.5rem; text-align:center;">Share Your Experience</h3>
+            <p style="text-align:center; color:#64748b; font-size:0.9rem; margin-bottom:1.5rem;">Your feedback helps us improve and helps others make informed decisions.</p>
+            <div style="display:flex; justify-content:center; gap:0.5rem; font-size:2rem; margin-bottom:1.5rem; cursor:pointer;" id="starRow">
+                <span class="fstar" onclick="setRating(1)" style="color:#cbd5e1; transition:0.15s;">&#9733;</span>
+                <span class="fstar" onclick="setRating(2)" style="color:#cbd5e1; transition:0.15s;">&#9733;</span>
+                <span class="fstar" onclick="setRating(3)" style="color:#cbd5e1; transition:0.15s;">&#9733;</span>
+                <span class="fstar" onclick="setRating(4)" style="color:#cbd5e1; transition:0.15s;">&#9733;</span>
+                <span class="fstar" onclick="setRating(5)" style="color:#cbd5e1; transition:0.15s;">&#9733;</span>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                <input type="text" id="fbName" placeholder="Your Name" style="padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:8px; font-family:inherit; font-size:0.95rem; width:100%; box-sizing:border-box;">
+                <input type="text" id="fbRole" placeholder="Patient / Student / Faculty" style="padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:8px; font-family:inherit; font-size:0.95rem; width:100%; box-sizing:border-box;">
+            </div>
+            <textarea id="fbMsg" placeholder="Write your review here..." rows="4" style="width:100%; padding:0.8rem 1rem; border:1px solid #cbd5e1; border-radius:8px; font-family:inherit; font-size:0.95rem; resize:vertical; box-sizing:border-box; margin-bottom:1rem;"></textarea>
+            <div id="fbSuccess" style="display:none; background:#dcfce7; border:1px solid #bbf7d0; border-radius:8px; padding:1rem; text-align:center; color:#166534; font-weight:600; margin-bottom:1rem;">Thank you! Your review has been submitted successfully.</div>
+            <button onclick="submitFeedback()" style="width:100%; padding:0.9rem; background:#2A6F97; color:white; border:none; border-radius:8px; font-weight:700; font-size:1rem; cursor:pointer;">Submit Review</button>
+        </div>
+    </section>
+    <script>
+        let fbRating = 0;
+        function setRating(n) {
+            fbRating = n;
+            document.querySelectorAll('.fstar').forEach((s, i) => {
+                s.style.color = i < n ? '#f59e0b' : '#cbd5e1';
+            });
+        }
+        function submitFeedback() {
+            const name = document.getElementById('fbName').value.trim();
+            const msg = document.getElementById('fbMsg').value.trim();
+            if (!name || !msg || fbRating === 0) {
+                alert('Please fill in your name, select a star rating, and write a review.');
+                return;
+            }
+            document.getElementById('fbSuccess').style.display = 'block';
+            document.getElementById('fbName').value = '';
+            document.getElementById('fbRole').value = '';
+            document.getElementById('fbMsg').value = '';
+            fbRating = 0;
+            document.querySelectorAll('.fstar').forEach(s => s.style.color = '#cbd5e1');
+            setTimeout(() => document.getElementById('fbSuccess').style.display = 'none', 4000);
+        }
+    </script>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <img src="images/logo.png" alt="RRDCH Logo" class="footer-logo">
+                <p>No. 14, Ramohalli Cross, Kumbalgodu,<br>Mysore Road, Bangalore - 560074.</p>
+                <div style="margin-top: 1rem;">
+                    <strong>Ph:</strong> +91-80-2843 7150<br>
+                    <strong>Email:</strong> principalrrdch@gmail.com
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Academics</h4>
+                <ul>
+                    <li><a href="admissions.html">Admissions</a></li>
+                    <li><a href="departments.html">Departments</a></li>
+                    <li><a href="students.html">Student Portal</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Hospital Services</h4>
+                <ul>
+                    <li><a href="patients.html">Book Appointment</a></li>
+                    <li><a href="patients.html">Patient Portal</a></li>
+                    <li><a href="doctors.html">Doctor Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Rajarajeshwari Dental College and Hospital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/site-context.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/public-shell.js"></script>
+    <script src="js/script.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+    
+    
+    <!-- Floating Chat Widget -->
+    <div id="chatBubble" onclick="toggleChat()" title="Ask RRDCH AI Assistant" style="position:fixed; bottom:24px; right:24px; width:64px; height:64px; background:linear-gradient(135deg, #2A6F97, #1A365D); border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 32px rgba(42,111,151,0.4); z-index:9999; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color:white; font-size:1.8rem;">
+      <img src="images/logo.png" alt="RRDCH assistant" style="width:38px; height:38px; border-radius:50%; background:#fff; padding:4px; object-fit:contain;">
+    </div>
+    
+    <div id="chatPanel" style="display:none; opacity:0; pointer-events:none; position:fixed; bottom:100px; right:24px; width:380px; height:550px; background:white; border-radius:24px; box-shadow:0 15px 50px rgba(0,0,0,0.15); z-index:9998; flex-direction:column; overflow:hidden; border:1px solid rgba(226,232,240,0.8); transform:translateY(20px) scale(0.95); transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+      <div style="background:linear-gradient(135deg, #1A365D, #2A6F97); color:white; padding:1.25rem 1.5rem; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:0.5rem;">✨ RRDCH Assistant</div>
+          <div style="font-size:0.8rem; opacity:0.8; margin-top:2px;">Powered by AI • Always active</div>
+        </div>
+        <button onclick="toggleChat()" style="background:rgba(255,255,255,0.2); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1.2rem; display:flex; align-items:center; justify-content:center; transition:0.2s;">✕</button>
+      </div>
+      <div id="chatMessages" style="flex:1; overflow-y:auto; padding:1.5rem; display:flex; flex-direction:column; gap:1rem; background:#f8fafc;">
+        <div class="chat-msg bot" style="padding:0.85rem 1.15rem; border-radius:16px; font-size:0.95rem; line-height:1.5; max-width:85%; background:white; border:1px solid #e2e8f0; align-self:flex-start; color:#1e293b; border-bottom-left-radius:4px; box-shadow:0 2px 5px rgba(0,0,0,0.05); animation:fadeInUp 0.3s ease;">Hello! I'm the RRDCH automated assistant. Feel free to ask me anything about our facilities, doctors, admissions, or treatments! 🦷</div>
+      </div>
+      <div style="padding:1rem; background:white; border-top:1px solid #e2e8f0; display:flex; gap:0.75rem; align-items:center;">
+        <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1; padding:0.8rem 1.2rem; border:1px solid #cbd5e1; border-radius:24px; font-size:0.95rem; outline:none; transition:0.2s; background:#f8fafc;" onkeydown="if(event.key==='Enter') sendChat()">
+        <button onclick="sendChat()" style="background:#2A6F97; color:white; border:none; width:42px; height:42px; border-radius:50%; cursor:pointer; font-weight:600; display:flex; align-items:center; justify-content:center; transition:0.2s;">
+           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px; height:20px; transform:translate(1px, 0px);"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
+    <style>
+      #chatBubble:hover { transform:scale(1.1) translateY(-5px) !important; box-shadow:0 12px 40px rgba(42,111,151,0.5) !important; }
+      @keyframes wave { 0%, 60%, 100% { transform: rotate(0deg); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
+      #chatPanel.active { opacity:1 !important; pointer-events:all !important; transform:translateY(0) scale(1) !important; }
+      @keyframes fadeInUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+      .typing-indicator { display:flex; gap:4px; align-items:center; padding:10px 15px; background:white; border-radius:16px; border-bottom-left-radius:4px; border:1px solid #e2e8f0; width:max-content; box-shadow:0 2px 5px rgba(0,0,0,0.05); animation:fadeInUp 0.3s ease; }
+      .typing-dot { width:6px; height:6px; background:#94a3b8; border-radius:50%; animation: typing 1.4s infinite ease-in-out both; }
+      .typing-dot:nth-child(1) { animation-delay:-0.32s; }
+      .typing-dot:nth-child(2) { animation-delay:-0.16s; }
+      @keyframes typing { 0%, 80%, 100% { transform:scale(0); } 40% { transform:scale(1); } }
+      #chatInput:focus { border-color:#2A6F97 !important; background:white !important; box-shadow:0 0 0 3px rgba(42,111,151,0.1) !important; }
+      button[onclick="sendChat()"]:hover { background:#1A365D !important; transform:scale(1.05) !important; }
+    </style>
+
+</body>
+</html>

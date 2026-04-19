@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1, "icon": "🦷", "name": "Oral & Maxillofacial Surgery",
+    "short": "Oral Surgery",
+    "hod": "Dr. Suresh Kumar, MDS, FDSRCS",
+    "desc": "Expert care in tooth extractions, jaw surgery, orthognathic surgery, and implant placement. State-of-the-art surgical suites.",
+    "scope": ["Complex extractions", "Jaw surgery", "Orthognathic surgery", "Implant placement", "Bone augmentation", "Facial trauma"],
+    "timings": "Mon–Sat: 9:00 AM – 5:00 PM",
+    "equipment": ["Surgical microscopes", "Piezoelectric bone surgery units", "Laser systems", "CBCT navigation"],
+    "image": "https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 2, "icon": "🔬", "name": "Conservative Dentistry & Endodontics",
+    "short": "Endodontics",
+    "hod": "Dr. Meenakshi Rao, MDS",
+    "desc": "Comprehensive root canal treatments, tooth restoration, and composite fillings using rotary endodontic systems.",
+    "scope": ["Root canal therapy", "Composite restorations", "Tooth-colored fillings", "Bleaching", "Ceramic inlays"],
+    "timings": "Mon–Sat: 9:00 AM – 4:30 PM",
+    "equipment": ["Rotary endodontics", "Apex locators", "Digital X-ray", "Magnification loupes"],
+    "image": "https://images.unsplash.com/photo-1598993200924-f17548c2c19e?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 3, "icon": "😁", "name": "Orthodontics & Dentofacial Orthopedics",
+    "short": "Orthodontics",
+    "hod": "Dr. Anita Krishnan, MDS",
+    "desc": "Correcting misaligned teeth and jaws using modern braces, clear aligners, and functional appliances.",
+    "scope": ["Metal & ceramic braces", "Clear aligners", "Palatal expanders", "Pediatric ortho", "Surgical orthodontics"],
+    "timings": "Mon–Sat: 9:00 AM – 5:00 PM",
+    "equipment": ["Digital cephalometric units", "3D model scanners", "Clear aligner printers"],
+    "image": "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 4, "icon": "👑", "name": "Prosthodontics, Crown & Bridge",
+    "short": "Prosthodontics",
+    "hod": "Dr. Rajendra Prasad, MDS",
+    "desc": "Full mouth rehabilitation, dentures, crowns, bridges, and implant-supported prostheses for lasting smiles.",
+    "scope": ["Complete dentures", "Partial dentures", "Crowns & bridges", "Implant prosthetics", "Full mouth rehab"],
+    "timings": "Mon–Sat: 9:00 AM – 4:30 PM",
+    "equipment": ["CAD/CAM milling unit", "Digital impression scanners", "Ceramic furnaces"],
+    "image": "https://images.unsplash.com/photo-1542880796-03c0032b4b7a?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 5, "icon": "🌿", "name": "Periodontology",
+    "short": "Periodontology",
+    "hod": "Dr. Kavita Nair, MDS, PGCOI",
+    "desc": "Treatment of gum disease, scaling and root planing, flap surgeries, and advanced bone grafting procedures.",
+    "scope": ["Gum disease treatment", "Scaling & polishing", "Flap surgeries", "Bone grafting", "Laser gum therapy"],
+    "timings": "Mon–Sat: 9:00 AM – 5:00 PM",
+    "equipment": ["Ultrasonic scalers", "Dental lasers", "Guided bone regeneration kits"],
+    "image": "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 6, "icon": "🧬", "name": "Oral Pathology & Microbiology",
+    "short": "Oral Pathology",
+    "hod": "Dr. Venkataraman, MDS, PhD",
+    "desc": "Biopsies, oral cancer screening, pathological diagnosis. Houses Real-Time PCR facility attracting research nationally.",
+    "scope": ["Oral biopsies", "Cancer screening", "Histopathology", "Cytology", "PCR diagnostics"],
+    "timings": "Mon–Fri: 9:00 AM – 4:00 PM",
+    "equipment": ["Real-Time PCR", "Fluorescence microscopes", "Histopathology lab", "Cryostat"],
+    "image": "https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 7, "icon": "📡", "name": "Oral Medicine & Radiology",
+    "short": "Oral Medicine",
+    "hod": "Dr. Shobha Hebbale, MDS",
+    "desc": "Advanced CBCT imaging, X-ray diagnosis, oral medicine, and TMJ disorder management.",
+    "scope": ["CBCT imaging", "OPG X-rays", "TMJ analysis", "Oral medicine diagnosis", "Sleep disorders"],
+    "timings": "Mon–Sat: 9:00 AM – 4:30 PM",
+    "equipment": ["CBCT unit (installed 2015)", "Digital OPG", "Cephalometric unit", "Intraoral sensors"],
+    "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 8, "icon": "🧒", "name": "Pediatric & Preventive Dentistry",
+    "short": "Pediatric Dentistry",
+    "hod": "Dr. Sudha Mohan, MDS",
+    "desc": "Specialized gentle dental care for children, fluoride treatments, sealants, and habit-breaking appliances.",
+    "scope": ["Children's dentistry", "Fluoride treatments", "Pit & fissure sealants", "Space maintainers", "Habit appliances"],
+    "timings": "Mon–Sat: 9:00 AM – 4:00 PM",
+    "equipment": ["Child-friendly dental chairs", "Nitrous oxide sedation", "Laughing gas units"],
+    "image": "https://images.unsplash.com/photo-1606277259648-52b3149a622f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 9, "icon": "🏘️", "name": "Public Health Dentistry",
+    "short": "Public Health",
+    "hod": "Dr. Mala Shankar, MDS, MPH",
+    "desc": "Community dental health programs, awareness camps, school dental care, and preventive dentistry outreach.",
+    "scope": ["Community camps", "School programs", "Tobacco cessation", "PHC surveys", "Oral hygiene awareness"],
+    "timings": "Mon–Fri: 9:00 AM – 4:00 PM",
+    "equipment": ["Mobile dental unit", "Camp equipment", "Fluoride varnish kits"],
+    "image": "https://images.unsplash.com/photo-1584308666744-24d5e4b6c310?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": 10, "icon": "⚙️", "name": "Oral Implantology",
+    "short": "Implantology",
+    "hod": "Dr. Arun Kothari, MDS, PGCOI",
+    "desc": "Advanced certificate program in implant placement, bone augmentation, and guided implant surgery.",
+    "scope": ["Single implants", "Multiple implants", "All-on-4/All-on-6", "Bone augmentation", "Guided surgery"],
+    "timings": "Tue, Thu, Sat: 10:00 AM – 4:00 PM",
+    "equipment": ["Implant surgical kits", "Bone densitometer", "CBCT navigation software"],
+    "image": "https://images.unsplash.com/photo-1598993200924-f17548c2c19e?auto=format&fit=crop&w=800&q=80"
+  }
+]

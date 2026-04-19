@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Login | RRDCH — Student, Doctor &amp; Admin Access</title>
+  <meta name="description" content="Access the RRDCH digital portal. Students, PG doctors, and administrators can log in to manage academics, OPD schedules, and institutional records.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/login.html">
+
+  <meta name="description" content="RRDCH Login — Student, Patient, PG Doctor, and Admin portal access.">
+  <title>Portal Login — RRDCH</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    body { background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, #2E86AB 100%); min-height: 100vh; display: flex; flex-direction: column; }
+    .login-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .login-card { background: var(--surface); border-radius: var(--radius-lg); box-shadow: 0 20px 60px rgba(0,0,0,0.25); width: 100%; max-width: 480px; overflow: hidden; }
+    .login-header { background: linear-gradient(135deg, var(--navy), var(--teal)); padding: 2rem; text-align: center; }
+    .login-logo { width: 60px; height: 60px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; color: var(--navy); margin: 0 auto 1rem; }
+    .login-body { padding: 2rem; }
+    .role-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.75rem; }
+    .role-tab { flex: 1; min-width: 100px; padding: 0.6rem 0.75rem; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--bg); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all var(--transition); text-align: center; color: var(--muted); }
+    .role-tab:hover { border-color: var(--navy); color: var(--navy); }
+    .role-tab.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .demo-creds { background: rgba(46,134,171,0.06); border: 1px solid rgba(46,134,171,0.2); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.25rem; font-size: 0.8rem; }
+    .demo-creds h5 { color: var(--teal); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; }
+    .cred-row { display: flex; justify-content: space-between; margin-bottom: 0.2rem; }
+    .cred-key { color: var(--muted); }
+    .cred-val { color: var(--text); font-weight: 600; font-family: monospace; }
+    .login-footer { background: var(--bg); padding: 1rem 2rem; border-top: 1px solid var(--border); display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .login-footer a { font-size: 0.8rem; color: var(--muted); transition: color var(--transition); }
+    .login-footer a:hover { color: var(--navy); }
+    .error-msg { background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3); border-radius: var(--radius-md); padding: 0.75rem 1rem; font-size: 0.875rem; color: var(--danger); margin-bottom: 1rem; display: none; }
+  </style>
+</head>
+<body>
+
+<div style="background:rgba(255,255,255,0.05);padding:0.6rem 1.5rem;text-align:center;">
+  <a href="index.html" style="color:rgba(255,255,255,0.6);font-size:0.82rem;">← Back to RRDCH Home</a>
+</div>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="login-logo" style="padding:0;overflow:hidden;background:#fff;border:2px solid rgba(255,255,255,0.35);">
+        <img src="assets/images/badges/rrdch-logo.png" alt="RRDCH" style="width:100%;height:100%;object-fit:contain;">
+      </div>
+      <h2 style="color:#fff;font-size:1.3rem;margin-bottom:0.3rem;">RRDCH Campus Portal</h2>
+      <p style="color:rgba(255,255,255,0.65);font-size:0.82rem;">Rajarajeswari Dental College & Hospital, Bengaluru</p>
+    </div>
+    <div class="login-body">
+      <!-- Role Selector -->
+      <div class="role-tabs">
+        <button class="role-tab active" data-role="student" onclick="selectRole('student', this)">🎓 Student</button>
+        <button class="role-tab" data-role="patient" onclick="selectRole('patient', this)">🏥 Patient</button>
+        <button class="role-tab" data-role="doctor" onclick="selectRole('doctor', this)">👨‍⚕️ PG Doctor</button>
+        <button class="role-tab" data-role="admin" onclick="selectRole('admin', this)">⚙️ Admin</button>
+      </div>
+
+      <!-- Demo credentials hint -->
+      <div class="demo-creds" id="demoCreds">
+        <h5>🔐 Demo Credentials</h5>
+        <div class="cred-row"><span class="cred-key" id="demoIdLabel">Student ID:</span><span class="cred-val" id="demoId">BDS2023001</span></div>
+        <div class="cred-row"><span class="cred-key">Password:</span><span class="cred-val" id="demoPass">RRDCH@2023001</span></div>
+      </div>
+
+      <div class="error-msg" id="errorMsg">❌ Invalid credentials. Please check your ID and password.</div>
+
+      <div class="form-group">
+        <label class="form-label" id="idLabel">Student ID</label>
+        <input class="form-control" id="loginId" placeholder="Enter your Student ID" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div style="position:relative;">
+          <input class="form-control" id="loginPass" type="password" placeholder="Enter your password" autocomplete="current-password" style="padding-right:3rem;">
+          <button onclick="togglePwd()" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted);font-size:1rem;" id="pwdToggle">👁️</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.875rem;color:var(--text);">
+          <input type="checkbox" id="rememberMe"> Remember me for 7 days
+        </label>
+        <a href="#" style="font-size:0.82rem;color:var(--teal);">Forgot Password?</a>
+      </div>
+      <button class="btn btn-navy btn-lg w-full" onclick="doLogin()" style="justify-content:center;margin-bottom:1rem;" id="loginBtn">
+        🔐 Sign In
+      </button>
+      <div style="text-align:center;font-size:0.82rem;color:var(--muted);">
+        Are you a patient? <a href="appointments.html" style="color:var(--teal);">Book an appointment without logging in →</a>
+      </div>
+    </div>
+    <div class="login-footer">
+      <a href="appointments.html">📅 Book Appointment</a>
+      <a href="departments.html">🏥 Departments</a>
+      <a href="contact.html">📞 Contact</a>
+      <a href="admissions.html">🎓 Admissions</a>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/auth.js"></script>
+<script>
+let currentRole = 'student';
+const roleConfig = {
+  student: { label: 'Student ID', placeholder: 'e.g. BDS2023001', demoId: 'BDS2023001', demoPass: 'RRDCH@2023001', demoIdLabel: 'Student ID:' },
+  patient: { label: 'Registered Mobile', placeholder: 'e.g. 9876543210', demoId: '9876543210', demoPass: '123456', demoIdLabel: 'Mobile No.:' },
+  doctor:  { label: 'Employee/PG Email', placeholder: 'e.g. pg.001@rrdch.org', demoId: 'pg.001@rrdch.org', demoPass: 'PG@0012026', demoIdLabel: 'Email ID:' },
+  admin:   { label: 'Admin Email', placeholder: 'e.g. admin@rrdch.org', demoId: 'admin@rrdch.org', demoPass: 'Admin@RRDCH2026', demoIdLabel: 'Email ID:' },
+};
+
+function selectRole(role, btn) {
+  currentRole = role;
+  document.querySelectorAll('.role-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const cfg = roleConfig[role];
+  document.getElementById('idLabel').textContent = cfg.label;
+  document.getElementById('loginId').placeholder = cfg.placeholder;
+  document.getElementById('loginId').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('demoIdLabel').textContent = cfg.demoIdLabel;
+  document.getElementById('demoId').textContent = cfg.demoId;
+  document.getElementById('demoPass').textContent = cfg.demoPass;
+  document.getElementById('errorMsg').style.display = 'none';
+}
+
+function togglePwd() {
+  const inp = document.getElementById('loginPass');
+  const btn = document.getElementById('pwdToggle');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈'; }
+  else { inp.type = 'password'; btn.textContent = '👁️'; }
+}
+
+async function doLogin() {
+  const id = document.getElementById('loginId').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('errorMsg');
+  const btn = document.getElementById('loginBtn');
+
+  if (!id || !pass) { errEl.textContent = '⚠️ Please enter your ID and password.'; errEl.style.display = 'block'; return; }
+
+  btn.textContent = '⏳ Signing in...';
+  btn.disabled = true;
+
+  const result = await RRDCH.doLogin(id, pass, currentRole);
+  if (result.ok) {
+    btn.textContent = '✅ Redirecting...';
+    // RRDCH.doLogin automatically redirects.
+  } else {
+    errEl.textContent = '❌ ' + (result.msg || 'Login failed.');
+    errEl.style.display = 'block';
+    btn.textContent = '🔐 Sign In';
+    btn.disabled = false;
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// Auto-fill demo credentials on click
+document.getElementById('demoId').addEventListener('click', () => {
+  document.getElementById('loginId').value = roleConfig[currentRole].demoId;
+  document.getElementById('loginPass').value = roleConfig[currentRole].demoPass;
+});
+
+// Handle incoming reasons
+window.onload = () => {
+  RRDCH.redirectIfLoggedIn();
+  const reason = RRDCH.getUrlParam('reason');
+  if (reason === 'session_expired') {
+    const errEl = document.getElementById('errorMsg');
+    errEl.textContent = 'Session expired. Please log in again.';
+    errEl.style.display = 'block';
+  }
+};
+</script>
+</body>
+</html>

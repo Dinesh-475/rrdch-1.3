@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ERP Portal | RRDCH</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/backend.js"></script>
+    <script src="js/site-context.js"></script>
+    <script src="js/ai.js"></script>
+    <style>
+        :root {
+            --primary: #2563a8;
+            --primary-deep: #1e3a5f;
+            --accent-warm: #c4a35a;
+        }
+        body { background: #eef2f6; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; margin: 0; overflow-x: hidden; min-height: 100vh; }
+        
+        /* Basic utilities & overrides */
+        .text-red { color: #ef4444; }
+        .text-green { color: #22c55e; }
+        .text-yellow { color: #eab308; }
+        .bg-red-light { background: #fee2e2; }
+        .border-red { border: 1px solid #fca5a5; }
+
+        /* Login Screen */
+        .erp-login {
+            display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center;
+            padding: 5.5rem 1.25rem 2rem;
+            box-sizing: border-box;
+            background:
+              linear-gradient(145deg, rgba(30,58,95,0.88) 0%, rgba(37,99,168,0.82) 45%, rgba(196,163,90,0.25) 100%),
+              url('images/new_hero_bg.png') center/cover fixed;
+            position: fixed; inset: 0; z-index: 1000;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .erp-login.hidden { opacity: 0; visibility: hidden; }
+        .login-nav { position: fixed; top: 0; left: 0; right: 0; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; background: linear-gradient(180deg, rgba(15,23,42,0.35) 0%, transparent 100%); z-index: 1001; }
+        .login-card {
+            background: rgba(255,255,255,0.97);
+            padding: 2.5rem 2.25rem;
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.75);
+            box-shadow: 0 24px 60px rgba(15,23,42,0.35), 0 0 0 1px rgba(196,163,90,0.2);
+            width: 100%; max-width: 440px; text-align: center;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            animation: loginCardIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        @keyframes loginCardIn {
+            from { opacity: 0; transform: translateY(16px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .login-card h2 { margin-bottom: 0.5rem; color: #0f172a; font-size: 1.45rem; font-weight: 800; }
+        .login-card p { color: #5c6b7a; margin-bottom: 1.75rem; font-size: 0.92rem; line-height: 1.5; }
+        #loginError { color: #ef4444; font-size: 0.85rem; margin-top: 1rem; display: none; font-weight: 500; }
+        
+        /* Dashboard Layout */
+        .erp-layout { display: flex; height: 100vh; width: 100vw; background: #f8fafc; }
+        .erp-sidebar { width: 280px; background: #0f172a; color: #94a3b8; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+        .erp-brand { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .erp-brand img { height: 42px; background: white; border-radius: 8px; padding: 6px 12px; object-fit: contain; width: 100%; max-width: 200px; }
+        .sidebar-menu { list-style: none; padding: 1rem 0; margin: 0; }
+        .sidebar-item { padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 0.85rem; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
+        .sidebar-item i { width: 18px; height: 18px; }
+        .sidebar-item:hover, .sidebar-item.active { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border-right: 3px solid #38bdf8; }
+        
+        .erp-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .erp-header { background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; height: 75px; box-sizing: border-box; }
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+        
+        /* Notifications Bell & Dropdown */
+        .notification-wrapper { position: relative; }
+        .notification-btn { cursor: pointer; padding: 0.5rem; color: #64748b; border-radius: 50%; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+        .notification-btn:hover { background: #f1f5f9; color: #1e293b; }
+        .notification-badge { position: absolute; top: 0; right: 0; background: #ef4444; color: white; font-size: 0.6rem; padding: 0.15rem 0.35rem; border-radius: 50%; font-weight: bold; }
+        
+        .notification-dropdown { position: absolute; top: calc(100% + 10px); right: -10px; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); width: 340px; z-index: 100; opacity: 0; visibility: hidden; transition: all 0.2s; transform: translateY(-10px); border: 1px solid #e2e8f0; overflow: hidden; }
+        .notification-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .notif-header { padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; font-weight: 600; color: #0f172a; display: flex; justify-content: space-between; align-items: center; }
+        .notif-list { max-height: 300px; overflow-y: auto; }
+        .notif-item { padding: 1rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; gap: 1rem; }
+        .notif-item:hover { background: #f8fafc; cursor: pointer; }
+        .notif-icon { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .notif-content h4 { margin: 0 0 0.2rem 0; font-size: 0.9rem; color: #1e293b; }
+        .notif-content p { margin: 0; font-size: 0.8rem; color: #64748b; line-height: 1.4; }
+        .notif-content span { font-size: 0.7rem; color: #94a3b8; display: block; margin-top: 0.3rem; }
+
+        /* Profile Dropdown */
+        .profile-trigger { display: flex; align-items: center; gap: 0.75rem; cursor: pointer; position: relative; padding: 0.4rem 0.8rem; border-radius: 8px; transition: background 0.2s; border: 1px solid transparent; }
+        .profile-trigger:hover { background: #f8fafc; border-color: #e2e8f0; }
+        .profile-img { width: 38px; height: 38px; border-radius: 50%; background: #2A6F97; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1rem; }
+        .profile-info { text-align: left; }
+        .profile-name { font-weight: 600; font-size: 0.9rem; color: #1e293b; display: block; }
+        .profile-role { font-size: 0.75rem; color: #64748b; }
+        
+        .profile-dropdown { position: absolute; top: calc(100% + 10px); right: 0; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); width: 320px; padding: 1.5rem; z-index: 100; opacity: 0; visibility: hidden; transition: all 0.2s; transform: translateY(-10px); border: 1px solid #e2e8f0; }
+        .profile-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
+        .profile-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+        .profile-header .profile-img { width: 50px; height: 50px; font-size: 1.25rem; }
+        .profile-dropdown hr { border: none; border-top: 1px solid #e2e8f0; margin: 1rem 0; }
+        .profile-stat { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.6rem; }
+        .profile-stat span { color: #64748b; font-weight: 500; }
+        .profile-stat strong { color: #0f172a; text-align: right; }
+        
+        .logout-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem; background: #fee2e2; color: #ef4444; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 1rem; font-size: 0.95rem; }
+        .logout-btn:hover { background: #fecaca; }
+
+        /* Content Area & Dashboard Grids */
+        .erp-content { flex: 1; overflow-y: auto; padding: 2rem; }
+        .module-view { display: none; animation: fadeIn 0.3s ease; }
+        .module-view.active { display: block; }
+        .page-title { font-size: 1.6rem; color: #0f172a; margin-bottom: 1.5rem; font-weight: 700; margin-top: 0; display: flex; align-items: center; gap: 0.5rem; }
+        
+        .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 1.5rem; }
+        @media (max-width: 1200px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
+        
+        .erp-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 1.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
+        .erp-card h3 { display: flex; align-items: center; gap: 0.5rem; margin-top: 0; margin-bottom: 1.2rem; font-size: 1.1rem; color: #1e293b; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem; }
+        
+        .list-item-clean { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px dashed #e2e8f0; font-size: 0.9rem; }
+        .list-item-clean:last-child { border-bottom: none; padding-bottom: 0; }
+        .status-badge { padding: 0.25rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .status-badge.pending { background: #fef9c3; color: #854d0e; }
+        .status-badge.completed { background: #dcfce7; color: #166534; }
+        .status-badge.unpaid { background: #fee2e2; color: #b91c1c; }
+        
+        /* Timetable Module Styling */
+        .timetable-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .timetable-table th { background: #f1f5f9; color: #475569; padding: 1rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+        .timetable-table td { padding: 1rem; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; color: #1e293b; vertical-align: top; }
+        .timetable-table tr:hover { background: #f8fafc; }
+        .break-row td { background: #fef3c7; color: #d97706; text-align: center; font-weight: 600; letter-spacing: 2px; padding: 0.5rem; }
+        
+        /* Calendar UI */
+        .calendar-ui { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; display: flex; flex-direction: column; height: 600px; }
+        .calendar-header { display: flex; justify-content: space-between; padding: 1.5rem; align-items: center; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: #e2e8f0; flex: 1; }
+        .cal-head { background: #f8fafc; padding: 1rem; text-align: center; font-weight: 600; font-size: 0.85rem; color: #64748b; }
+        .cal-day { background: white; display: flex; flex-direction: column; overflow: hidden; padding: 0.5rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+        .cal-day:hover { background: #f0f9ff; }
+        .cal-day.empty { background: #f8fafc; color: transparent; pointer-events: none; }
+        .cal-day.today { background: #e0f2fe; border: 2px solid #38bdf8; color: #0284c7; }
+        .cal-day-num { margin-bottom: 4px; }
+        .event-pill { font-size: 0.65rem; padding: 0.2rem 0.4rem; border-radius: 4px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 0.2rem; }
+        .event-holiday { background: #fee2e2; color: #b91c1c; border-left: 2px solid #ef4444; }
+        .event-exam { background: #e0e7ff; color: #3730a3; border-left: 2px solid #4f46e5; }
+        .event-academic { background: #dcfce7; color: #166534; border-left: 2px solid #22c55e; }
+
+        /* Map Container */
+        .campus-map-container { width: 100%; height: 500px; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; }
+        
+        /* Custom Inputs */
+        .form-control { border: 1px solid #cbd5e1; padding: 0.75rem 1rem; box-sizing: border-box; width: 100%; border-radius: 8px; font-family: 'Inter', sans-serif; transition: all 0.2s; }
+        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(42, 111, 151, 0.1); }
+        .btn { border: none; padding: 0.75rem 1.5rem; cursor: pointer; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.2s; text-decoration: none; }
+        .btn-primary { background: #2A6F97; color: white; }
+        .btn-primary:hover { background: #1A365D; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(42,111,151,0.2); }
+        .btn-outline { background: white; border: 1px solid #cbd5e1; color: #475569; }
+        .btn-outline:hover { background: #f8fafc; color: #1e293b; }
+        .btn-action { background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; font-size: 0.85rem; padding: 0.5rem 1rem; }
+        .btn-action:hover { background: #bae6fd; }
+        
+        /* Progress Bar Base */
+        .progress-track { width: 100%; background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden; margin: 0.5rem 0; }
+        .progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+<!-- Login Screen -->
+    <div id="erpLogin" class="erp-login">
+        <div class="login-nav">
+            <img src="images/logo.png" alt="RRDCH" style="height: 50px; background: white; border-radius: 8px; padding: 10px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); object-fit: contain;">
+            <a href="index.html" class="btn btn-outline" style="background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: white;"><i data-lucide="arrow-left" width="18"></i> Back to Website</a>
+        </div>
+        
+        <div class="login-card">
+            <h2 style="display:flex; align-items:center; justify-content:center; gap:0.5rem;"><i data-lucide="lock" style="color:var(--primary);"></i> Student Portal</h2>
+            <p>Access your personalized university dashboard</p>
+            <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+                <div style="text-align: left; margin-bottom: 1.2rem;">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem; display: block;">University Registration Number (USN)</label>
+                    <input type="text" id="usnInput" class="form-control" placeholder="1RR24MDS001 OR 1RR24BDS002" required style="font-family: monospace; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase;">
+                </div>
+                <div style="text-align: left; margin-bottom: 1.5rem;">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem; display: block;">Secure Password</label>
+                    <input type="password" id="passInput" class="form-control" placeholder="••••••••" required style="font-family: monospace; font-size: 1.1rem;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Authenticate & Login</button>
+                <div id="loginError"><i data-lucide="alert-circle" width="16" style="display:inline; vertical-align:-3px;"></i> Invalid USN format. (Use 1RR24MDSxxx or 1RR24BDSxxx)</div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ERP Dashboard Interface -->
+    <div id="erpLayout" class="erp-layout" style="display: none;">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="erp-sidebar">
+            <div class="erp-brand">
+                <img src="images/logo.png" alt="RRDCH Logo">
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active" data-target="dashboard"><i data-lucide="layout-dashboard"></i> Overview</li>
+                <li class="sidebar-item" data-target="inbox"><i data-lucide="inbox"></i> Inbox & Notices</li>
+                <li class="sidebar-item" data-target="timetable"><i data-lucide="clock"></i> Class Timetable</li>
+                <li class="sidebar-item" data-target="syllabus"><i data-lucide="book-open"></i> Syllabus & Subjects</li>
+                <li class="sidebar-item" data-target="attendance"><i data-lucide="clipboard-check"></i> Attendance Details</li>
+                <li class="sidebar-item" data-target="assignments"><i data-lucide="file-text"></i> Assignments</li>
+                <li class="sidebar-item" data-target="exams"><i data-lucide="graduation-cap"></i> Exam Schedule</li>
+                <li class="sidebar-item" data-target="fees"><i data-lucide="credit-card"></i> Fee Management</li>
+                <li class="sidebar-item" data-target="calendar"><i data-lucide="calendar"></i> Institution Calendar</li>
+                <li class="sidebar-item" data-target="feedback"><i data-lucide="message-square"></i> Faculty Feedback</li>
+                <li class="sidebar-item" data-target="campusmap"><i data-lucide="map"></i> Campus Map</li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <main class="erp-main">
+            <!-- Top Header Navbar -->
+            <header class="erp-header">
+                <h2 id="headerTitle" style="font-size: 1.3rem; margin: 0; color: #0f172a; font-weight: 700;">Overview</h2>
+                
+                <div class="header-actions">
+                    <!-- Notifications Dropdown -->
+                    <div class="notification-wrapper" id="notifTrigger">
+                        <div class="notification-btn" title="Alerts">
+                            <i data-lucide="bell"></i>
+                            <span class="notification-badge" id="notifBadgeCount">3</span>
+                        </div>
+                        <div class="notification-dropdown" id="notifDropdown">
+                            <div class="notif-header">
+                                Notifications
+                                <span style="font-size:0.75rem; color:#38bdf8; cursor:pointer; font-weight:500;">Mark all read</span>
+                            </div>
+                            <div class="notif-list" id="globalNotifList">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Card Dropdown -->
+                    <div class="profile-trigger" id="profileTrigger">
+                        <div class="profile-img" id="navAvatar">U</div>
+                        <div class="profile-info">
+                            <span class="profile-name" id="navName">Student Name</span>
+                            <span class="profile-role" id="navRole">USN</span>
+                        </div>
+                        <i data-lucide="chevron-down" style="width: 16px; margin-left: 0.25rem; color: #64748b;"></i>
+                        
+                        <div class="profile-dropdown" id="profileDropdown">
+                            <div class="profile-header">
+                                <div class="profile-img" id="dropAvatar">U</div>
+                                <div>
+                                    <h4 id="dropName" style="margin: 0; color: #0f172a; font-size:1.1rem;">Student Name</h4>
+                                    <span style="font-size: 0.85rem; color: #64748b; font-weight:500;" id="dropProgram">Program</span>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="profile-stat"><span>Registration USN</span> <strong id="profUsn">...</strong></div>
+                            <div class="profile-stat"><span>Admission No.</span> <strong id="profAdm">...</strong></div>
+                            <div class="profile-stat"><span>Class Roll No.</span> <strong id="profRoll">...</strong></div>
+                            <div class="profile-stat"><span>Exam Register No.</span> <strong id="profExam">...</strong></div>
+                            <div class="profile-stat"><span>Date of Birth</span> <strong id="profDob">...</strong></div>
+                            <div class="profile-stat"><span>Student Phone</span> <strong id="profPhone">...</strong></div>
+                            <div class="profile-stat"><span>University Email</span> <strong id="profEmail">...</strong></div>
+                            <hr>
+                            <div class="profile-stat"><span>Father's Name</span> <strong id="profFather">...</strong></div>
+                            <div class="profile-stat"><span>Mother's Name</span> <strong id="profMother">...</strong></div>
+                            <div class="profile-stat"><span>Emergency Contact</span> <strong id="profParentPhone">...</strong></div>
+                            
+                            <button class="logout-btn" onclick="handleLogout()"><i data-lucide="log-out" width="18"></i> Terminate Session</button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dynamic Views Container -->
+            <div class="erp-content">
+                
+                <!-- 1. DASHBOARD VIEW (5 CARDS + QUICK ACTIONS) -->
+                <div id="view-dashboard" class="module-view active">
+                    <h1 class="page-title"><i data-lucide="layout-dashboard"></i> Dashboard Summary</h1>
+                    
+                    <!-- Top Row: Metrics -->
+                    <div class="dashboard-grid">
+                        <div class="erp-card">
+                            <h3><i data-lucide="file-bar-chart"></i> Academic Progress</h3>
+                            <div class="profile-stat"><span>Total Syllabus Covered</span> <strong id="dashPctProg" style="color:#0284c7;">--</strong></div>
+                            <div class="progress-track"><div id="dashBarProg" class="progress-fill" style="background:#0284c7; width:0;"></div></div>
+                            <div class="profile-stat" style="margin-top:0.75rem;"><span>Assignments Cleared</span> <strong id="dashAssign">--</strong></div>
+                            <div class="profile-stat"><span>Internal Assessment Marks</span> <strong id="dashIA">-- / --</strong></div>
+                        </div>
+
+                        <div class="erp-card" id="cardAttendance">
+                            <h3><i data-lucide="check-circle"></i> Attendance Summary</h3>
+                            <div class="profile-stat"><span>Overall Attendance</span> <strong id="dashAtt" style="font-size:1.2rem;">--</strong></div>
+                            <div class="progress-track"><div id="dashAttBar" class="progress-fill" style="width:0;"></div></div>
+                            <div id="attWarningBlock" style="margin-top:1rem; padding:0.75rem; border-radius:6px; display:none; align-items:center; gap:0.5rem;">
+                                <i data-lucide="alert-triangle" width="16"></i> <span style="font-size:0.85rem; font-weight:600;">Warning: Attendance Below 75% threshold!</span>
+                            </div>
+                            <p style="font-size:0.8rem; color:#64748b; margin-top:1rem; margin-bottom:0;">You must maintain 75% minimum aggregate attendance for finals.</p>
+                        </div>
+                        
+                        <div class="erp-card">
+                            <h3><i data-lucide="rupee"></i> Fee & Payments Overview</h3>
+                            <div class="profile-stat"><span>Total Course Fees</span> <strong id="dashTotalFees">--</strong></div>
+                            <div class="profile-stat"><span>Amount Paid</span> <strong class="text-green" id="dashPaidFees">--</strong></div>
+                            <div class="profile-stat"><span>Pending Balance</span> <strong class="text-red" id="dashPendingFees">--</strong></div>
+                            <div style="margin-top:1rem; display:flex; justify-content:space-between; align-items:center;">
+                                <span class="status-badge" id="dashFeeStatus">--</span>
+                                <span style="font-size:0.8rem; font-weight:600; color:#475569;">Due: <span id="dashFeeDue">--</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Row -->
+                    <div class="dashboard-grid" style="grid-template-columns: 2fr 1fr;">
+                        <div class="erp-card">
+                            <h3><i data-lucide="calendar-clock"></i> Upcoming Schedule</h3>
+                            <div id="dashScheduleList"></div>
+                            <button class="btn btn-outline" style="width:100%; margin-top:1rem;" onclick="NAV(document.querySelector('[data-target=timetable]'))">View Full Timetable</button>
+                        </div>
+                        <div class="erp-card">
+                            <h3><i data-lucide="zap"></i> Quick Actions</h3>
+                            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                                <button class="btn btn-action" onclick="NAV(document.querySelector('[data-target=fees]'))"><i data-lucide="credit-card"></i> Make Fee Payment</button>
+                                <button class="btn btn-action" style="background:#f0fdf4; color:#166534; border-color:#bbf7d0;"><i data-lucide="file-input"></i> Apply for Leave</button>
+                                <button class="btn btn-action" style="background:#fefce8; color:#854d0e; border-color:#fef08a;" onclick="NAV(document.querySelector('[data-target=inbox]'))"><i data-lucide="mail"></i> Message Faculty</button>
+                            </div>
+                            
+                            <h3 style="margin-top:1.5rem; padding-bottom:0.5rem;"><i data-lucide="folder-search"></i> Resources</h3>
+                            <ul style="margin:0; padding-left:1.2rem; font-size:0.85rem; color:#0284c7; line-height:1.6;">
+                                <li><a href="#" style="color:inherit;">Download Lab Room Chart PDF</a></li>
+                                <li><a href="#" style="color:inherit;">Final Exam Routine Notification</a></li>
+                                <li><a href="#" style="color:inherit;">University Academic Guidelines</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. INBOX VIEW -->
+                <div id="view-inbox" class="module-view">
+                    <h1 class="page-title"><i data-lucide="inbox"></i> Inbox & Notices</h1>
+                    <div class="erp-card" style="padding:0;">
+                        <div id="inboxContainer"></div>
+                    </div>
+                </div>
+
+                <!-- 3. TIMETABLE VIEW -->
+                <div id="view-timetable" class="module-view">
+                    <h1 class="page-title"><i data-lucide="clock"></i> Class Timetable</h1>
+                    <div class="erp-card" style="overflow-x:auto;">
+                        <h3>Weekly Structure (Mapped to Syllabus)</h3>
+                        <table class="timetable-table" id="timetableArea">
+                            <!-- Populated via JS based on USN -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4. SYLLABUS VIEW -->
+                <div id="view-syllabus" class="module-view">
+                    <h1 class="page-title"><i data-lucide="book-open"></i> Syllabus Modules</h1>
+                    <div class="dashboard-grid" id="syllabusContentGrid"></div>
+                </div>
+
+                <!-- 5. ATTENDANCE VIEW -->
+                <div id="view-attendance" class="module-view">
+                    <h1 class="page-title"><i data-lucide="clipboard-list"></i> Subject-wise Attendance</h1>
+                    <div class="erp-card" style="max-width:800px;">
+                        <table class="timetable-table" id="attendanceTable">
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6. ASSIGNMENTS VIEW -->
+                <div id="view-assignments" class="module-view">
+                    <h1 class="page-title"><i data-lucide="file-signature"></i> Assignments & Submissions</h1>
+                    <div class="erp-card">
+                        <div id="assignmentsContent"></div>
+                    </div>
+                </div>
+                
+                <!-- 7. EXAMS VIEW -->
+                <div id="view-exams" class="module-view">
+                    <h1 class="page-title"><i data-lucide="graduation-cap"></i> Examination Schedule</h1>
+                    <div class="erp-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #f1f5f9;">
+                            <h3 style="margin:0; border:none; padding:0; display:flex; align-items:center; gap:0.5rem;"><i data-lucide="list-clipboard"></i> Routine Selector</h3>
+                            <select class="form-control" style="width:280px; padding:0.6rem; font-weight:500;" id="examFilterSelect">
+                                <option value="All">View All Exams</option>
+                                <option value="Internal Exam I">Internal Test 1</option>
+                                <option value="Internal Exam II">Internal Test 2</option>
+                                <option value="Internal Exam III">Internal Test 3</option>
+                                <option value="University Practicals">University Practicals</option>
+                                <option value="University Theory">University Theory</option>
+                                <option value="Final">Final Exams</option>
+                            </select>
+                        </div>
+                        <table class="timetable-table" id="examTable"></table>
+                    </div>
+                </div>
+
+                <!-- 8. FEES VIEW -->
+                <div id="view-fees" class="module-view">
+                    <h1 class="page-title"><i data-lucide="wallet"></i> Financial & Fee Management</h1>
+                    <div class="dashboard-grid" style="grid-template-columns: repeat(2, 1fr);">
+                        <div class="erp-card">
+                            <h3><i data-lucide="receipt"></i> Tuition Fee Details</h3>
+                            <div class="list-item-clean"><span>Academic Year</span> <strong>2026-2027</strong></div>
+                            <div class="list-item-clean"><span>Total Prescribed Fee</span> <strong id="feeDetTotal">--</strong></div>
+                            <div class="list-item-clean"><span>Payments Realized</span> <strong class="text-green" id="feeDetPaid">--</strong></div>
+                            <div class="list-item-clean"><span>Outstanding Dues</span> <strong class="text-red" id="feeDetPend">--</strong></div>
+                            <div class="list-item-clean"><span>Clearance Deadline</span> <strong id="feeDetDue">--</strong></div>
+                        </div>
+                        <div class="erp-card">
+                            <h3><i data-lucide="credit-card"></i> Secure Payment Gateway</h3>
+                            <p style="font-size:0.9rem; color:#64748b;">Process remaining institute dues rapidly via Razorpay secure portal.</p>
+                            <input type="text" class="form-control" style="margin-bottom:1rem;" placeholder="Amount to pay (₹)" id="feePayInput">
+                            <button class="btn btn-primary" style="width:100%;" onclick="openPaymentModal()"><i data-lucide="lock"></i> Pay Securely via Portal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. CALENDAR VIEW -->
+                <div id="view-calendar" class="module-view">
+                    <h1 class="page-title"><i data-lucide="calendar"></i> Institution Calendar</h1>
+                    <div class="calendar-ui" id="calendarApp">
+                        <!-- Header Built By JS -->
+                    </div>
+                </div>
+
+                <!-- 10. FEEDBACK VIEW -->
+                <div id="view-feedback" class="module-view">
+                    <h1 class="page-title"><i data-lucide="message-square"></i> Faculty Feedback</h1>
+                    <div class="dashboard-grid" id="feedbackCards"></div>
+                </div>
+
+                <!-- 11. MAP VIEW -->
+                <div id="view-campusmap" class="module-view">
+                    <h1 class="page-title"><i data-lucide="map-pin"></i> RRDCH Campus Map</h1>
+                    <p style="color: #64748b; margin-bottom: 1.5rem;">Explore our Hospital block, administrative offices, canteen, and sports grounds.</p>
+                    <div class="campus-map-container">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!4v1776281365595!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJQ0txcW45RlE.!2m2!1d12.8872363070956!2d77.4508580774884!3f284.27121207218994!4f-15.702741423491702!5f0.4000000000000002" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Payment Modal (Hidden by default) -->
+    <div id="paymentModal" style="display:none; position:fixed; inset:0; z-index:2000; background:rgba(15,23,42,0.8); align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+        <div style="background:white; border-radius:12px; width:100%; max-width:550px; overflow:hidden; box-shadow:0 25px 50px rgba(0,0,0,0.25);">
+            <div style="background:#f8fafc; padding:1.2rem 1.5rem; border-bottom:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; font-size:1.1rem; color:#0f172a; display:flex; gap:0.5rem; align-items:center;"><i data-lucide="shield-check" style="color:#22c55e;"></i> Secure Checkout</h3>
+                <i data-lucide="x" style="cursor:pointer; color:#64748b;" onclick="closePaymentModal()"></i>
+            </div>
+            <div style="padding:1.5rem;">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                    <div><label style="font-size:0.8rem; font-weight:600; color:#64748b; margin-bottom:0.3rem; display:block;">Recipient Name</label><input type="text" class="form-control" id="payName" readonly></div>
+                    <div><label style="font-size:0.8rem; font-weight:600; color:#64748b; margin-bottom:0.3rem; display:block;">Email Address</label><input type="email" class="form-control" id="payEmail" readonly></div>
+                    <div><label style="font-size:0.8rem; font-weight:600; color:#64748b; margin-bottom:0.3rem; display:block;">Phone Number</label><input type="text" class="form-control" id="payPhone" readonly></div>
+                    <div><label style="font-size:0.8rem; font-weight:600; color:#64748b; margin-bottom:0.3rem; display:block;">Billing Zip Code</label><input type="text" class="form-control" value="560074"></div>
+                </div>
+                
+                <label style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-top:1.5rem; display:block; margin-bottom:0.75rem;">Select Payment Method</label>
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:0.75rem; margin-bottom:1.5rem;">
+                    <div class="pay-method" style="border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem; text-align:center; cursor:pointer; transition:all 0.2s;" onclick="selectPay(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" style="height:20px; object-fit:contain;"><br><span style="font-size:0.75rem; font-weight:600; display:block; margin-top:5px;">UPI Gateway</span></div>
+                    <div class="pay-method" style="border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem; text-align:center; cursor:pointer; transition:all 0.2s;" onclick="selectPay(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" style="height:20px; object-fit:contain;"><br><span style="font-size:0.75rem; font-weight:600; display:block; margin-top:5px;">Google Pay</span></div>
+                    <div class="pay-method" style="border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem; text-align:center; cursor:pointer; transition:all 0.2s;" onclick="selectPay(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" style="height:20px; object-fit:contain;"><br><span style="font-size:0.75rem; font-weight:600; display:block; margin-top:5px;">PhonePe</span></div>
+                    <div class="pay-method" style="border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem; text-align:center; cursor:pointer; transition:all 0.2s;" onclick="selectPay(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" style="height:15px; margin-top:3px; object-fit:contain;"><br><span style="font-size:0.75rem; font-weight:600; display:block; margin-top:7px;">Paytm</span></div>
+                    <div class="pay-method" style="border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem; text-align:center; cursor:pointer; transition:all 0.2s;" onclick="selectPay(this)"><i data-lucide="building" style="height:20px; color:#475569;"></i><br><span style="font-size:0.75rem; font-weight:600; display:block; margin-top:5px;">Net Banking</span></div>
+                    <div class="pay-method" style="border:1px solid #cbd5e1; border-radius:8px; padding:0.75rem; text-align:center; cursor:pointer; transition:all 0.2s;" onclick="selectPay(this)"><i data-lucide="credit-card" style="height:20px; color:#475569;"></i><br><span style="font-size:0.75rem; font-weight:600; display:block; margin-top:5px;">Credit / Debit</span></div>
+                </div>
+                
+                <button class="btn btn-primary" style="width:100%; font-size:1.1rem; padding:1rem;" onclick="processMockPayment()">Complete Payment of <span id="modalPayAmt" style="margin-left:5px;">₹0</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ERP LOGIC -->
+    <script>
+        function selectPay(el) {
+            document.querySelectorAll('.pay-method').forEach(e => { e.style.borderColor = '#cbd5e1'; e.style.background = 'white'; });
+            el.style.borderColor = '#38bdf8';
+            el.style.background = '#f0f9ff';
+        }
+        function openPaymentModal() {
+            const amtStr = document.getElementById('feePayInput').value;
+            if(!amtStr || isNaN(parseFloat(amtStr))) { alert("Please enter a valid numeric amount to pay."); return; }
+            document.getElementById('modalPayAmt').textContent = '₹' + parseFloat(amtStr).toLocaleString('en-IN');
+            
+            // Auto fill info
+            if(cUser) {
+                document.getElementById('payName').value = cUser.profile.name;
+                document.getElementById('payEmail').value = cUser.profile.email;
+                document.getElementById('payPhone').value = cUser.profile.phone;
+            }
+            
+            document.getElementById('paymentModal').style.display = 'flex';
+            lucide.createIcons();
+        }
+        function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
+        async function processMockPayment() {
+            const amtStr = document.getElementById('feePayInput').value;
+            const fees = window.__studentFees || [];
+            const nextPending = fees.find(f => String(f.status || "").toLowerCase() !== "paid");
+            if (nextPending?.id) {
+                try {
+                    await window.RRDCH_BACKEND.request("/student/fees/pay", {
+                        method: "POST",
+                        body: JSON.stringify({ fee_id: nextPending.id })
+                    });
+                } catch (e) {}
+            }
+            setTimeout(() => {
+                alert("Payment completed.");
+                closePaymentModal();
+                document.getElementById('feePayInput').value = '';
+            }, 800);
+        }
+
+        lucide.createIcons();
+
+        // MASSIVE EXPANDED DATABASE PER USN
+        const studentDB = {
+            '1RR24MDS001': {
+                profile: {
+                    name: 'Dr. Suresh Kumar', program: 'MDS - Periodontology', avatar: 'S',
+                    adm: 'ADM/2024/MDS/001', roll: 'PG-01-PERIO', examNum: 'RGUHS-MDS-712-A',
+                    dob: '12-Aug-1996', phone: '+91 9876543210', email: 'suresh.k@mds.rrdch.org',
+                    father: 'Mr. Ramesh Kumar', mother: 'Mrs. Geetha Kumar', parentPhone: '+91 9123456780'
+                },
+                finances: { total: '₹ 8,50,000', paid: '₹ 4,00,000', pending: '₹ 4,50,000', status: 'Pending', due: '15-May-2026' },
+                academics: { syllabusCovered: '62%', internals: '78 / 100', overallAtt: 88, assignments: '3 / 4' },
+                attendance: [
+                    { sub: 'Applied Anatomy & Physiology', pct: 92 },
+                    { sub: 'Clinical Periodontology', pct: 85 },
+                    { sub: 'Implantology Protocols', pct: 88 }
+                ],
+                syllabus: [
+                    { sub: 'Applied Anatomy & Physiology', desc: 'Surgical anatomy of maxilla and mandible, blood supply.', mods: ['Head & Neck Anatomy', 'Embryology of jaws', 'Physiology of Pain'] },
+                    { sub: 'Clinical Periodontology', desc: 'Pathogenesis and advanced surgical techniques.', mods: ['Flap Surgical Designs', 'Bone Grafting Methods', 'Laser Therapeutics'] },
+                    { sub: 'Implantology Protocols', desc: 'Endosseous implant placements and restorations.', mods: ['Sinner Lift Operations', 'Immediate Loading', 'Radiology for Implants'] }
+                ],
+                timetable: [
+                    { time: '08:30 - 09:30', m: 'Applied Anatomy', t: 'Clinical Perio', w: 'Clinical Perio', th:'Implantology', f:'Seminar' },
+                    { time: '09:30 - 10:30', m: 'Applied Anatomy', t: 'Clinical Perio', w: 'Clinical Perio', th:'Implantology', f:'Journal Club' },
+                    { time: '10:30 - 10:45', name: 'TEA BREAK', isBreak: true },
+                    { time: '10:45 - 12:45', m: 'PG Clinical Quota', t: 'PG Clinical Quota', w: 'PG Clinical Quota', th:'PG Clinical Quota', f:'PG Clinical Quota' },
+                    { time: '12:45 - 01:30', name: 'LUNCH BREAK', isBreak: true },
+                    { time: '01:30 - 02:30', m: 'Library/Research', t: 'Library/Research', w: 'Library/Research', th:'Library/Research', f:'Case Presentation' }
+                ],
+                exams: [
+                    { type: 'Internal Exam I', date: '20-May-2026', sub: 'Clinical Periodontology' },
+                    { type: 'Internal Exam I', date: '22-May-2026', sub: 'Applied Anatomy' },
+                    { type: 'Final MDS Exam', date: '10-Nov-2026', sub: 'All Subjects (Theory + Practical)' }
+                ],
+                inbox: [
+                    { from: 'Prof. Anitha Rao', title: 'Dissertation Protocol Revisions', msg: 'Dr. Suresh, please adjust the methodology section of your protocol.', date: '15-Apr-2026' },
+                    { from: 'Admin Office', title: 'Exam Registration Form', msg: 'MDS RGUHS forms are available in block B.', date: '12-Apr-2026' }
+                ],
+                assignments: [
+                    { title: 'Case Study: Gingival Overgrowth', status: 'pending', date: '25-Apr-2026' },
+                    { title: 'Journal Club Presentation (Lasers)', status: 'completed', date: '10-Apr-2026' }
+                ],
+                feedback: [
+                    { faculty: 'Dr. Ramesh Babu', course: 'Clinical Periodontology', rating: 5, comment: 'Excellent hand skills during flap surgeries.' },
+                    { faculty: 'Dr. Neha K', course: 'Applied Anatomy', rating: 4, comment: 'Good theoretical grip, participate more in seminars.' }
+                ]
+            },
+            '1RR24BDS002': {
+                profile: {
+                    name: 'Ananya Sharma', program: 'BDS - 2nd Year', avatar: 'A',
+                    adm: 'ADM/2024/BDS/142', roll: 'UG-142', examNum: 'RGUHS-BDS-1420',
+                    dob: '24-Mar-2004', phone: '+91 8765432109', email: 'ananya.s@bds.rrdch.org',
+                    father: 'Mr. Arvind Sharma', mother: 'Mrs. Priya Sharma', parentPhone: '+91 8012345679'
+                },
+                finances: { total: '₹ 4,20,000', paid: '₹ 4,20,000', pending: '₹ 0', status: 'Cleared', due: 'N/A' },
+                academics: { syllabusCovered: '56%', internals: '62 / 100', overallAtt: 68, assignments: '1 / 3' },
+                attendance: [
+                    { sub: 'General Pathology', pct: 60 },
+                    { sub: 'Microbiology', pct: 70 },
+                    { sub: 'Dental Materials', pct: 81 },
+                    { sub: 'Pharmacology', pct: 62 }
+                ],
+                syllabus: [
+                    { sub: 'General Pathology', desc: 'Cellular responses, inflammation, and diseases.', mods: ['Cellular Adapation', 'Hemodynamic disorders', 'Neoplasia'] },
+                    { sub: 'Microbiology', desc: 'Bacteriology, virology, immunology.', mods: ['Morphology of bacteria', 'Sterilization techniques', 'Immune System'] },
+                    { sub: 'Dental Materials', desc: 'Properties of synthetic biological materials.', mods: ['Gypsum products', 'Impression Materials', 'Dental Cements'] },
+                    { sub: 'Pharmacology', desc: 'Drugs acting on CNS, ANS, and antibiotics.', mods: ['General Pharmacology', 'Local Anesthetics', 'Analgesics'] }
+                ],
+                timetable: [
+                    { time: '08:30 - 09:30', m: 'Gen. Pathology', t: 'Microbiology', w: 'Dental Materials', th:'Pharmacology', f:'Microbiology' },
+                    { time: '09:30 - 10:30', m: 'Pharmacology', t: 'Dental Materials', w: 'Gen. Pathology', th:'Dental Materials', f:'Gen. Pathology' },
+                    { time: '10:30 - 10:45', name: 'TEA BREAK', isBreak: true },
+                    { time: '10:45 - 11:45', m: 'Pre-clinical Lab', t: 'Pre-clinical Lab', w: 'Pre-clinical Lab', th:'Pre-clinical Lab', f:'Pre-clinical Lab' },
+                    { time: '11:45 - 12:45', m: 'Pre-clinical Lab', t: 'Pre-clinical Lab', w: 'Pre-clinical Lab', th:'Pre-clinical Lab', f:'Pre-clinical Lab' },
+                    { time: '12:45 - 01:30', name: 'LUNCH BREAK', isBreak: true },
+                    { time: '01:30 - 02:30', m: 'Library', t: 'Sports', w: 'Library', th:'Library', f:'Mentorship' }
+                ],
+                exams: [
+                    { type: 'Internal Exam II', date: '05-Jun-2026', sub: 'General Pathology' },
+                    { type: 'Internal Exam II', date: '07-Jun-2026', sub: 'Pharmacology' },
+                    { type: 'University Practicals', date: '15-Aug-2026', sub: 'Pre-Clinical Prosthodontics' }
+                ],
+                inbox: [
+                    { from: 'Dr. Vivek Sharma', title: 'Low Attendance Warning', msg: 'Ananya, your Pathology attendance is at 60%. Next class is mandatory.', date: '14-Apr-2026' },
+                    { from: 'Cultural Committee', title: 'Dentofest Registrations', msg: 'Sign up for the inter-college dance competition by Friday.', date: '10-Apr-2026' }
+                ],
+                assignments: [
+                    { title: 'Pathology Record Submission', status: 'pending', date: '22-Apr-2026' },
+                    { title: 'Drug Chart Assignment', status: 'pending', date: '25-Apr-2026' },
+                    { title: 'Impression Trays Drawing', status: 'completed', date: '01-Apr-2026' }
+                ],
+                feedback: [
+                    { faculty: 'Dr. Priya M', course: 'Dental Materials', rating: 4, comment: 'Good understanding of practical mixing.' },
+                    { faculty: 'Dr. Vivek Sharma', course: 'General Pathology', rating: 2, comment: 'Needs to improve attendance and theory prep.' }
+                ]
+            }
+        };
+
+        // --- AUTH & ROUTING LOGIC ---
+        const loginEl = document.getElementById('erpLogin');
+        const layoutEl = document.getElementById('erpLayout');
+        const errorEl = document.getElementById('loginError');
+        let cUser = null;
+
+        async function handleLogin() {
+            const usnRaw = document.getElementById('usnInput').value.trim();
+            const usn = usnRaw.toUpperCase();
+            const password = document.getElementById('passInput').value.trim();
+            if(!/^1RR\d{2}(BDS|MDS)\d{3}$/.test(usn) && !usnRaw.includes('@')) { errorEl.style.display = 'block'; return; }
+
+            cUser = studentDB[usn];
+            if(!cUser) {
+                // Generative fallback
+                const isPG = usn.includes('MDS');
+                cUser = JSON.parse(JSON.stringify(isPG ? studentDB['1RR24MDS001'] : studentDB['1RR24BDS002']));
+                cUser.profile.name = isPG ? "Dr. Student Mock" : "Student Mock";
+                cUser.profile.usn = usn;
+            } else { cUser.profile.usn = usn; }
+
+            errorEl.style.display = 'none';
+            renderAllData(cUser);
+            try {
+                const auth = await window.RRDCH_BACKEND.request("/auth/login", {
+                    method: "POST",
+                    body: JSON.stringify({ identifier: usnRaw, password, role: "student" })
+                });
+                window.RRDCH_BACKEND.setToken(auth.token);
+                await hydrateStudentFromBackend();
+            } catch (e) {
+                // Keep local demo behavior if backend auth fails.
+            }
+            
+            loginEl.classList.add('hidden');
+            setTimeout(() => {
+                loginEl.style.display = 'none';
+                layoutEl.style.display = 'flex';
+                lucide.createIcons();
+                initCalendar();
+            }, 500);
+        }
+
+        function handleLogout() {
+            layoutEl.style.display = 'none';
+            loginEl.style.display = 'flex';
+            setTimeout(() => { loginEl.classList.remove('hidden'); }, 50);
+            document.querySelectorAll('.profile-dropdown, .notification-dropdown').forEach(e => e.classList.remove('show'));
+            document.getElementById('usnInput').value = '';
+            document.getElementById('passInput').value = '';
+            cUser = null;
+        }
+
+        // Dropdowns
+        document.getElementById('profileTrigger').addEventListener('click', (e) => {
+            if(!e.target.closest('.logout-btn')) document.getElementById('profileDropdown').classList.toggle('show');
+            document.getElementById('notifDropdown').classList.remove('show');
+        });
+        document.getElementById('notifTrigger').addEventListener('click', (e) => {
+            if(e.target.closest('.notification-btn')) document.getElementById('notifDropdown').classList.toggle('show');
+            document.getElementById('profileDropdown').classList.remove('show');
+        });
+        document.addEventListener('click', (e) => {
+            if(!e.target.closest('#profileTrigger')) document.getElementById('profileDropdown').classList.remove('show');
+            if(!e.target.closest('#notifTrigger')) document.getElementById('notifDropdown').classList.remove('show');
+        });
+
+        // Navigation
+        const NAV = (el) => {
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const tgt = el.getAttribute('data-target');
+            document.getElementById('headerTitle').textContent = el.textContent.trim();
+            document.querySelectorAll('.module-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + tgt).classList.add('active');
+        };
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', () => NAV(item));
+        });
+
+        // --- RENDER LOGIC ---
+        function renderAllData(u) {
+            // Profile Top
+            document.getElementById('navAvatar').textContent = u.profile.avatar;
+            document.getElementById('navName').textContent = u.profile.name;
+            document.getElementById('navRole').textContent = u.profile.usn;
+            document.getElementById('dropAvatar').textContent = u.profile.avatar;
+            document.getElementById('dropName').textContent = u.profile.name;
+            document.getElementById('dropProgram').textContent = u.profile.program;
+            
+            // Profile Card Details
+            const k = ['Usn','Adm','Roll','Exam','Dob','Phone','Email','Father','Mother','ParentPhone'];
+            const o = ['usn','adm','roll','examNum','dob','phone','email','father','mother','parentPhone'];
+            k.forEach((id, i) => document.getElementById('prof'+id).textContent = u.profile[o[i]]);
+
+            // Dashboard Math & Setup
+            document.getElementById('dashPctProg').textContent = u.academics.syllabusCovered;
+            document.getElementById('dashBarProg').style.width = u.academics.syllabusCovered;
+            document.getElementById('dashAssign').textContent = u.academics.assignments;
+            document.getElementById('dashIA').textContent = u.academics.internals;
+            
+            // Dashboard - Attendance Logics
+            const att = u.academics.overallAtt;
+            document.getElementById('dashAtt').textContent = att + '%';
+            document.getElementById('dashAttBar').style.width = att + '%';
+            const attCard = document.getElementById('cardAttendance');
+            const attWarn = document.getElementById('attWarningBlock');
+            if(att < 75) {
+                attCard.classList.add('bg-red-light', 'border-red');
+                document.getElementById('dashAtt').classList.add('text-red');
+                document.getElementById('dashAttBar').style.background = '#ef4444';
+                attWarn.style.display = 'flex'; attWarn.style.color = '#ef4444'; attWarn.style.background = '#fecaca';
+            } else {
+                attCard.classList.remove('bg-red-light', 'border-red');
+                document.getElementById('dashAtt').classList.remove('text-red');
+                document.getElementById('dashAtt').classList.add('text-green');
+                document.getElementById('dashAttBar').style.background = '#22c55e';
+                attWarn.style.display = 'none';
+            }
+
+            // Dashboard - Finances
+            document.getElementById('dashTotalFees').textContent = u.finances.total;
+            document.getElementById('dashPaidFees').textContent = u.finances.paid;
+            document.getElementById('dashPendingFees').textContent = u.finances.pending;
+            document.getElementById('dashFeeDue').textContent = u.finances.due;
+            
+            const btnStat = document.getElementById('dashFeeStatus');
+            btnStat.textContent = u.finances.status;
+            btnStat.className = 'status-badge ' + (u.finances.status === 'Cleared' ? 'completed' : 'unpaid');
+            
+            // Populate Fee Page similarly
+            const fd = ['Total','Paid','Pend','Due'];
+            const fo = ['total','paid','pending','due'];
+            fd.forEach((id, i) => document.getElementById('feeDet'+id).textContent = u.finances[fo[i]]);
+
+            // Inbox & Notifications (Inject Top 3 into Notification Dropdown)
+            document.getElementById('notifBadgeCount').textContent = u.inbox.length;
+            document.getElementById('globalNotifList').innerHTML = u.inbox.map(ib => `
+                <div class="notif-item">
+                    <div class="notif-icon bg-red-light text-red"><i data-lucide="mail" width="16"></i></div>
+                    <div class="notif-content">
+                        <h4>${ib.title}</h4>
+                        <p>${ib.msg}</p>
+                        <span>From: ${ib.from} • ${ib.date}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('inboxContainer').innerHTML = u.inbox.map(ib => `
+                <div style="padding:1.5rem; border-bottom:1px solid #e2e8f0; display:flex; gap:1.5rem;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center;"><i data-lucide="mail"></i></div>
+                    <div style="flex:1;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                            <strong style="color:#0f172a;">${ib.title}</strong>
+                            <span style="font-size:0.8rem; color:#64748b;">${ib.date}</span>
+                        </div>
+                        <p style="color:#475569; margin:0 0 0.5rem 0; font-size:0.95rem;">${ib.msg}</p>
+                        <span style="font-size:0.8rem; font-weight:600; color:#2A6F97;">- ${ib.from}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Full Timetable Mapping
+            const thr = `<tr><th>Time</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th></tr>`;
+            const tbd = u.timetable.map(t => {
+                if(t.isBreak) return `<tr class="break-row"><td>${t.time}</td><td colspan="5">${t.name}</td></tr>`;
+                return `<tr><td><strong>${t.time}</strong></td><td>${t.m}</td><td>${t.t}</td><td>${t.w}</td><td>${t.th}</td><td>${t.f}</td></tr>`;
+            }).join('');
+            document.getElementById('timetableArea').innerHTML = thr + tbd;
+
+            // Dashboard Upcomings (Just slice first few classes)
+            document.getElementById('dashScheduleList').innerHTML = `
+                <div class="list-item-clean"><span>08:30 AM</span> <strong>${u.timetable[0].m}</strong></div>
+                <div class="list-item-clean"><span>09:30 AM</span> <strong>${u.timetable[1].m}</strong></div>
+                <div class="list-item-clean"><span>10:45 AM</span> <strong>${u.timetable[3].m}</strong></div>
+            `;
+
+            // Syllabus Matrix
+            document.getElementById('syllabusContentGrid').innerHTML = u.syllabus.map(s => `
+                <div class="erp-card">
+                    <h3><i data-lucide="book-check"></i> ${s.sub}</h3>
+                    <p style="font-size:0.85rem; color:#475569; border-bottom:1px solid #f1f5f9; padding-bottom:1rem;">${s.desc}</p>
+                    <ul style="margin:1rem 0 0 0; padding-left:1.2rem; font-size:0.85rem; color:#1e293b; line-height:1.6;">
+                        ${s.mods.map(ch => `<li>${ch}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+
+            // Detailed Attendance Table
+            const ath = `<tr><th>Subject Code / Name</th><th>Attendance Percentage</th><th>Status Alert</th></tr>`;
+            const abd = u.attendance.map(a => {
+                const isBad = a.pct < 75;
+                const col = isBad ? '#ef4444' : '#22c55e';
+                const tag = isBad ? 'Shortage' : 'Satisfactory';
+                return `<tr>
+                    <td><strong>${a.sub}</strong></td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <span style="font-weight:700; width:40px;">${a.pct}%</span>
+                            <div class="progress-track" style="flex:1; margin:0;"><div class="progress-fill" style="width:${a.pct}%; background:${col};"></div></div>
+                        </div>
+                    </td>
+                    <td><span class="status-badge" style="background:${isBad?'#fecaca':'#dcfce7'}; color:${col};">${tag}</span></td>
+                </tr>`;
+            }).join('');
+            document.getElementById('attendanceTable').innerHTML = ath + abd;
+
+            // Exams
+            // Generate full table
+            const renderEList = (exams) => {
+                const ehr = `<tr><th>Exam Type</th><th>Scheduled Date</th><th>Subject / Scope</th></tr>`;
+                const ebd = exams.map(e => `<tr><td><strong style="color:#0284c7;">${e.type}</strong></td><td>${e.date}</td><td>${e.sub}</td></tr>`).join('');
+                document.getElementById('examTable').innerHTML = ehr + ebd;
+            };
+            renderEList(u.exams);
+            
+            // Wire the dropdown
+            document.getElementById('examFilterSelect').onchange = (e) => {
+                const val = e.target.value;
+                if(val === 'All') renderEList(u.exams);
+                else {
+                    const filtered = u.exams.filter(ex => ex.type.includes(val) || val.includes(ex.type));
+                    if(filtered.length === 0) document.getElementById('examTable').innerHTML = `<tr><td colspan="3" style="text-align:center; padding:2rem; color:#64748b;">No schedule posted for ${val}.</td></tr>`;
+                    else renderEList(filtered);
+                }
+            };
+
+            // Assignments
+            document.getElementById('assignmentsContent').innerHTML = u.assignments.map(a => `
+                <div class="list-item-clean" style="padding:1rem 0;">
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <i data-lucide="${a.status === 'completed' ? 'check-circle-2' : 'circle-dashed'}" style="color: ${a.status === 'completed' ? '#22c55e' : '#eab308'}"></i>
+                        <div>
+                            <span style="font-weight:600; font-size:1rem; color:#1e293b; display:block;">${a.title}</span>
+                            <span style="font-size:0.8rem; color:#64748b;">Due: ${a.date}</span>
+                        </div>
+                    </div>
+                    <span class="status-badge ${a.status}">${a.status === 'completed' ? 'Submitted' : 'Pending Action'}</span>
+                </div>
+            `).join('');
+
+            // Staff Feedback
+            document.getElementById('feedbackCards').innerHTML = u.feedback.map(f => {
+                const stars = '★'.repeat(f.rating) + '☆'.repeat(5 - f.rating);
+                return `<div class="erp-card">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
+                        <div>
+                            <h4 style="margin:0; font-size:1.1rem; color:#0f172a;">${f.faculty}</h4>
+                            <span style="font-size:0.8rem; color:#64748b;">${f.course}</span>
+                        </div>
+                        <div style="color:#eab308; font-size:1.2rem; letter-spacing:2px;">${stars}</div>
+                    </div>
+                    <p style="background:#f8fafc; padding:1rem; border-radius:6px; font-size:0.9rem; color:#475569; margin:0;">"${f.comment}"</p>
+                </div>`
+            }).join('');
+        }
+
+        async function hydrateStudentFromBackend() {
+            try {
+                const [att, results, fees, complaints] = await Promise.all([
+                    window.RRDCH_BACKEND.request("/student/attendance", { method: "GET" }),
+                    window.RRDCH_BACKEND.request("/student/results?semester=4", { method: "GET" }),
+                    window.RRDCH_BACKEND.request("/student/fees", { method: "GET" }),
+                    window.RRDCH_BACKEND.request("/student/complaints", { method: "GET" })
+                ]);
+
+                window.__studentFees = fees.data || [];
+
+                if ((att.data || []).length) {
+                    const ath = `<tr><th>Subject Code / Name</th><th>Attendance Percentage</th><th>Status Alert</th></tr>`;
+                    const abd = att.data.map(a => {
+                        const pct = Number(a.percentage || 0);
+                        const isBad = pct < 75;
+                        const col = isBad ? '#ef4444' : '#22c55e';
+                        const tag = isBad ? 'Shortage' : 'Satisfactory';
+                        return `<tr>
+                            <td><strong>${a.code || ''} - ${a.name || a.subject_name || 'Subject'}</strong></td>
+                            <td><div style="display:flex; align-items:center; gap:1rem;"><span style="font-weight:700; width:40px;">${pct}%</span><div class="progress-track" style="flex:1; margin:0;"><div class="progress-fill" style="width:${pct}%; background:${col};"></div></div></div></td>
+                            <td><span class="status-badge" style="background:${isBad?'#fecaca':'#dcfce7'}; color:${col};">${tag}</span></td>
+                        </tr>`;
+                    }).join('');
+                    document.getElementById('attendanceTable').innerHTML = ath + abd;
+                }
+
+                if ((results.data || []).length) {
+                    const ehr = `<tr><th>Exam Type</th><th>Scheduled Date</th><th>Subject / Scope</th></tr>`;
+                    const ebd = results.data.map(r => `<tr><td><strong style="color:#0284c7;">Semester ${r.semester}</strong></td><td>${r.exam_date || "--"}</td><td>${r.subject_name || r.code || "Subject"} — ${r.marks_obtained || r.internal_marks || "--"} marks</td></tr>`).join('');
+                    document.getElementById('examTable').innerHTML = ehr + ebd;
+                }
+
+                if ((fees.data || []).length) {
+                    const pending = fees.data.filter(f => String(f.status || "").toLowerCase() !== "paid");
+                    const totalDue = pending.reduce((sum, f) => sum + Number(f.amount || 0), 0);
+                    if (totalDue > 0) {
+                        document.getElementById('feePayInput').value = String(totalDue);
+                        document.getElementById('dashPendingFees').textContent = "₹ " + totalDue.toLocaleString("en-IN");
+                    }
+                }
+
+                if ((complaints.data || []).length) {
+                    const list = complaints.data.map(c => `<div class="list-item-clean"><strong>${c.id}</strong><span style="color:#64748b;">${c.category} · ${c.status}</span></div>`).join('');
+                    const host = document.getElementById('hostelComplaintsList');
+                    if (host) host.innerHTML = list;
+                }
+            } catch (e) {
+                // Silent fallback to seeded local dataset.
+            }
+        }
+
+        // --- INTERACTIVE CALENDAR ENGINE ---
+        let currDate = new Date(); // Mock System considers "now"
+        function initCalendar() {
+            renderCal(currDate.getMonth(), currDate.getFullYear());
+        }
+
+        function renderCal(m, y) {
+            const calApp = document.getElementById('calendarApp');
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            // Events Global DB
+            const eventsDB = {
+                "0-26" : {type: "holiday", l: "Republic Day", i:"flag"},
+                "2-30" : {type: "holiday", l: "Good Friday", i:"flag"},
+                "3-13" : {type: "holiday", l: "Ugadi", i:"flag"},
+                "3-14" : {type: "holiday", l: "Ambedkar Jayanti", i:"flag"},
+                "3-18" : {type: "exam", l: "RGUHS Internal Assess", i:"file-edit"},
+                "3-22" : {type: "academic", l: "Mega Dental Camp", i:"stethoscope"},
+                "4-01" : {type: "holiday", l: "May Day", i:"flag"},
+                "4-20" : {type: "exam", l: "MDS Periodontology Internal", i:"file-edit"},
+                "5-05" : {type: "exam", l: "BDS Gen. Pathology Internal", i:"file-edit"},
+                "7-15" : {type: "holiday", l: "Independence Day", i:"flag"}
+            };
+
+            const firstDay = new Date(y, m, 1).getDay();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const today = new Date();
+
+            let gridHTML = `<div class="cal-head">Sun</div><div class="cal-head">Mon</div><div class="cal-head">Tue</div><div class="cal-head">Wed</div><div class="cal-head">Thu</div><div class="cal-head">Fri</div><div class="cal-head">Sat</div>`;
+            
+            for(let i = 0; i < firstDay; i++) {
+                gridHTML += `<div class="cal-day empty"></div>`;
+            }
+
+            for(let d = 1; d <= daysInMonth; d++) {
+                const isToday = (d === today.getDate() && m === today.getMonth() && y === today.getFullYear());
+                const eKey = `${m}-${d<10?'0'+d:d}`;
+                const ev = eventsDB[eKey];
+                
+                let pillHTML = '';
+                if(ev) {
+                    pillHTML = `<div class="event-pill event-${ev.type}"><i data-lucide="${ev.i}" width="10"></i> ${ev.l}</div>`;
+                }
+
+                gridHTML += `<div class="cal-day ${isToday ? 'today' : ''}" onclick="alert('Viewing events for ${d} ${months[m]} ${y}')">
+                    <span class="cal-day-num" style="font-weight:${isToday?'700':'500'}">${d}</span>
+                    ${isToday && !ev ? `<div class="event-pill event-academic"><i data-lucide="play-circle" width="10"></i> Today</div>` : ''}
+                    ${pillHTML}
+                </div>`;
+            }
+
+            calApp.innerHTML = `
+                <div class="calendar-header">
+                    <h3 style="margin: 0; font-size: 1.2rem;">${months[m]} ${y}</h3>
+                    <div style="display:flex; gap:1rem;">
+                        <button class="btn btn-outline" style="padding: 0.4rem 0.8rem;" onclick="chgMonth(-1)">&lt; Prev</button>
+                        <button class="btn btn-outline" style="padding: 0.4rem 0.8rem;" onclick="currDate=new Date(); initCalendar();">Today Focus</button>
+                        <button class="btn btn-outline" style="padding: 0.4rem 0.8rem;" onclick="chgMonth(1)">Next &gt;</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    ${gridHTML}
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        window.chgMonth = (shift) => {
+            currDate.setMonth(currDate.getMonth() + shift);
+            initCalendar();
+        }; else {
+              div.style.cssText = "padding:0.85rem 1.15rem; border-radius:16px; font-size:0.95rem; line-height:1.5; max-width:85%; background:white; border:1px solid #e2e8f0; align-self:flex-start; color:#1e293b; border-bottom-left-radius:4px; box-shadow:0 2px 5px rgba(0,0,0,0.05); animation:fadeInUp 0.3s ease;";
+          }
+          
+          c.appendChild(div); 
+          c.scrollTop = c.scrollHeight; return div;
+        }
+    </script>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>

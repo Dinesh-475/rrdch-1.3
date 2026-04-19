@@ -1,0 +1,26 @@
+{
+  "topbar": {
+    "phone": "+91 80 1234 5678",
+    "email": "info@rrdch.org"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "academics": "Academics",
+    "hospital": "Hospital",
+    "research": "Research",
+    "admissions": "Admissions",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero1": "Excellence in Dental Education Since 1992",
+    "hero1_sub": "Rajarajeswari Dental College & Hospital",
+    "hero1_cta": "Explore Academics",
+    "stats": {
+      "years": "30+ Years",
+      "chairs": "250+ Dental Chairs",
+      "depts": "10 Departments",
+      "patients": "500+ Daily Patients"
+    }
+  }
+}

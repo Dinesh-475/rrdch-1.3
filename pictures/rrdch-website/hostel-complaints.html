@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RRDCH Hostel Complaint Portal — Submit and track hostel maintenance requests. Students can report electrical, plumbing, or other issues with real-time status tracking.">
+  <title>Hostel Complaints — RRDCH, Bengaluru</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+  <style>
+    .complaint-card { background: var(--surface); border-radius: var(--radius-md); padding: 1.25rem; border: 1px solid var(--border); margin-bottom: 0.75rem; display: flex; align-items: flex-start; gap: 1rem; transition: box-shadow 0.2s; }
+    .complaint-card:hover { box-shadow: var(--shadow-card); }
+    .status-pill { padding: 0.25rem 0.75rem; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-pending { background: rgba(230,126,34,0.12); color: #e67e22; border: 1px solid rgba(230,126,34,0.3); }
+    .status-inprogress { background: rgba(52,152,219,0.12); color: #2980b9; border: 1px solid rgba(52,152,219,0.3); }
+    .status-resolved { background: rgba(39,174,96,0.12); color: #27ae60; border: 1px solid rgba(39,174,96,0.3); }
+    .urgency-high { color: var(--danger); font-weight: 700; }
+    .urgency-medium { color: var(--gold); font-weight: 600; }
+    .urgency-low { color: var(--success); }
+    .progress-steps { display: flex; gap: 0; margin: 1.5rem 0; }
+    .progress-step { flex: 1; text-align: center; position: relative; }
+    .progress-step::before { content: ''; position: absolute; top: 14px; left: 50%; right: -50%; height: 2px; background: var(--border); z-index: 0; }
+    .progress-step:last-child::before { display: none; }
+    .step-dot { width: 28px; height: 28px; border-radius: 50%; margin: 0 auto 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; position: relative; z-index: 1; background: var(--border); color: var(--muted); border: 2px solid var(--border); }
+    .step-dot.done { background: var(--success); border-color: var(--success); color: #fff; }
+    .step-dot.active { background: var(--teal); border-color: var(--teal); color: #fff; box-shadow: 0 0 0 4px rgba(46,134,171,0.2); }
+    .step-label { font-size: 0.7rem; color: var(--muted); }
+    .category-btn { padding: 0.65rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius-md); background: var(--surface); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--muted); text-align: center; }
+    .category-btn:hover { border-color: var(--teal); color: var(--teal); }
+    .category-btn.selected { background: var(--teal); border-color: var(--teal); color: #fff; }
+    .urgency-btn { padding: 0.5rem 1rem; border-radius: var(--radius-pill); border: 1.5px solid var(--border); font-size: 0.8rem; font-weight: 600; cursor: pointer; background: var(--bg); color: var(--muted); }
+    .urgency-btn.selected-low { background: rgba(39,174,96,0.1); border-color: var(--success); color: var(--success); }
+    .urgency-btn.selected-medium { background: rgba(200,169,81,0.1); border-color: var(--gold); color: var(--gold); }
+    .urgency-btn.selected-high { background: rgba(231,76,60,0.1); border-color: var(--danger); color: var(--danger); }
+  </style>
+</head>
+<body>
+
+<div class="live-ticker">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;">
+    <div class="ticker-inner">
+      <span class="ticker-label">HOSTEL</span>
+      <div class="ticker-track"><span class="ticker-text">🏠 Hostel Office Hours: 8AM–8PM Mon–Sat &nbsp;•&nbsp; Warden Contact: 080-28437151 &nbsp;•&nbsp; Emergency: 080-28437150</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="navbar-inner" style="max-width:1280px;margin:0 auto;">
+    <a href="index.html" class="navbar-brand">
+      <img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text"><div class="navbar-brand-name">RRDCH</div><div class="navbar-brand-sub">Hostel Complaints</div></div>
+    </a>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="students.html">Student Life</a></li>
+      <li><a href="hostel-complaints.html" class="active">Hostel Complaints</a></li>
+      <li><a href="login.html" style="color:var(--gold);">Portal Login</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button>
+      <button class="dark-toggle" id="darkToggle">🌙</button>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background:linear-gradient(135deg,var(--navy),#1a4a6b);padding:5rem 0 2.5rem;text-align:center;color:#fff;margin-top:72px;">
+  <div class="container">
+    <div style="display:inline-block;background:rgba(200,169,81,0.2);border:1px solid rgba(200,169,81,0.4);color:var(--gold-light);font-size:0.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:0.35rem 1rem;border-radius:var(--radius-pill);margin-bottom:1rem;">🏠 Hostel Portal</div>
+    <h1 style="color:#fff;margin-bottom:0.75rem;">Hostel Complaint Portal</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto;">Submit hostel maintenance requests or report issues. Track your complaint status in real time.</p>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<section class="section">
+  <div class="container" style="max-width:900px;">
+
+    <!-- Auth guard notice (shown if not logged in) -->
+    <div id="authNotice" class="alert alert-info" style="display:none;">
+      <span>🔐</span>
+      <div>
+        <strong>Login Required</strong> — You must be logged in as a student to submit a new complaint.
+        <a href="login.html" style="color:var(--teal);font-weight:600;margin-left:0.5rem;">Login as Student →</a>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div style="display:flex;gap:0.5rem;margin-bottom:2rem;border-bottom:2px solid var(--border);">
+      <button class="btn btn-sm" id="tab-submit" onclick="switchTab('submit')" style="border:none;border-bottom:3px solid var(--navy);border-radius:0;color:var(--navy);padding:0.75rem 1.25rem;font-weight:700;">📝 Submit Complaint</button>
+      <button class="btn btn-sm" id="tab-track" onclick="switchTab('track')" style="border:none;border-bottom:3px solid transparent;border-radius:0;color:var(--muted);padding:0.75rem 1.25rem;">🔍 Track by ID</button>
+      <button class="btn btn-sm" id="tab-my" onclick="switchTab('my')" style="border:none;border-bottom:3px solid transparent;border-radius:0;color:var(--muted);padding:0.75rem 1.25rem;">📋 My Complaints</button>
+    </div>
+
+    <!-- TAB: SUBMIT -->
+    <div id="panel-submit">
+      <div id="submitForm">
+        <div class="form-group">
+          <label class="form-label">Room Number</label>
+          <input class="form-control" id="roomNo" placeholder="e.g. G-204, B-112" autocomplete="off">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.5rem;" id="categoryGrid">
+            <button class="category-btn" onclick="selectCategory('Electrical',this)">⚡ Electrical</button>
+            <button class="category-btn" onclick="selectCategory('Plumbing',this)">🔧 Plumbing</button>
+            <button class="category-btn" onclick="selectCategory('Furniture',this)">🪑 Furniture</button>
+            <button class="category-btn" onclick="selectCategory('WiFi',this)">📡 WiFi</button>
+            <button class="category-btn" onclick="selectCategory('Cleanliness',this)">🧹 Cleanliness</button>
+            <button class="category-btn" onclick="selectCategory('Pest Control',this)">🐛 Pest Control</button>
+            <button class="category-btn" onclick="selectCategory('Security',this)">🔒 Security</button>
+            <button class="category-btn" onclick="selectCategory('Other',this)">➕ Other</button>
+          </div>
+          <input type="hidden" id="category" value="">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Urgency Level</label>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <button class="urgency-btn" onclick="selectUrgency('low',this)">🟢 Low — Can wait a few days</button>
+            <button class="urgency-btn" onclick="selectUrgency('medium',this)">🟡 Medium — Within 48 hours</button>
+            <button class="urgency-btn" onclick="selectUrgency('high',this)">🔴 High — Urgent, needs today</button>
+          </div>
+          <input type="hidden" id="urgency" value="medium">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Describe the Issue <span style="color:var(--danger);">*</span></label>
+          <textarea class="form-control" id="description" rows="4" placeholder="Describe the problem in detail — include location, when it started, and what you've already tried..."></textarea>
+        </div>
+
+        <button class="btn btn-navy btn-lg w-full" id="submitBtn" onclick="submitComplaint()" style="justify-content:center;">
+          🚀 Submit Complaint
+        </button>
+        <p style="font-size:0.78rem;color:var(--muted);text-align:center;margin-top:0.75rem;">After submission, you'll receive a Complaint ID. Use it to track your request.</p>
+      </div>
+
+      <!-- Success state -->
+      <div id="submitSuccess" style="display:none;text-align:center;padding:2.5rem 1rem;">
+        <div style="font-size:4rem;margin-bottom:1rem;">✅</div>
+        <h2 style="margin-bottom:0.75rem;">Complaint Submitted!</h2>
+        <p style="margin-bottom:0.5rem;">Your Complaint ID is:</p>
+        <div id="complaintIdDisplay" style="font-family:monospace;font-size:1.4rem;font-weight:700;color:var(--teal);background:rgba(46,134,171,0.08);border:1.5px solid rgba(46,134,171,0.25);border-radius:var(--radius-md);padding:0.75rem 1.5rem;display:inline-block;margin-bottom:1.5rem;"></div>
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+          <button onclick="copyComplaintId()" class="btn btn-teal">📋 Copy ID</button>
+          <button onclick="resetForm()" class="btn" style="border:1.5px solid var(--border);">Submit Another</button>
+          <button onclick="switchTab('track')" class="btn btn-navy">🔍 Track This Complaint</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: TRACK -->
+    <div id="panel-track" style="display:none;">
+      <div class="card" style="padding:1.5rem;margin-bottom:1.5rem;">
+        <h3 style="margin-bottom:1rem;">Track by Complaint ID</h3>
+        <div style="display:flex;gap:0.75rem;">
+          <input class="form-control" id="trackId" placeholder="Enter Complaint ID — e.g. HC-20260412-001" style="flex:1;">
+          <button class="btn btn-navy" onclick="trackComplaint()">Track →</button>
+        </div>
+      </div>
+      <div id="trackResult"></div>
+    </div>
+
+    <!-- TAB: MY COMPLAINTS -->
+    <div id="panel-my" style="display:none;">
+      <div id="myComplaintsContent"></div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div style="text-align:center;padding:1rem 0;">
+      <p style="margin-bottom:0.5rem;">🏠 Hostel Office: Room 101, Main Building &nbsp;|&nbsp; 📞 080-28437151</p>
+      <p>📧 hostel@rrdch.org &nbsp;|&nbsp; Office Hours: Monday–Saturday 8AM–8PM</p>
+    </div>
+    <div class="footer-bottom"><p>© 2026 RRDCH, Bengaluru. All Rights Reserved.</p></div>
+  </div>
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;background:var(--gold);color:var(--navy);border:none;border-radius:50%;font-size:1.2rem;cursor:pointer;display:none;z-index:999;">↑</button>
+
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+const API = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+
+let selectedCategory = '';
+let selectedUrgency = 'medium';
+let currentComplaintId = '';
+let currentUser = null;
+
+function init() {
+  currentUser = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+  if (!currentUser || currentUser.role !== 'student') {
+    document.getElementById('authNotice').style.display = 'flex';
+    document.getElementById('submitForm').style.opacity = '0.5';
+    document.getElementById('submitForm').style.pointerEvents = 'none';
+  }
+  loadMyComplaints();
+}
+
+function switchTab(tab) {
+  ['submit','track','my'].forEach(t => {
+    document.getElementById(`panel-${t}`).style.display = t === tab ? 'block' : 'none';
+    const btn = document.getElementById(`tab-${t}`);
+    if (btn) {
+      btn.style.borderBottom = t === tab ? '3px solid var(--navy)' : '3px solid transparent';
+      btn.style.color = t === tab ? 'var(--navy)' : 'var(--muted)';
+      btn.style.fontWeight = t === tab ? '700' : '500';
+    }
+  });
+  if (tab === 'my') loadMyComplaints();
+}
+
+function selectCategory(cat, btn) {
+  selectedCategory = cat;
+  document.getElementById('category').value = cat;
+  document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function selectUrgency(urg, btn) {
+  selectedUrgency = urg;
+  document.getElementById('urgency').value = urg;
+  document.querySelectorAll('.urgency-btn').forEach(b => b.className = 'urgency-btn');
+  btn.classList.add(`selected-${urg}`);
+}
+
+function genComplaintId() {
+  const d = new Date();
+  const date = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  return `HC-${date}-${String(Math.floor(Math.random()*999)).padStart(3,'0')}`;
+}
+
+function submitComplaint() {
+  const room = document.getElementById('roomNo').value.trim();
+  const desc = document.getElementById('description').value.trim();
+  if (!selectedCategory) { showToast('Please select a category.', 'error'); return; }
+  if (!desc) { showToast('Please describe the issue.', 'error'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '⏳ Submitting...';
+  btn.disabled = true;
+
+  const payload = { room_no: room, category: selectedCategory, description: desc, urgency: selectedUrgency };
+  const token = localStorage.getItem('rrdch_token');
+
+  // Try real API first, fall back to localStorage demo
+  const headers = { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+
+  fetch(`${API}/student/complaints`, { method: 'POST', headers, body: JSON.stringify(payload) })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        showComplaintSuccess(data.data.id);
+      } else { throw new Error(data.msg); }
+    })
+    .catch(e => {
+      showToast(e.message || 'Error submitting complaint. Are you logged in?', 'error');
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = '🚀 Submit Complaint';
+      btn.disabled = false;
+    });
+}
+
+function showComplaintSuccess(id) {
+  currentComplaintId = id;
+  document.getElementById('submitForm').style.display = 'none';
+  document.getElementById('submitSuccess').style.display = 'block';
+  document.getElementById('complaintIdDisplay').textContent = id;
+  document.getElementById('submitBtn').textContent = '🚀 Submit Complaint';
+  document.getElementById('submitBtn').disabled = false;
+  showToast('Complaint submitted successfully!', 'success');
+}
+
+function resetForm() {
+  document.getElementById('submitForm').style.display = 'block';
+  document.getElementById('submitSuccess').style.display = 'none';
+  document.getElementById('description').value = '';
+  document.getElementById('roomNo').value = '';
+  document.getElementById('category').value = '';
+  selectedCategory = '';
+  document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('selected'));
+}
+
+function copyComplaintId() {
+  navigator.clipboard?.writeText(currentComplaintId).then(() => showToast('Complaint ID copied!', 'success'));
+  document.getElementById('trackId').value = currentComplaintId;
+}
+
+function saveLocalComplaint(c) {
+  // Deprecated function due to removing localStorage fallback
+}
+
+function getStatusStep(status) {
+  const steps = ['pending','in_progress','resolved'];
+  return steps.indexOf(status);
+}
+
+function renderComplaintCard(c) {
+  const statusClass = c.status === 'resolved' ? 'status-resolved' : c.status === 'in_progress' ? 'status-inprogress' : 'status-pending';
+  const statusLabel = c.status === 'resolved' ? '✅ Resolved' : c.status === 'in_progress' ? '🔄 In Progress' : '⏳ Pending';
+  const step = getStatusStep(c.status);
+  return `
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.5rem;margin-bottom:1rem;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+        <div>
+          <div style="font-family:monospace;font-size:0.82rem;color:var(--teal);margin-bottom:0.25rem;">${c.id}</div>
+          <h3 style="font-size:1rem;color:var(--text);margin-bottom:0.25rem;">${c.category || 'General'}</h3>
+          <div style="font-size:0.78rem;color:var(--muted);">Room: ${c.room_no || '—'} &nbsp;•&nbsp; ${new Date(c.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem;">
+          <span class="status-pill ${statusClass}">${statusLabel}</span>
+          <span class="${c.urgency === 'high' ? 'urgency-high' : c.urgency === 'medium' ? 'urgency-medium' : 'urgency-low'}" style="font-size:0.75rem;">${c.urgency === 'high' ? '🔴 High' : c.urgency === 'medium' ? '🟡 Medium' : '🟢 Low'} Priority</span>
+        </div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">${c.description}</p>
+      ${c.resolution_notes ? `<div style="background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.2);border-radius:var(--radius-sm);padding:0.75rem;margin-bottom:1rem;"><div style="font-size:0.75rem;font-weight:700;color:var(--success);margin-bottom:0.3rem;">RESOLUTION NOTES</div><p style="font-size:0.83rem;color:var(--text);">${c.resolution_notes}</p></div>` : ''}
+      <div class="progress-steps">
+        <div class="progress-step">
+          <div class="step-dot ${step >= 0 ? 'done' : ''}">✓</div>
+          <div class="step-label">Submitted</div>
+        </div>
+        <div class="progress-step">
+          <div class="step-dot ${step >= 1 ? (step > 1 ? 'done' : 'active') : ''}">🔄</div>
+          <div class="step-label">In Progress</div>
+        </div>
+        <div class="progress-step">
+          <div class="step-dot ${step >= 2 ? 'done' : ''}">✅</div>
+          <div class="step-label">Resolved</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function trackComplaint() {
+  const id = document.getElementById('trackId').value.trim();
+  if (!id) { showToast('Enter a Complaint ID to track.', 'error'); return; }
+  const trackResult = document.getElementById('trackResult');
+  trackResult.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted);">⏳ Looking up complaint...</div>';
+
+  // Try API then fall back to localStorage
+  fetch(`${API}/student/complaints`)
+    .then(r => r.json())
+    .then(data => {
+      const c = (data.data || []).find(c => c.id === id);
+      if (c) { trackResult.innerHTML = renderComplaintCard(c); }
+      else throw new Error('Not in DB');
+    })
+    .catch(() => {
+      trackResult.innerHTML = '<div class="alert alert-warning"><span>⚠️</span><div>Complaint not found. Please check the ID and try again, or contact the hostel office directly.</div></div>';
+    });
+}
+
+function loadMyComplaints() {
+  const container = document.getElementById('myComplaintsContent');
+  const token = localStorage.getItem('rrdch_token');
+  if (!token) {
+    container.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--muted);"><div style="font-size:3rem;margin-bottom:1rem;">🔐</div><p>Please log in to view your complaints.</p></div>';
+    return;
+  }
+  
+  fetch(`${API}/student/complaints`, { headers: { Authorization: `Bearer ${token}` } })
+    .then(r => r.json())
+    .then(data => {
+      const complaints = data.data || [];
+      if (complaints.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:3rem 1rem;color:var(--muted);"><div style="font-size:3rem;margin-bottom:1rem;">📋</div><p>No complaints submitted yet.</p><button onclick="switchTab(\'submit\')" class="btn btn-navy mt-2">Submit a Complaint</button></div>';
+        return;
+      }
+      container.innerHTML = `<p style="font-size:0.85rem;color:var(--muted);margin-bottom:1.25rem;">${complaints.length} complaint(s) on record</p>` +
+        complaints.map(c => renderComplaintCard(c)).join('');
+    })
+    .catch(() => {
+      container.innerHTML = '<div class="alert alert-danger"><span>❌</span><div>Error loading complaints.</div></div>';
+    });
+}
+
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  if (btn) btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+});
+
+init();
+</script>
+</body>
+</html>

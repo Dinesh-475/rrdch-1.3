@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Departments | RRDCH — Rajarajeswari Dental College &amp; Hospital</title>
+  <meta name="description" content="Explore all 10 clinical departments at RRDCH including Oral Surgery, Orthodontics, Periodontology, Paediatric Dentistry, Implantology and more. Expert HODs and modern equipment.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/departments.html">
+  <meta property="og:title" content="Clinical Departments | RRDCH">
+  <meta property="og:description" content="10 specialized dental departments with state-of-the-art equipment. Book an OPD appointment at any RRDCH department.">
+  <meta property="og:url" content="https://rrdch.edu.in/departments.html">
+  <meta property="og:image" content="/assets/images/campus/hospital.jpg">
+
+  <meta name="description" content="RRDCH Departments — All 10 specialized dental departments with HODs, timings, scope and appointment booking.">
+  <title>Departments — RRDCH</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .dept-hero { background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%); padding: 6rem 0 3rem; color: #fff; text-align: center; }
+    .dept-detail { background: var(--surface); }
+    .dept-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+    .dept-nav-btn { padding: 0.5rem 1rem; border-radius: var(--radius-pill); border: 1.5px solid var(--border); background: var(--surface); font-size: 0.82rem; cursor: pointer; transition: all var(--transition); color: var(--text); }
+    .dept-nav-btn:hover, .dept-nav-btn.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .dept-full-card { background: var(--surface); border-radius: var(--radius-lg); border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow-card); margin-bottom: 2rem; }
+    .dept-full-header { background: linear-gradient(135deg, var(--navy), var(--teal)); padding: 2rem; display: flex; align-items: center; gap: 1.5rem; }
+    .dept-full-icon { width: 64px; height: 64px; background: rgba(255,255,255,0.15); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
+    .dept-full-body { padding: 2rem; }
+    .dept-scope-tag { display: inline-block; background: rgba(46,134,171,0.08); border: 1px solid rgba(46,134,171,0.2); color: var(--teal); font-size: 0.78rem; padding: 0.3rem 0.75rem; border-radius: var(--radius-pill); margin: 0.2rem; font-weight: 500; }
+    .hod-card { display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--bg); border-radius: var(--radius-md); border: 1px solid var(--border); }
+    .hod-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--navy), var(--teal)); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .equip-tag { display: inline-block; background: rgba(27,58,107,0.06); border: 1px solid rgba(27,58,107,0.12); color: var(--navy); font-size: 0.78rem; padding: 0.3rem 0.75rem; border-radius: var(--radius-pill); margin: 0.2rem; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" style="top:0;">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text">
+        <div class="navbar-brand-name">RRDCH</div>
+        <div class="navbar-brand-sub">Rajarajeswari Dental College & Hospital</div>
+      </div>
+    </a>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="departments.html" class="active">Departments</a></li>
+      <li><a href="appointments.html">Appointments</a></li>
+      <li><a href="admissions.html">Admissions</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html" style="color:var(--gold);">Portal Login</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button>
+      <button class="dark-toggle" id="darkToggle">🌙</button>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<section class="dept-hero" style="margin-top:72px;">
+  <div class="container">
+    <div class="label" style="display:inline-block;background:rgba(200,169,81,0.2);border:1px solid rgba(200,169,81,0.4);color:var(--gold-light);font-size:0.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:0.35rem 1rem;border-radius:var(--radius-pill);margin-bottom:1rem;">10 Speciality Clinics</div>
+    <h1 style="color:#fff;margin-bottom:0.75rem;">Dental Departments</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto;">World-class specialized dental care across 10 departments with expert faculty, modern equipment, and 350 electronic dental chairs.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <!-- Quick Nav -->
+    <div class="dept-nav" id="deptNav"></div>
+    <!-- Department Cards -->
+    <div id="deptList"></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 Rajarajeswari Dental College & Hospital, Bengaluru.</p>
+      <div style="display:flex;gap:1rem;">
+        <a href="index.html" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Home</a>
+        <a href="appointments.html" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Book Appointment</a>
+        <a href="contact.html" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+fetch('/api/public/departments')
+  .then(r => r.json())
+  .then(res => {
+    if(!res.ok) return;
+    const depts = res.data;
+    const nav = document.getElementById('deptNav');
+    const list = document.getElementById('deptList');
+
+    depts.forEach(d => {
+      // Nav button
+      const btn = document.createElement('button');
+      btn.className = 'dept-nav-btn';
+      btn.textContent = `${d.icon || '🦷'} ${d.short_name}`;
+      btn.onclick = () => { document.getElementById(`dept-${d.id}`).scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+      nav.appendChild(btn);
+
+      // Parse equipment and scope if strings
+      let equipment = [];
+      try { equipment = JSON.parse(d.equipment_list); } catch(e) { equipment = []; }
+
+      // Full card
+      const card = document.createElement('div');
+      card.className = 'dept-full-card animate-on-scroll';
+      card.id = `dept-${d.id}`;
+      card.innerHTML = `
+        <div class="dept-full-header" style="position:relative;overflow:hidden;min-height:220px;padding:3rem 2rem;">
+          ${d.image ? `<img src="${d.image}" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.3;mix-blend-mode:overlay;z-index:0;" alt="${d.name}">` : ''}
+          <div style="position:relative;z-index:1;display:flex;align-items:center;gap:1.5rem;width:100%;">
+            <div class="dept-full-icon" style="background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);">${d.icon || '🦷'}</div>
+            <div style="flex:1;">
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.8);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.3rem;text-shadow:0 1px 2px rgba(0,0,0,0.5);">Department ${d.id} of 10</div>
+              <h2 style="color:#fff;margin-bottom:0.3rem;font-size:1.8rem;text-shadow:0 2px 4px rgba(0,0,0,0.5);">${d.name}</h2>
+              <div style="color:rgba(255,255,255,0.9);font-size:0.875rem;font-weight:600;text-shadow:0 1px 2px rgba(0,0,0,0.5);">🕐 ${d.opd_hours} — ${d.opd_days || 'Mon–Sat'}</div>
+            </div>
+            <div style="margin-left:auto;">
+              <a href="appointments.html?dept=${d.id}" class="btn btn-primary" style="box-shadow:0 4px 15px rgba(0,0,0,0.3);">📅 Book Appointment</a>
+            </div>
+          </div>
+        </div>
+        <div class="dept-full-body">
+          <div class="grid-2" style="gap:2rem;">
+            <div>
+              <h4 style="color:var(--text);margin-bottom:0.75rem;">About the Department</h4>
+              <p style="font-size:0.9rem;line-height:1.7;margin-bottom:1.25rem;">${d.description}</p>
+              
+              ${d.image ? `
+                <div style="border-radius:var(--radius-md);overflow:hidden;margin-bottom:1.5rem;box-shadow:var(--shadow-sm);border:1px solid var(--border);">
+                  <img src="${d.image}" style="width:100%;height:200px;object-fit:cover;display:block;" alt="${d.name} Clinic">
+                </div>
+              ` : ''}
+
+              <h4 style="color:var(--text);margin-bottom:0.75rem;">Equipment & Facilities</h4>
+              <div>${equipment.map(e => `<span class="equip-tag">⚙️ ${e}</span>`).join('')}</div>
+            </div>
+
+            <div>
+              <h4 style="color:var(--text);margin-bottom:0.75rem;">Head of Department</h4>
+              <div class="hod-card" style="margin-bottom:1.25rem;">
+                <div class="hod-avatar">👨‍⚕️</div>
+                <div>
+                  <div style="font-weight:600;color:var(--text);">${d.hod_name}</div>
+                  <div style="font-size:0.78rem;color:var(--gold);font-weight:600;">Head of Department</div>
+                </div>
+              </div>
+
+              <h4 style="color:var(--text);margin-bottom:0.75rem;">Clinic Schedule</h4>
+              <div class="card" style="padding:1rem;margin-bottom:1.25rem;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                  ${['Mon','Tue','Wed','Thu','Fri','Sat'].map(day => `
+                    <div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:0.3rem 0;border-bottom:1px solid var(--border);">
+                      <span style="color:var(--muted);">${day}</span>
+                      <span style="color:var(--success);font-weight:600;">Open</span>
+                    </div>
+                  `).join('')}
+                  <div style="display:flex;justify-content:space-between;font-size:0.82rem;padding:0.3rem 0;grid-column:1/-1;">
+                    <span style="color:var(--muted);">Sun</span>
+                    <span style="color:var(--danger);font-weight:600;">Closed</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="alert alert-info">
+                <span>💡</span>
+                <span style="font-size:0.82rem;">Patient Info: Walk-ins accepted before 11:00 AM. Prior appointments are given priority. Please bring valid ID and any previous X-rays/records.</span>
+              </div>
+
+              <a href="appointments.html?dept=${d.id}" class="btn btn-navy w-full mt-2" style="justify-content:center;">📅 Book an Appointment in This Department →</a>
+            </div>
+          </div>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+
+    // Animate on scroll
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.animate-on-scroll').forEach(el => obs.observe(el));
+
+    // Hash navigation
+    if (window.location.hash) {
+      setTimeout(() => {
+        const el = document.querySelector(window.location.hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Portal | RRDCH</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/backend.js"></script>
+    <script src="js/site-context.js"></script>
+    <script src="js/ai.js"></script>
+    <style>
+        body { background: #f8fafc; font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #0f172a; }
+
+        /* Unified Top Nav */
+        .portal-nav { background: white; padding: 1rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .nav-brand { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
+        .nav-brand img { height: 42px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .lang-toggle { background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #cbd5e1; cursor: pointer; display: flex; gap: 0.5rem; align-items: center; font-weight: 600; font-size: 0.85rem; color: #475569; }
+        .lang-toggle span.active { color: #0284c7; font-weight: 700; }
+
+        /* Emergency Banner */
+        .emergency-banner { background: #ef4444; color: white; padding: 1rem; display: flex; justify-content: center; align-items: center; gap: 1rem; font-weight: 600; animation: pulse 2s infinite; }
+        .emergency-banner a { color: white; border: 1px solid white; padding: 0.4rem 1rem; border-radius: 6px; text-decoration: none; font-size: 0.9rem; }
+        .emergency-banner a:hover { background: white; color: #ef4444; }
+
+        /* Quick Nav */
+        .quick-nav { background: #1e293b; padding: 1rem; display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+        .quick-nav a { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; transition: 0.2s; }
+        .quick-nav a:hover { background: rgba(255,255,255,0.1); color: white; }
+
+        /* Main Container */
+        .container { max-width: 1280px; margin: 0 auto; padding: 2.5rem 2rem; }
+        .grid-layout { display: grid; grid-template-columns: 8fr 4fr; gap: 2rem; }
+        @media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        /* Cards */
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; padding: 2rem; margin-bottom: 2rem; }
+        .card-header { display: flex; align-items: center; gap: 0.75rem; margin-top: 0; margin-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem; font-size: 1.3rem; color: #1e293b; font-weight: 700; }
+        
+        /* Forms */
+        .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+        .form-control { width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.8rem 1rem; font-family: 'Inter', sans-serif; box-sizing: border-box; transition: 0.2s; }
+        .form-control:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+        label { display: block; margin-bottom: 0.4rem; font-size: 0.85rem; font-weight: 600; color: #475569; }
+        
+        /* Time Slots Grid */
+        .time-slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 0.5rem; }
+        .time-slot { background: #f8fafc; border: 1px solid #cbd5e1; padding: 0.75rem; text-align: center; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #475569; transition: 0.2s; }
+        .time-slot:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .time-slot.selected { background: #e0f2fe; border-color: #0284c7; color: #0284c7; }
+
+        .btn { border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; justify-content: center; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: #2A6F97; color: white; }
+        .btn-primary:hover { background: #1A365D; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(42,111,151,0.2); }
+
+        /* Tracker UX */
+        .tracker-steps { display: flex; justify-content: space-between; position: relative; margin-top: 2rem; margin-bottom: 1rem; }
+        .tracker-steps::before { content: ''; position: absolute; top: 18px; left: 0; right: 0; height: 3px; background: #e2e8f0; z-index: 1; }
+        .tracker-step { z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; flex: 1; }
+        .step-circle { width: 40px; height: 40px; border-radius: 50%; background: white; border: 3px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #64748b; background: #f8fafc; transition: 0.3s; }
+        .step-label { font-size: 0.8rem; font-weight: 600; color: #64748b; text-align: center; line-height: 1.2; }
+        .tracker-step.active .step-circle { border-color: #22c55e; background: #22c55e; color: white; }
+        .tracker-step.active .step-label { color: #166534; }
+        .tracker-step.waiting .step-circle { border-color: #eab308; background: #fef08a; color: #854d0e; }
+        #trackerResult { display: none; margin-top: 2rem; padding: 1.5rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; }
+
+        /* Live Queue Ticker */
+        .live-queue { background: #0f172a; padding: 1.5rem; border-radius: 12px; color: white; margin-bottom: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .queue-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .queue-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .queue-token { font-size: 1.5rem; font-weight: 800; color: #38bdf8; display: flex; align-items: center; gap: 0.5rem; }
+        
+        /* Departments Grid */
+        .dept-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .dept-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; background: #f8fafc; transition: 0.2s; }
+        .dept-card:hover { border-color: #bae6fd; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+        /* Interactive Map */
+        .map-embed { width: 100%; height: 250px; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; }
+
+        /* Message Banner */
+        .success-banner { background: #dcfce7; color: #166534; padding: 1.5rem; border-radius: 8px; border: 1px solid #bbf7d0; display: none; align-items: center; gap: 1rem; font-weight: 600; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.85; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+<!-- Unified Top Nav -->
+    <nav class="portal-nav">
+        <a href="index.html" class="nav-brand">
+            <img src="images/logo.png" alt="RRDCH" style="height: 48px; background: white; border-radius: 8px; padding: 8px 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); object-fit: contain; width: 100%; max-width: 250px;">
+            <span style="background: #e0f2fe; color: #0284c7; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; border: 1px solid #bae6fd; letter-spacing: 0.5px;" class="tl" data-kn="ರೋಗಿಗಳ ಪೋರ್ಟಲ್">PATIENT PORTAL</span>
+        </a>
+        <div style="display:flex; gap:1rem; align-items:center;">
+            <button class="lang-toggle" onclick="toggleLang()"><i data-lucide="languages" width="16"></i> <span id="enBtn" class="active">EN</span> | <span id="knBtn">ಕನ್ನಡ</span></button>
+            <a href="index.html" class="btn btn-outline" style="border:1px solid #e2e8f0;"><i data-lucide="log-out" width="16"></i> Exit</a>
+        </div>
+    </nav>
+
+    <!-- Emergency Banner -->
+    <div class="emergency-banner" id="bannerEmergency">
+        <i data-lucide="alert-triangle"></i> <span class="tl" data-kn="ತುರ್ತು ಆರೈಕೆ - ತಕ್ಷಣ ವೈದ್ಯಕೀಯ ನೆರವು ಬೇಕೇ?">Emergency Care - Need immediate medical assistance?</span> 
+        <a href="tel:08028437150" class="tl" data-kn="ಈಗಲೇ ಕರೆ ಮಾಡಿ 080-28437150">Call Now 080-28437150</a>
+    </div>
+
+    <!-- Quick Navbar -->
+    <div class="quick-nav">
+        <a href="#symptomSec"><i data-lucide="stethoscope"></i> <span class="tl" data-kn="ಲಕ್ಷಣಗಳ ತಪಾಸಣೆ">Symptom Checker</span></a>
+        <a href="#bookingSec"><i data-lucide="calendar"></i> <span class="tl" data-kn="ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಕಾಯ್ದಿರಿಸಿ">Book Appointment</span></a>
+        <a href="#trackSec"><i data-lucide="activity"></i> <span class="tl" data-kn="ಲೈವ್ ಟ್ರ್ಯಾಕಿಂಗ್">Live Tracking</span></a>
+        <a href="#deptSec"><i data-lucide="briefcase-medical"></i> <span class="tl" data-kn="ವಿಭಾಗಗಳು">Departments</span></a>
+        <a href="#historySec"><i data-lucide="history"></i> <span class="tl" data-kn="ರೋಗಿಯ ಇತಿಹಾಸ">Patient History</span></a>
+        <a href="#contactSec"><i data-lucide="map-pin"></i> <span class="tl" data-kn="ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ">Contact Us</span></a>
+    </div>
+
+    <div class="container">
+        
+        <div class="grid-layout">
+            <!-- LEFT COLUMN: Forms & Trackers -->
+            <div>
+                <!-- Booking Section -->
+                <div class="card" id="bookingSec">
+                    <h2 class="card-header tl" data-kn="ಹೊಸ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಕಾಯ್ದಿರಿಸಿ"><i data-lucide="calendar-plus"></i> Book New Appointment</h2>
+                    <div class="success-banner" id="bookSuccess">
+                        <i data-lucide="check-circle" width="32"></i>
+                        <div>
+                            <span style="display:block; font-size:1.1rem; margin-bottom:0.2rem;" class="tl" data-kn="ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ!">Appointment Confirmed!</span>
+                            <span style="font-size:0.9rem; font-weight:400;">Your token number is <strong>#42</strong>. Please arrive 15 minutes early.</span>
+                        </div>
+                    </div>
+                    
+                    <div id="tokenCard" style="display:none; margin-top:1.5rem; margin-bottom:1.5rem;">
+                        <div id="tokenCardInner" style="background: linear-gradient(135deg, #1A365D, #2A6F97); color: white; border-radius: 16px; padding: 2rem; max-width: 420px; margin: 0 auto; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                            <div style="font-size:0.75rem; letter-spacing:2px; opacity:0.7; margin-bottom:0.5rem;">RRDCH — APPOINTMENT TOKEN</div>
+                            <div id="tcToken" style="font-size:3.5rem; font-weight:900; line-height:1; margin-bottom:0.5rem;">#42</div>
+                            <div id="tcDept" style="font-size:1.1rem; font-weight:600; margin-bottom:1.5rem; color:#BAE6FD;"></div>
+                            <div style="background:white; border-radius:12px; padding:1rem; display:inline-block; margin-bottom:1.5rem;">
+                                <canvas id="tokenQR"></canvas>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; text-align:left; font-size:0.85rem; opacity:0.9;">
+                                <div><div style="opacity:0.6;">Patient</div><div id="tcName" style="font-weight:600;"></div></div>
+                                <div><div style="opacity:0.6;">Date</div><div id="tcDate" style="font-weight:600;"></div></div>
+                                <div><div style="opacity:0.6;">Time</div><div id="tcTime" style="font-weight:600;"></div></div>
+                                <div><div style="opacity:0.6;">Token No.</div><div id="tcTokenSmall" style="font-weight:600;"></div></div>
+                            </div>
+                            <div style="margin-top:1.5rem; font-size:0.75rem; opacity:0.6; border-top: 1px solid rgba(255,255,255,0.2); padding-top:1rem;">
+                                📸 Screenshot or Print this card. Arrive 15 min early.
+                            </div>
+                        </div>
+                        <button onclick="printToken()" style="margin-top:1rem; width:100%; border:1px solid #cbd5e1; background:white; color:#0f172a;" class="btn btn-outline">🖨️ Print Token Card</button>
+                    </div>
+                    
+                    <form id="bookingForm" onsubmit="event.preventDefault(); submitBooking();">
+                        <div class="form-grid">
+                            <div>
+                                <label class="tl" data-kn="ರೋಗಿಯ ಹೆಸರು">Patient Full Name</label>
+                                <input type="text" class="form-control" required placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="tl" data-kn="ಮೊಬೈಲ್ ಸಂಖ್ಯೆ">Mobile Number</label>
+                                <input type="tel" class="form-control" required placeholder="10-digit number" pattern="[0-9]{10}">
+                            </div>
+                            <div>
+                                <label class="tl" data-kn="ವಿಭಾಗ">Select Department</label>
+                                <select class="form-control" required>
+                                    <option value="" class="tl" data-kn="ಆಯ್ಕೆಮಾಡಿ">Select...</option>
+                                    <option value="Oral Surgery">Oral Surgery</option>
+                                    <option value="Orthodontics">Orthodontics</option>
+                                    <option value="General Dentistry">General Dentistry</option>
+                                    <option value="Periodontology">Periodontology</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="tl" data-kn="ದ್ಯದ ವೈದ್ಯರ">Preferred Doctor (Optional)</label>
+                                <select class="form-control">
+                                    <option value="">Any Available Specialist</option>
+                                    <option value="Dr. Arvind">Dr. Arvind</option>
+                                    <option value="Dr. Shilpa">Dr. Shilpa</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem;">
+                            <label class="tl" data-kn="ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ">Select Date</label>
+                            <input type="date" class="form-control" style="width:50%;" required>
+                        </div>
+
+                        <div style="margin-top: 1.5rem;">
+                            <label class="tl" data-kn="ಸಮಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ">Select Time Slot</label>
+                            <div class="time-slots" id="tSlots">
+                                <div class="time-slot" onclick="selTime(this)">09:00 AM</div>
+                                <div class="time-slot" onclick="selTime(this)">10:30 AM</div>
+                                <div class="time-slot" onclick="selTime(this)">11:45 AM</div>
+                                <div class="time-slot" onclick="selTime(this)">01:30 PM</div>
+                                <div class="time-slot" onclick="selTime(this)">03:00 PM</div>
+                                <div class="time-slot" onclick="selTime(this)">04:15 PM</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:2rem; font-size:1.1rem;"><i data-lucide="save"></i> <span class="tl" data-kn="ಪುಚಿತಪಡಿಸಿ">Confirm Appointment</span></button>
+                    </form>
+                </div>
+
+                <!-- Symptom Checker Section -->
+                <div class="card" id="symptomSec">
+                    <h2 class="card-header"><i data-lucide="stethoscope"></i> AI Symptom Checker</h2>
+                    <p style="color:#64748b; font-size:0.95rem; margin-bottom:1.5rem;">Describe your dental problem in plain language. Our AI will recommend the right department and urgency level.</p>
+                    <textarea id="symptomInput" class="form-control" rows="4" placeholder="e.g. My tooth has been aching for 3 days and it hurts badly when I eat something cold..." style="margin-bottom:1rem;"></textarea>
+                    <button id="symptomBtn" class="btn btn-primary" style="width:100%; margin-bottom:1rem;" onclick="analyseSymptoms()"><i data-lucide="sparkles"></i> Analyse My Symptoms</button>
+                    
+                    <div id="symptomLoading" style="display:none; text-align:center; padding:1.5rem; color:#64748b;">
+                        <i data-lucide="loader-2" class="lucide-spin" style="animation: spin 2s linear infinite;"></i> Analysing your symptoms...
+                    </div>
+                    
+                    <div id="symptomResult" style="display:none; padding:1.5rem; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; margin-top:1rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e2e8f0; padding-bottom:1rem; margin-bottom:1rem;">
+                            <div>
+                                <h3 id="symCondition" style="margin:0; font-size:1.1rem; color:#0f172a;"></h3>
+                                <span id="symDept" style="font-size:0.85rem; color:#64748b; font-weight:600;"></span>
+                            </div>
+                            <span id="symUrgency" style="padding:0.4rem 1rem; border-radius:20px; font-weight:700; font-size:0.85rem;"></span>
+                        </div>
+                        <p id="symAdvice" style="font-size:0.9rem; line-height:1.5; color:#475569; margin-bottom:1.5rem;"></p>
+                        <button class="btn btn-outline" style="width:100%; border:1px solid #cbd5e1; background:white; color:#0f172a;" onclick="document.getElementById('bookingSec').scrollIntoView({behavior:'smooth'})">Book This Department</button>
+                    </div>
+                </div>
+
+                <!-- Treatment Cost Estimator Section -->
+                <div class="card" id="costSec">
+                    <h2 class="card-header"><span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;border:2px solid currentColor;font-weight:bold;margin-right:0.5rem;font-size:14px;">₹</span> Treatment Cost Estimator</h2>
+                    <p style="color:#64748b; font-size:0.95rem; margin-bottom:1.5rem;">Get an instant estimate before your visit. Prices are indicative ranges.</p>
+                    
+                    <select id="treatmentSelect" class="form-control" style="margin-bottom:1rem;">
+                        <option value="">Select a treatment...</option>
+                        <option value="Routine Checkup & Cleaning">Routine Checkup & Cleaning</option>
+                        <option value="Tooth Extraction (Simple)">Tooth Extraction (Simple)</option>
+                        <option value="Tooth Extraction (Surgical)">Tooth Extraction (Surgical)</option>
+                        <option value="Root Canal Treatment (RCT)">Root Canal Treatment (RCT)</option>
+                        <option value="Dental Crown (Ceramic)">Dental Crown (Ceramic)</option>
+                        <option value="Dental Implant">Dental Implant</option>
+                        <option value="Braces (Metal)">Braces (Metal)</option>
+                        <option value="Braces (Ceramic)">Braces (Ceramic)</option>
+                        <option value="Invisible Aligners">Invisible Aligners</option>
+                        <option value="Teeth Whitening">Teeth Whitening</option>
+                        <option value="Gum Treatment (Scaling)">Gum Treatment (Scaling)</option>
+                        <option value="Dentures (Full)">Dentures (Full)</option>
+                        <option value="Composite Filling">Composite Filling</option>
+                        <option value="Pediatric Dental Checkup">Pediatric Dental Checkup</option>
+                    </select>
+
+                    <div id="costResult" style="display:none; animation: pulse 0.5s ease 1; margin-bottom:1.5rem;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:8px; text-align:center;">
+                                <div style="font-size:0.8rem; color:#64748b; margin-bottom:0.3rem;">Est. Cost</div>
+                                <div id="costRange" style="font-size:1.1rem; font-weight:700; color:#0f172a;"></div>
+                            </div>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:8px; text-align:center;">
+                                <div style="font-size:0.8rem; color:#64748b; margin-bottom:0.3rem;">Visits</div>
+                                <div id="costSessions" style="font-size:1.1rem; font-weight:700; color:#0f172a;"></div>
+                            </div>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:8px; text-align:center;">
+                                <div style="font-size:0.8rem; color:#64748b; margin-bottom:0.3rem;">Insurance</div>
+                                <div id="costInsurance" style="font-size:0.95rem; font-weight:600;"></div>
+                            </div>
+                            <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:1rem; border-radius:8px; text-align:center;">
+                                <div style="font-size:0.8rem; color:#64748b; margin-bottom:0.3rem;">Payment Modes</div>
+                                <div id="costPayment" style="font-size:0.95rem; font-weight:600; color:#0f172a;"></div>
+                            </div>
+                        </div>
+                        <p style="font-size:0.8rem; color:#94a3b8; font-style:italic; margin-bottom:1rem; text-align:center;">Prices are approximate estimates for RRDCH. Actual cost determined after clinical examination. Contact 080-28437150 for exact quotes.</p>
+                        <button class="btn btn-outline" style="width:100%; border:1px solid #cbd5e1; background:white; color:#0f172a;" onclick="document.getElementById('bookingSec').scrollIntoView({behavior:'smooth'})">Book Appointment for This Treatment</button>
+                    </div>
+                </div>
+
+                <!-- Tracker Section -->
+                <div class="card" id="trackSec">
+                    <h2 class="card-header tl" data-kn="ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಸ್ಥಿತಿ ಟ್ರ್ಯಾಕಿಂಗ್"><i data-lucide="crosshair"></i> Appointment Tracking</h2>
+                    <p style="color:#64748b; font-size:0.95rem; margin-bottom:1.5rem;" class="tl" data-kn="ನಿಮ್ಮ ಟೋಕನ್ ಅಥವಾ ಮೊಬೈಲ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ.">Enter your Token Number or Registered Phone Number to check queue status.</p>
+                    
+                    <div style="display:flex; gap:1rem;">
+                        <input type="text" class="form-control" placeholder="Token No. (e.g., #42) or Phone" id="trackInput">
+                        <button class="btn btn-primary" style="white-space:nowrap;" onclick="processTrack()"><i data-lucide="search"></i> <span class="tl" data-kn="ಹುಡುಕಿ">Check Status</span></button>
+                    </div>
+
+                    <div id="trackerResult">
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #bbf7d0; padding-bottom:1rem; margin-bottom:0.5rem;">
+                            <div>
+                                <h3 style="margin:0; font-size:1.1rem; color:#166534;">Token #42</h3>
+                                <span style="font-size:0.85rem; color:#166534; font-weight:600;">Oral Surgery • Dr. Arvind</span>
+                            </div>
+                            <span style="background:#22c55e; color:white; padding:0.4rem 1rem; border-radius:20px; font-weight:700; font-size:0.85rem; box-shadow:0 4px 6px rgba(34,197,94,0.3);">ONGOING</span>
+                        </div>
+                        
+                        <div class="tracker-steps">
+                            <div class="tracker-step active"><div class="step-circle"><i data-lucide="clipboard-check"></i></div><span class="step-label">Booked</span></div>
+                            <div class="tracker-step active"><div class="step-circle"><i data-lucide="clock"></i></div><span class="step-label">Arrived</span></div>
+                            <div class="tracker-step active"><div class="step-circle"><i data-lucide="activity"></i></div><span class="step-label">Ongoing<br>Consultation</span></div>
+                            <div class="tracker-step"><div class="step-circle"><i data-lucide="check"></i></div><span class="step-label">Completed</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Departments Grid -->
+                <div class="card" id="deptSec">
+                    <h2 class="card-header tl" data-kn="ನಮ್ಮ ವಿಭಾಗಗಳು"><i data-lucide="building-2"></i> Specialized Departments</h2>
+                    <div class="dept-grid">
+                        <div class="dept-card">
+                            <h3 style="margin-top:0; color:#0284c7; font-size:1.1rem;">Oral Surgery</h3>
+                            <p style="font-size:0.85rem; color:#64748b; line-height:1.5;">Extractions, trauma care, and maxillofacial interventions.</p>
+                            <button class="btn btn-outline" style="width:100%; font-size:0.8rem; padding:0.5rem;" onclick="location.href='#bookingSec'">Book Now</button>
+                        </div>
+                        <div class="dept-card">
+                            <h3 style="margin-top:0; color:#0284c7; font-size:1.1rem;">Orthodontics</h3>
+                            <p style="font-size:0.85rem; color:#64748b; line-height:1.5;">Braces, aligners, and dentofacial orthopedics correction.</p>
+                            <button class="btn btn-outline" style="width:100%; font-size:0.8rem; padding:0.5rem;" onclick="location.href='#bookingSec'">Book Now</button>
+                        </div>
+                        <div class="dept-card">
+                            <h3 style="margin-top:0; color:#0284c7; font-size:1.1rem;">Pedodontics</h3>
+                            <p style="font-size:0.85rem; color:#64748b; line-height:1.5;">Specialized pediatric dentistry for infants and children.</p>
+                            <button class="btn btn-outline" style="width:100%; font-size:0.8rem; padding:0.5rem;" onclick="location.href='#bookingSec'">Book Now</button>
+                        </div>
+                        <div class="dept-card">
+                            <h3 style="margin-top:0; color:#0284c7; font-size:1.1rem;">Periodontology</h3>
+                            <p style="font-size:0.85rem; color:#64748b; line-height:1.5;">Gum disease treatment, scaling, and oral hygiene.</p>
+                            <button class="btn btn-outline" style="width:100%; font-size:0.8rem; padding:0.5rem;" onclick="location.href='#bookingSec'">Book Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History & Feedback -->
+                <div class="card" id="historySec">
+                    <h2 class="card-header tl" data-kn="ರೋಗಿಯ ಇತಿಹಾಸ ಮತ್ತು ಪ್ರತಿಕ್ರಿಯೆ"><i data-lucide="clipboard-list"></i> History & Evaluation</h2>
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:1rem; border-radius:8px; border:1px dashed #cbd5e1; margin-bottom:2rem;">
+                        <div>
+                            <strong style="color:#0f172a; display:block;">Last Visit: 12-Mar-2026</strong>
+                            <span style="font-size:0.85rem; color:#64748b;">Orthodontics • Dr. Shilpa (Braces Checkup)</span>
+                        </div>
+                        <span class="btn btn-outline" style="background:white; pointer-events:none; font-size:0.8rem; padding:0.4rem 0.8rem;">Completed</span>
+                    </div>
+
+                    <h3 style="font-size:1rem; color:#1e293b; margin-bottom:1rem;" class="tl" data-kn="ಪ್ರತಿಕ್ರಿಯೆ ನೀಡಿ">Submit Post-Consultation Feedback</h3>
+                    <div class="success-banner" id="feedSuccess" style="margin-bottom:1rem; padding:1rem;">
+                        <i data-lucide="heart" style="color:#166534;"></i> <span class="tl" data-kn="ನಿಮ್ಮ ಪ್ರತಿಕ್ರಿಯೆಗೆ ಧನ್ಯವಾದಗಳು!">Thank you for your feedback! It helps us improve our care.</span>
+                    </div>
+                    <form id="feedbackForm" onsubmit="event.preventDefault(); submitFeedback();">
+                        <div style="display:flex; gap:0.5rem; margin-bottom:1rem; color:#cbd5e1;">
+                            <i data-lucide="star" class="star-rating" style="cursor:pointer;" onclick="rate(1)"></i>
+                            <i data-lucide="star" class="star-rating" style="cursor:pointer;" onclick="rate(2)"></i>
+                            <i data-lucide="star" class="star-rating" style="cursor:pointer;" onclick="rate(3)"></i>
+                            <i data-lucide="star" class="star-rating" style="cursor:pointer;" onclick="rate(4)"></i>
+                            <i data-lucide="star" class="star-rating" style="cursor:pointer;" onclick="rate(5)"></i>
+                        </div>
+                        <textarea class="form-control" rows="3" placeholder="Share your experience (Optional)" style="resize:vertical; margin-bottom:1rem;"></textarea>
+                        <button type="submit" class="btn btn-outline"><i data-lucide="send"></i> Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Dashboard & Info -->
+            <div>
+                <!-- LIVE QUEUE TICKER -->
+                <div class="live-queue">
+                    <h2 style="margin-top:0; font-size:1.2rem; display:flex; align-items:center; gap:0.5rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:1rem;">
+                        <i data-lucide="radio" style="color:#ef4444; animation:pulse 2s infinite;"></i> 
+                        <span class="tl" data-kn="ಲೈವ್ ಆಸ್ಪತ್ರೆ ಸರತಿ">Live Hospital Queue</span>
+                        <span style="font-size:0.6rem; background:#ef4444; color:white; padding:0.2rem 0.5rem; border-radius:10px; margin-left:auto; animation:pulse 1s infinite;">🔴 LIVE</span>
+                    </h2>
+                    
+                    <div id="liveQueueContainer">
+                        <div style="text-align:center; padding:2rem; color:#94a3b8;">Loading live queue...</div>
+                    </div>
+                </div>
+
+                <!-- Contact & Maps -->
+                <div class="card" id="contactSec" style="padding:1.5rem;">
+                    <h2 class="card-header tl" data-kn="ಆಸ್ಪತ್ರೆಯ ನಿರ್ದೇಶನಗಳು"><i data-lucide="map"></i> Hospital Directions</h2>
+                    <div class="map-embed">
+                        <iframe src="https://www.google.com/maps/embed?pb=!4v1776281365595!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJQ0txcW45RlE.!2m2!1d12.8872363070956!2d77.4508580774884!3f284.27121207218994!4f-15.702741423491702!5f0.4000000000000002" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <div style="margin-top:1.5rem; font-size:0.9rem; line-height:1.6; color:#475569;">
+                        <strong>Rajarajeswari Dental College & Hospital</strong><br>
+                        #14 Ramohalli Cross, Mysore Road, Kumbalgodu,<br>
+                        Bangalore - 560074.<br><br>
+                        <i data-lucide="phone" width="14"></i> +91 80 2843 7150<br>
+                        <i data-lucide="mail" width="14"></i> info@rrdch.org
+                    </div>
+                </div>
+
+                <!-- Calendar Events -->
+                <div class="card" style="padding:1.5rem;">
+                    <h2 class="card-header tl" data-kn="ಮುಂಬರುವ ಘಟನೆಗಳು"><i data-lucide="calendar-heart"></i> Health Events</h2>
+                    <div style="display:flex; flex-direction:column; gap:1rem;">
+                        <div style="border-left:3px solid #0284c7; padding-left:1rem;">
+                            <strong style="color:#0f172a; display:block;">Free Oral Cancer Screening</strong>
+                            <span style="font-size:0.8rem; color:#64748b;">Sunday, 20-Apr-2026 • Main Block</span>
+                        </div>
+                        <div style="border-left:3px solid #22c55e; padding-left:1rem;">
+                            <strong style="color:#0f172a; display:block;">Pediatric Dental Camp</strong>
+                            <span style="font-size:0.8rem; color:#64748b;">Saturday, 26-Apr-2026 • Pediatrics Dept</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements & Tour -->
+                <div class="card" style="padding:1.5rem; background:#1e293b; color:white; border:none;">
+                    <h2 class="card-header" style="color:white; border-bottom:1px solid rgba(255,255,255,0.1);"><i data-lucide="award"></i> Accreditations</h2>
+                    <div style="display:flex; justify-content:space-around; align-items:center; margin:1.5rem 0;">
+                        <div style="text-align:center;"><div style="font-size:1.5rem; font-weight:800; color:#facc15;">A+</div><span style="font-size:0.75rem;">NAAC Graded</span></div>
+                        <div style="text-align:center;"><div style="font-size:1.5rem; font-weight:800; color:#38bdf8;">ISO</div><span style="font-size:0.75rem;">9001:2015</span></div>
+                        <div style="text-align:center;"><div style="font-size:1.5rem; font-weight:800; color:#22c55e;">DCI</div><span style="font-size:0.75rem;">Recognised</span></div>
+                    </div>
+                    <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:1.5rem 0;">
+                    <h3 style="margin:0 0 1rem 0; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i data-lucide="video"></i> Virtual Campus Tour</h3>
+                    <div style="width:100%; height:250px; background:#0f172a; border-radius:8px; border:1px solid #475569; position:relative; overflow:hidden;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!4v1776281365595!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJQ0txcW45RlE.!2m2!1d12.8872363070956!2d77.4508580774884!3f284.27121207218994!4f-15.702741423491702!5f0.4000000000000002" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Time Slot Logic
+        let selT = null;
+        function selTime(el) {
+            document.querySelectorAll('.time-slot').forEach(e => e.classList.remove('selected'));
+            el.classList.add('selected');
+            selT = el.textContent;
+        }
+
+        const sb = window.sb || (window.RRDCH_CONFIG && window.RRDCH_CONFIG.SUPABASE_URL && !window.RRDCH_CONFIG.SUPABASE_URL.startsWith("YOUR_")
+            ? supabase.createClient(window.RRDCH_CONFIG.SUPABASE_URL, window.RRDCH_CONFIG.SUPABASE_ANON_KEY)
+            : null);
+
+        function loadQueue() {
+            if(!sb) return;
+            sb.from("opd_queue").select("*").order("department").then(({data, error}) => {
+                if(error || !data) return;
+                const container = document.getElementById("liveQueueContainer");
+                container.innerHTML = "";
+                data.forEach(row => {
+                    const waitNum = row.est_wait_minutes;
+                    let dotCol = "#22c55e";
+                    if(waitNum >= 10 && waitNum <= 20) dotCol = "#eab308";
+                    else if(waitNum > 20) dotCol = "#ef4444";
+                    
+                    container.innerHTML += `
+                    <div class="queue-item">
+                        <div>
+                            <div style="font-weight:600; font-size:1.05rem; display:flex; align-items:center; gap:0.4rem;">
+                            <span style="width:8px; height:8px; border-radius:50%; background:${dotCol}; display:inline-block;"></span>
+                            ${row.department}</div>
+                            <span style="font-size:0.8rem; color:#94a3b8;">${row.doctor_name || 'Doctor'} • Est. Wait: ${waitNum} min</span>
+                        </div>
+                        <div class="queue-token">#${row.current_token}</div>
+                    </div>`;
+                });
+            });
+        }
+        
+        if (sb) {
+            sb.channel("queue-changes").on("postgres_changes", { event: "*", schema: "public", table: "opd_queue" }, () => loadQueue()).subscribe();
+            loadQueue();
+        } else {
+            const container = document.getElementById("liveQueueContainer");
+            if (container) {
+                container.innerHTML = '<div style="padding:0.9rem;border:1px dashed #cbd5e1;border-radius:10px;color:#64748b;">Live queue is unavailable. Configure Supabase in <code>js/config.js</code>.</div>';
+            }
+        }
+
+        async function analyseSymptoms() {
+            const input = document.getElementById("symptomInput").value.trim();
+            if(!input) { alert("Please describe your symptoms first."); return; }
+            document.getElementById("symptomLoading").style.display = "block";
+            document.getElementById("symptomResult").style.display = "none";
+            
+            try {
+                const parsed = await window.RRDCH_AI.askJson(
+                    "You are a dental triage assistant for RRDCH hospital in Bangalore. A patient describes their problem: " +
+                    input +
+                    ". Respond ONLY with a JSON object with these exact keys: condition (string, plain language, max 10 words), department (one of: Oral Surgery, Orthodontics, General Dentistry, Periodontology, Pedodontics, Conservative Dentistry and Endodontics, Oral Medicine and Radiology, Implantology), urgency (one of: Routine, Soon, Urgent, Emergency), advice (2 sentences max, plain language, reassuring tone). Return only raw JSON, no markdown."
+                );
+                
+                document.getElementById("symCondition").textContent = parsed.condition;
+                document.getElementById("symDept").textContent = parsed.department;
+                document.getElementById("symAdvice").textContent = parsed.advice;
+                
+                const urgEl = document.getElementById("symUrgency");
+                urgEl.textContent = parsed.urgency;
+                urgEl.style.color = "white";
+                if(parsed.urgency === "Routine") { urgEl.style.background = "#22c55e"; }
+                else if(parsed.urgency === "Soon") { urgEl.style.background = "#eab308"; urgEl.style.color = "#854d0e"; }
+                else if(parsed.urgency === "Urgent") { urgEl.style.background = "#f97316"; }
+                else if(parsed.urgency === "Emergency") { urgEl.style.background = "#ef4444"; }
+                else { urgEl.style.background = "#94a3b8"; }
+                
+                const deptSelect = document.querySelector('#bookingForm select[required]');
+                if(deptSelect) {
+                    for(let i=0; i<deptSelect.options.length; i++) {
+                        if(deptSelect.options[i].value.toLowerCase().includes(parsed.department.toLowerCase())) {
+                            deptSelect.selectedIndex = i; break;
+                        }
+                    }
+                }
+                document.getElementById("symptomLoading").style.display = "none";
+                document.getElementById("symptomResult").style.display = "block";
+                document.getElementById("symptomResult").style.animation = "pulse 0.5s ease 1";
+                document.getElementById("symCondition").style.display = "block";
+                document.getElementById("symDept").style.display = "block";
+                urgEl.style.display = "block";
+                document.getElementById("symAdvice").style.color = "#475569";
+            } catch (err) {
+                document.getElementById("symptomLoading").style.display = "none";
+                document.getElementById("symptomResult").style.display = "block";
+                document.getElementById("symCondition").style.display = "none";
+                document.getElementById("symDept").style.display = "none";
+                document.getElementById("symUrgency").style.display = "none";
+                document.getElementById("symAdvice").textContent = "Could not analyse symptoms. Please try again.";
+                document.getElementById("symAdvice").style.color = "red";
+            }
+        }
+
+        const COST_DATA = {
+            "Routine Checkup & Cleaning": { min:500, max:1200, sessions:1, insurance:false, emi:false, department:"General Dentistry" },
+            "Tooth Extraction (Simple)": { min:500, max:1500, sessions:1, insurance:true, emi:false, department:"Oral Surgery" },
+            "Tooth Extraction (Surgical)": { min:2000, max:5000, sessions:1, insurance:true, emi:false, department:"Oral Surgery" },
+            "Root Canal Treatment (RCT)": { min:3000, max:8000, sessions:3, insurance:true, emi:true, department:"Conservative Dentistry and Endodontics" },
+            "Dental Crown (Ceramic)": { min:4000, max:10000, sessions:2, insurance:false, emi:true, department:"Prosthodontics" },
+            "Dental Implant": { min:25000, max:60000, sessions:4, insurance:false, emi:true, department:"Implantology" },
+            "Braces (Metal)": { min:20000, max:35000, sessions:12, insurance:false, emi:true, department:"Orthodontics" },
+            "Braces (Ceramic)": { min:30000, max:50000, sessions:12, insurance:false, emi:true, department:"Orthodontics" },
+            "Invisible Aligners": { min:60000, max:120000, sessions:10, insurance:false, emi:true, department:"Orthodontics" },
+            "Teeth Whitening": { min:3000, max:8000, sessions:1, insurance:false, emi:false, department:"General Dentistry" },
+            "Gum Treatment (Scaling)": { min:800, max:2500, sessions:2, insurance:false, emi:false, department:"Periodontology" },
+            "Dentures (Full)": { min:8000, max:25000, sessions:3, insurance:false, emi:true, department:"Prosthodontics" },
+            "Composite Filling": { min:800, max:2500, sessions:1, insurance:false, emi:false, department:"Conservative Dentistry and Endodontics" },
+            "Pediatric Dental Checkup": { min:300, max:800, sessions:1, insurance:false, emi:false, department:"Pedodontics" }
+        };
+
+        document.getElementById("treatmentSelect")?.addEventListener("change", function() {
+            const val = this.value; const resEl = document.getElementById("costResult");
+            if(!val || !COST_DATA[val]) { resEl.style.display = "none"; return; }
+            const data = COST_DATA[val];
+            document.getElementById("costRange").textContent = \`₹\${data.min.toLocaleString("en-IN")} – ₹\${data.max.toLocaleString("en-IN")}\`;
+            document.getElementById("costSessions").textContent = \`\${data.sessions} Session\${data.sessions > 1 ? 's' : ''}\`;
+            document.getElementById("costInsurance").innerHTML = data.insurance ? "<span style='color:#16a34a;'>✓ May be covered</span>" : "<span style='color:#64748b;'>✗ Self-pay only</span>";
+            document.getElementById("costPayment").textContent = data.emi ? "EMI available + Cash + Card" : "Cash + Card only";
+            const deptSelect = document.querySelector('#bookingForm select[required]');
+            if(deptSelect && data.department) {
+                for(let i=0; i<deptSelect.options.length; i++) {
+                    if(deptSelect.options[i].value.toLowerCase().includes(data.department.toLowerCase())) { deptSelect.selectedIndex = i; break; }
+                }
+            }
+            resEl.style.display = "block";
+        });
+
+        let feedbackScore = 0;
+
+        // Booking Submission (backend-enabled with graceful fallback)
+        async function submitBooking() {
+            if(!selT) { alert("Please select a time slot!"); return; }
+            
+            const form = document.getElementById('bookingForm');
+            const alertBox = document.getElementById('bookSuccess');
+            const name = form.querySelector('input[type="text"]').value.trim();
+            const phone = form.querySelector('input[type="tel"]')?.value.trim() || "";
+            const dept = form.querySelector('select').value;
+            const dateInput = form.querySelector('input[type="date"]')?.value;
+            const date = dateInput ? new Date(dateInput) : new Date();
+            const dateStr = date.toLocaleDateString("en-IN", {day:"2-digit", month:"short", year:"numeric"});
+            const time = selT || "10:00 AM";
+            let tokenNum = Math.floor(Math.random() * 80) + 20;
+
+            // Try backend booking first.
+            try {
+                const booked = await fetch("/api/book", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        patientName: name || "Patient",
+                        department: dept,
+                        doctor: form.querySelectorAll("select")[1]?.value || "Doctor",
+                        date: dateInput || new Date().toISOString().slice(0, 10),
+                        time,
+                        reason: document.getElementById("symptomInput")?.value.trim() || "",
+                        phone: phone || ""
+                    })
+                }).then(r => r.json());
+                if (booked?.ok) {
+                    const tokenRaw = booked.data?.appointment?.token || "";
+                    const tokenDigits = String(tokenRaw).replace(/\D/g, "");
+                    if (tokenDigits) tokenNum = parseInt(tokenDigits, 10);
+                }
+            } catch (e) {
+                window.RRDCH_UTILS?.showToast("Booked in offline mode (backend unavailable).", "info");
+            }
+
+            document.getElementById("tcToken").textContent = "#" + tokenNum;
+            document.getElementById("tcTokenSmall").textContent = "#" + tokenNum;
+            document.getElementById("tcName").textContent = name;
+            document.getElementById("tcDept").textContent = dept;
+            document.getElementById("tcDate").textContent = dateStr;
+            document.getElementById("tcTime").textContent = time;
+
+            const canvas = document.getElementById("tokenQR");
+            QRCode.toCanvas(canvas, \`RRDCH|Token:\${tokenNum}|\${dept}|\${name}|\${dateStr}|\${time}\`, { width: 150, margin: 1, color: { dark: "#1A365D", light: "#FFFFFF" } });
+
+            form.style.display = 'none';
+            alertBox.style.display = 'flex';
+            
+            document.getElementById("tokenCard").style.display = "block";
+            document.getElementById("tokenCard").scrollIntoView({ behavior: "smooth" });
+
+            setTimeout(() => { form.reset(); selT=null; document.querySelectorAll('.time-slot').forEach(e=>e.classList.remove('selected')); }, 3000);
+        }
+
+        function printToken() {
+            const content = document.getElementById("tokenCardInner").outerHTML;
+            const win = window.open("", "_blank");
+            win.document.write(\`<html><head><title>RRDCH Token</title><style>body{margin:2rem;font-family:Arial;}</style></head><body>\${content}<script>window.print();</script></body></html>\`);
+            win.document.close();
+        }
+
+        // Tracker (backend-enabled)
+        async function processTrack() {
+            const val = document.getElementById('trackInput').value.trim();
+            if(!val) return;
+            const res = document.getElementById('trackerResult');
+            try {
+                const data = val.toUpperCase().includes("A-")
+                    ? await window.RRDCH_BACKEND.trackVisit({ token: val })
+                    : await window.RRDCH_BACKEND.trackVisit({ phone: val });
+                const top = data.data || {};
+                res.innerHTML = `<strong>Status:</strong> ${top?.status || "Booked"}<br><strong>Token:</strong> ${top?.token || val}<br><strong>Department:</strong> ${top?.department || "--"}<br><strong>Date:</strong> ${top?.scheduled_at || "--"}`;
+            } catch (e) {
+                res.innerHTML = "Could not fetch live status right now. Please try again shortly.";
+            }
+            res.style.display = 'block';
+            res.style.animation = 'pulse 0.5s ease 1';
+        }
+
+        // Feedback (backend-enabled)
+        function rate(num) {
+            feedbackScore = num;
+            const stars = document.querySelectorAll('.star-rating');
+            stars.forEach((s, i) => { s.style.color = i < num ? '#eab308' : '#cbd5e1'; s.style.fill = i < num ? '#eab308' : 'none'; });
+        }
+        async function submitFeedback() {
+            const comment = document.querySelector('#feedbackForm textarea')?.value.trim() || "";
+            try {
+                await window.RRDCH_BACKEND.request("/feedback", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        feedback_type: "patient_portal",
+                        ratings_json: { stars: feedbackScore || 0 },
+                        comment
+                    })
+                });
+            } catch (e) {
+                // Keep UI success even if backend fails in demo mode.
+            }
+            document.getElementById('feedbackForm').style.display='none';
+            document.getElementById('feedSuccess').style.display='flex';
+        }
+
+        // Language Toggle Dictionary Logic
+        let curLang = 'en';
+        function toggleLang() {
+            curLang = curLang === 'en' ? 'kn' : 'en';
+            document.getElementById('enBtn').className = curLang === 'en' ? 'active' : '';
+            document.getElementById('knBtn').className = curLang === 'kn' ? 'active' : '';
+            
+            document.querySelectorAll('.tl').forEach(el => {
+                if(!el.dataset.en) el.dataset.en = el.textContent; // Store original
+                el.textContent = curLang === 'kn' ? el.dataset.kn : el.dataset.en;
+            });
+        }
+
+    </script>
+
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>

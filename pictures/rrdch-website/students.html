@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RRDCH Student Life — academics, achievements, anti-ragging, student council, campus activities, and clubs at Rajarajeswari Dental College & Hospital.">
+  <title>Student Life — RRDCH, Bengaluru</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <style>
+    .achievement-ticker { background: var(--navy); color: #fff; padding: 0.75rem 0; overflow: hidden; white-space: nowrap; }
+    .achievement-ticker span { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-size: 0.88rem; }
+    @keyframes marquee { to { transform: translateX(-100%); } }
+    .activity-card { border-radius: var(--radius-lg); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-card); border: 1px solid var(--border); transition: all 0.3s; }
+    .activity-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+    .activity-thumb { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 5rem; }
+    .council-card { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem; background: var(--surface); border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-card); }
+    .council-avatar { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+    .stat-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(200,169,81,0.12); border: 1px solid rgba(200,169,81,0.3); border-radius: var(--radius-pill); padding: 0.35rem 1rem; font-size: 0.82rem; font-weight: 600; color: var(--gold); }
+    .anti-ragging-box { background: linear-gradient(135deg, rgba(231,76,60,0.08), rgba(231,76,60,0.03)); border: 2px solid rgba(231,76,60,0.3); border-radius: var(--radius-lg); padding: 2.5rem; }
+  </style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="live-ticker">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;">
+    <div class="ticker-inner">
+      <span class="ticker-label">INFO</span>
+      <div class="ticker-track"><span class="ticker-text">🎓 BDS Admissions 2026–27 Open &nbsp;•&nbsp; 100% Placement Rate &nbsp;•&nbsp; NAAC "A" Grade &nbsp;•&nbsp; Ranked #34 in India — NIRF 2022 &nbsp;•&nbsp; Highest Package ₹32.5 LPA</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar">
+  <div class="navbar-inner" style="max-width:1280px;margin:0 auto;">
+    <a href="index.html" class="navbar-brand">
+      <img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text"><div class="navbar-brand-name">RRDCH</div><div class="navbar-brand-sub">Student Life</div></div>
+    </a>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="departments.html">Departments</a></li>
+      <li><a href="students.html" class="active">Student Life</a></li>
+      <li><a href="syllabus.html">Syllabus</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="admissions.html">Admissions</a></li>
+      <li><a href="login.html" style="color:var(--gold);">Portal Login</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button>
+      <button class="dark-toggle" id="darkToggle">🌙</button>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background:linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%);padding:6rem 0 3rem;text-align:center;color:#fff;margin-top:72px;" id="top">
+  <div class="container">
+    <div class="stat-badge" style="margin-bottom:1.25rem;">🎓 Student Life @ RRDCH</div>
+    <h1 style="color:#fff;margin-bottom:0.75rem;" data-kn="ವಿದ್ಯಾರ್ಥಿ ಜೀವನ">Student Life at RRDCH</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:560px;margin:0 auto 2rem;">Academics, sports, culture, hostels, research, and community service — RRDCH shapes complete dental professionals.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <div style="text-align:center;padding:1rem 1.5rem;background:rgba(255,255,255,0.1);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.15);">
+        <div style="font-size:1.5rem;font-weight:700;">100%</div><div style="font-size:0.75rem;opacity:0.7;">Placement Rate</div>
+      </div>
+      <div style="text-align:center;padding:1rem 1.5rem;background:rgba(255,255,255,0.1);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.15);">
+        <div style="font-size:1.5rem;font-weight:700;">₹32.5 LPA</div><div style="font-size:0.75rem;opacity:0.7;">Highest Package 2026</div>
+      </div>
+      <div style="text-align:center;padding:1rem 1.5rem;background:rgba(255,255,255,0.1);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.15);">
+        <div style="font-size:1.5rem;font-weight:700;">30+</div><div style="font-size:0.75rem;opacity:0.7;">Clubs & Activities</div>
+      </div>
+      <div style="text-align:center;padding:1rem 1.5rem;background:rgba(255,255,255,0.1);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.15);">
+        <div style="font-size:1.5rem;font-weight:700;">Guinness</div><div style="font-size:0.75rem;opacity:0.7;">World Record Holder</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS MARQUEE -->
+<div class="achievement-ticker">
+  <span>🏆 NAAC "A" Grade &nbsp;|&nbsp; 🏅 Guinness World Record — Largest Dental Health Camp &nbsp;|&nbsp; ⭐ NIRF #34 India &nbsp;|&nbsp; 📜 ISO 9001:2008 Certified &nbsp;|&nbsp; 🌍 MFDS Centre — Royal College of Glasgow &nbsp;|&nbsp; 🎓 100% BDS & MDS Placement &nbsp;|&nbsp; 🔬 300+ Research Publications &nbsp;|&nbsp; 🌐 IAO & HLAT International Accreditation &nbsp;|&nbsp; 🦷 350 Electronic Dental Chairs &nbsp;|&nbsp; 💰 Highest Package ₹32.5–35 LPA (2026 Batch)</span>
+</div>
+
+<!-- CAMPUS ACTIVITIES -->
+<section class="section">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="label">Campus Life</div>
+      <h2>Activities & Clubs</h2>
+      <p>From dental research to dance performances — RRDCH students lead holistic lives.</p>
+    </div>
+    <div class="grid-3" id="activitiesGrid"></div>
+  </div>
+</section>
+
+<!-- ACADEMIC SCHEDULE -->
+<section class="section" style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="label">Academics</div>
+      <h2>Academic Schedule & Programs</h2>
+      <p>RRDCH follows RGUHS regulations for all BDS and MDS programs. CDE programs run year-round.</p>
+    </div>
+    <div class="grid-2" style="gap:2rem;">
+      <div data-aos="fade-right">
+        <h3 style="margin-bottom:1.25rem;">BDS Program (5 Years)</h3>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+          <div class="card" style="padding:1.25rem;flex-direction:row;display:flex;align-items:center;gap:1rem;">
+            <div style="width:40px;height:40px;background:rgba(27,58,107,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:1rem;flex-shrink:0;">1</div>
+            <div><div style="font-weight:600;color:var(--text);">BDS Year 1</div><div style="font-size:0.82rem;color:var(--muted);">General Anatomy, Physiology, Biochemistry, Dental Anatomy</div></div>
+          </div>
+          <div class="card" style="padding:1.25rem;flex-direction:row;display:flex;align-items:center;gap:1rem;">
+            <div style="width:40px;height:40px;background:rgba(27,58,107,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--navy);font-size:1rem;flex-shrink:0;">2</div>
+            <div><div style="font-weight:600;color:var(--text);">BDS Year 2</div><div style="font-size:0.82rem;color:var(--muted);">Pathology, Microbiology, Pharmacology, Pre-clinical Dentistry</div></div>
+          </div>
+          <div class="card" style="padding:1.25rem;flex-direction:row;display:flex;align-items:center;gap:1rem;">
+            <div style="width:40px;height:40px;background:rgba(46,134,171,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--teal);font-size:1rem;flex-shrink:0;">3</div>
+            <div><div style="font-weight:600;color:var(--text);">BDS Year 3</div><div style="font-size:0.82rem;color:var(--muted);">Oral Surgery, Conservative, Orthodontics — Clinicals Begin</div></div>
+          </div>
+          <div class="card" style="padding:1.25rem;flex-direction:row;display:flex;align-items:center;gap:1rem;">
+            <div style="width:40px;height:40px;background:rgba(200,169,81,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--gold);font-size:1rem;flex-shrink:0;">4</div>
+            <div><div style="font-weight:600;color:var(--text);">BDS Year 4 & Internship</div><div style="font-size:0.82rem;color:var(--muted);">Full clinical posting, community service, RGUHS final exams + 1 year rotary internship</div></div>
+          </div>
+        </div>
+        <a href="syllabus.html" class="btn btn-navy mt-3">📚 View Full Syllabus →</a>
+      </div>
+      <div data-aos="fade-left">
+        <h3 style="margin-bottom:1.25rem;">MDS Specialities (9 Programs)</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">🦷</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Oral Surgery</div></div>
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">🔬</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Conservative & Endo</div></div>
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">😁</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Orthodontics</div></div>
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">👑</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Prosthodontics</div></div>
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">🌿</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Periodontology</div></div>
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">🧬</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Oral Pathology</div></div>
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">📡</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Oral Medicine & Radiology</div></div>
+          <div class="card" style="padding:1rem;text-align:center;"><div style="font-size:1.5rem;margin-bottom:0.4rem;">🧒</div><div style="font-size:0.82rem;font-weight:600;color:var(--text);">Pedodontics</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDENT ACHIEVEMENTS -->
+<section class="section">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="label">Pride</div>
+      <h2>Student Achievements</h2>
+      <p>RRDCH students consistently excel in state, national, and international competitions.</p>
+    </div>
+    <div class="grid-3" id="achievementsGrid"></div>
+  </div>
+</section>
+
+<!-- STUDENT COUNCIL -->
+<section class="section" style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="label">Leadership</div>
+      <h2>Student Council 2025–26</h2>
+      <p>Elected student representatives who bridge students and management.</p>
+    </div>
+    <div class="grid-3" id="councilGrid"></div>
+  </div>
+</section>
+
+<!-- ANTI-RAGGING -->
+<section class="section">
+  <div class="container">
+    <div class="anti-ragging-box" data-aos="fade-up">
+      <div style="display:flex;align-items:flex-start;gap:1.5rem;flex-wrap:wrap;">
+        <div style="font-size:3rem;flex-shrink:0;">🚫</div>
+        <div>
+          <h2 style="color:var(--danger);margin-bottom:1rem;">Anti-Ragging Policy</h2>
+          <p style="margin-bottom:1rem;">RRDCH has a <strong>ZERO TOLERANCE</strong> policy towards ragging in any form. The college is fully compliant with the UGC Anti-Ragging Regulations and the Supreme Court of India's directives. All students are required to submit an anti-ragging undertaking on admission.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem;">
+            <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:var(--danger);font-weight:700;">✓</span><span style="font-size:0.875rem;">Anti-Ragging Committee formed annually</span></div>
+            <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:var(--danger);font-weight:700;">✓</span><span style="font-size:0.875rem;">Anti-Ragging Squad with regular patrolling</span></div>
+            <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:var(--danger);font-weight:700;">✓</span><span style="font-size:0.875rem;">24×7 counsellor availability</span></div>
+            <div style="display:flex;gap:0.5rem;align-items:flex-start;"><span style="color:var(--danger);font-weight:700;">✓</span><span style="font-size:0.875rem;">Anonymous online complaint portal</span></div>
+          </div>
+          <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;">
+            <div style="background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-md);padding:0.75rem 1.25rem;">
+              <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.2rem;">National Anti-Ragging Helpline</div>
+              <div style="font-size:1.1rem;font-weight:700;color:var(--danger);">📞 1800-180-5522</div>
+            </div>
+            <div style="background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-md);padding:0.75rem 1.25rem;">
+              <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.2rem;">RRDCH Anti-Ragging Cell</div>
+              <div style="font-size:1.1rem;font-weight:700;color:var(--danger);">📞 080-28437150</div>
+            </div>
+            <a href="hostel-complaints.html" class="btn btn-lg" style="background:var(--danger);color:#fff;border:none;">🚨 Report an Incident</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOSTEL & FACILITIES -->
+<section class="section" style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="label">Facilities</div>
+      <h2>Hostel & Campus Facilities</h2>
+    </div>
+    <div class="grid-4">
+      <div class="card text-center" data-aos="fade-up">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🏠</div>
+        <h3 style="font-size:1rem;">Girls Hostel</h3>
+        <p style="font-size:0.82rem;">400+ capacity, lady warden, 24-hr water & WiFi, CCTV, mess, wardrobe, study rooms</p>
+      </div>
+      <div class="card text-center" data-aos="fade-up" data-aos-delay="100">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🏡</div>
+        <h3 style="font-size:1rem;">Boys Hostel</h3>
+        <p style="font-size:0.82rem;">Separate blocks, warden, AC common room, WiFi, dish TV, mess, discipline committee</p>
+      </div>
+      <div class="card text-center" data-aos="fade-up" data-aos-delay="200">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🍽️</div>
+        <h3 style="font-size:1rem;">Canteen & Mess</h3>
+        <p style="font-size:0.82rem;">Affordable nutritious meals, breakfast, lunch & dinner, food quality committee oversight</p>
+      </div>
+      <div class="card text-center" data-aos="fade-up" data-aos-delay="300">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">💪</div>
+        <h3 style="font-size:1rem;">Sports & Gym</h3>
+        <p style="font-size:0.82rem;">Multi-gym, football, cricket, volleyball, badminton, annual sports day YUDDHAM</p>
+      </div>
+      <div class="card text-center" data-aos="fade-up">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">📡</div>
+        <h3 style="font-size:1rem;">High-Speed WiFi</h3>
+        <p style="font-size:0.82rem;">Campus-wide WiFi, Helinet e-journal access, digital library on campus intranet</p>
+      </div>
+      <div class="card text-center" data-aos="fade-up" data-aos-delay="100">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🚌</div>
+        <h3 style="font-size:1rem;">Transport</h3>
+        <p style="font-size:0.82rem;">Bus service from multiple Bengaluru pickup points. Route map available at admin office.</p>
+      </div>
+      <div class="card text-center" data-aos="fade-up" data-aos-delay="200">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">🏥</div>
+        <h3 style="font-size:1rem;">Medical Care</h3>
+        <p style="font-size:0.82rem;">On-campus physician, emergency dental care, tie-up with Rajarajeswari Medical College Hospital</p>
+      </div>
+      <div class="card text-center" data-aos="fade-up" data-aos-delay="300">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">📚</div>
+        <h3 style="font-size:1rem;">Library</h3>
+        <p style="font-size:0.82rem;">6,000+ volumes, 90+ journals, Helinet access, AC reading rooms, working hours 8AM–8PM</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:linear-gradient(135deg,var(--navy),var(--teal));padding:4rem 0;text-align:center;">
+  <div class="container">
+    <h2 style="color:#fff;margin-bottom:1rem;">Ready to Join the RRDCH Family?</h2>
+    <p style="color:rgba(255,255,255,0.75);margin-bottom:2rem;">BDS Admissions 2026–27 are now open. Join 34+ years of dental excellence.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="admissions.html" class="btn btn-gold btn-lg">🎓 Apply for Admissions</a>
+      <a href="contact.html" class="btn btn-lg" style="border:2px solid rgba(255,255,255,0.4);color:#fff;background:transparent;">📞 Talk to Us</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom"><p>© 2026 RRDCH, Bengaluru. All Rights Reserved. | Moogambigai Charitable and Educational Trust</p></div>
+  </div>
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;background:var(--gold);color:var(--navy);border:none;border-radius:50%;font-size:1.2rem;cursor:pointer;box-shadow:var(--shadow-gold);display:none;z-index:999;">↑</button>
+
+<script src="assets/js/main.js"></script>
+<script>
+// Activities data
+const activities = [
+  { icon:'🎭', title:'SPANDAN Cultural Fest', desc:'Annual 3-day inter-college cultural extravaganza. Music, dance, fine arts, drama — RRDCH\'s biggest event.', badge:'Cultural', color:'#9B59B6' },
+  { icon:'⚽', title:'YUDDHAM Sports Day', desc:'Annual inter-department and inter-college sports competition. Football, cricket, volleyball, athletics.', badge:'Sports', color:'#E74C3C' },
+  { icon:'🦷', title:'Dental Quiz Championship', desc:'Inter-college dental knowledge competition. Judged by senior faculty. Winners get to represent RRDCH nationally.', badge:'Academic', color:'#1B3A6B' },
+  { icon:'🔬', title:'Research Club', desc:'Faculty-guided student research projects. Publication support and guidance for ICMR STS and state-level projects.', badge:'Research', color:'#27AE60' },
+  { icon:'🎵', title:'Music & Arts Club', desc:'Choir, rock band, fine arts, and photography groups open to all RRDCH students throughout the year.', badge:'Arts', color:'#E67E22' },
+  { icon:'🏘️', title:'Community Service', desc:'Regular outreach camps, school screenings, anti-tobacco drives, and oral health awareness in and around Bengaluru.', badge:'Community', color:'#2E86AB' },
+  { icon:'📚', title:'Journal Club', desc:'Weekly faculty-student discussions of recent dental research publications. PG students present case reports.', badge:'Academic', color:'#1B3A6B' },
+  { icon:'🏋️', title:'Fitness & Yoga', desc:'Multi-gym, yoga sessions, and wellness programs. Free for all registered students and hostel residents.', badge:'Wellness', color:'#C8A951' },
+  { icon:'💉', title:'Life Skills & First Aid', desc:'Annual BLS/CPR training, first-aid certification, and emergency dental care workshops for all students.', badge:'Skill', color:'#E74C3C' },
+];
+
+const achievements = [
+  { icon:'🏆', name:'Dr. Priya V., BDS 2022 Topper', desc:'Scored 97.4% in RGUHS university examinations. Now pursuing MDS at RRDCH itself.', year:'2022' },
+  { icon:'🏅', name:'Guinness Record Team', desc:'RRDCH student volunteers helped set the Guinness World Record for the largest single-day dental health camp.', year:'2023' },
+  { icon:'🥇', name:'National Dental Olympiad Winners', desc:'RRDCH students bagged 1st and 3rd place in the All-India Dental Students Olympiad.', year:'2024' },
+  { icon:'📝', name:'ICMR STS Grantees', desc:'5 student research projects funded by ICMR STS grants in 2025, highest among all Karnataka dental colleges.', year:'2025' },
+  { icon:'🎤', name:'Zonal Youth Parliament', desc:'Student council member represented RRDCH at the Karnataka State Youth Parliament finals.', year:'2024' },
+  { icon:'🌏', name:'International Presenter', desc:'Final-year BDS students presented clinical cases at the International Dental Federation World Congress.', year:'2025' },
+];
+
+const council = [
+  { icon:'👨‍🎓', name:'Arjun Mehta', post:'General Secretary', batch:'BDS Final Year', color:'rgba(27,58,107,0.1)' },
+  { icon:'👩‍🎓', name:'Sneha Krishnan', post:'Cultural Secretary', batch:'BDS Year 4', color:'rgba(46,134,171,0.12)' },
+  { icon:'👨‍🎓', name:'Rahul Desai', post:'Sports Secretary', batch:'BDS Year 4', color:'rgba(200,169,81,0.1)' },
+  { icon:'👩‍🎓', name:'Divya Suresh', post:'Academic Coordinator', batch:'BDS Year 3', color:'rgba(39,174,96,0.1)' },
+  { icon:'👨‍🎓', name:'Mohammed Zaid', post:'Hostel Coordinator', batch:'BDS Year 3', color:'rgba(231,76,60,0.08)' },
+  { icon:'👩‍🎓', name:'Pooja Nair', post:'Community Service Head', batch:'BDS Year 4', color:'rgba(155,89,182,0.1)' },
+];
+
+document.getElementById('activitiesGrid').innerHTML = activities.map(a => `
+  <div class="activity-card" data-aos="fade-up">
+    <div class="activity-thumb" style="background:linear-gradient(135deg,${a.color}18,${a.color}35);">${a.icon}</div>
+    <div style="padding:1.25rem;">
+      <span class="badge" style="background:${a.color}15;color:${a.color};border:1px solid ${a.color}30;margin-bottom:0.75rem;display:inline-block;">${a.badge}</span>
+      <h3 style="font-size:1rem;color:var(--text);margin-bottom:0.5rem;">${a.title}</h3>
+      <p style="font-size:0.83rem;line-height:1.6;">${a.desc}</p>
+    </div>
+  </div>
+`).join('');
+
+document.getElementById('achievementsGrid').innerHTML = achievements.map(a => `
+  <div class="card" data-aos="fade-up">
+    <div style="display:flex;gap:1rem;margin-bottom:0.75rem;">
+      <span style="font-size:2rem;">${a.icon}</span>
+      <div><div style="font-size:0.72rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px;">${a.year}</div><h3 style="font-size:0.95rem;color:var(--text);">${a.name}</h3></div>
+    </div>
+    <p style="font-size:0.82rem;line-height:1.6;">${a.desc}</p>
+  </div>
+`).join('');
+
+document.getElementById('councilGrid').innerHTML = council.map(c => `
+  <div class="council-card" data-aos="fade-up">
+    <div class="council-avatar" style="background:${c.color};">${c.icon}</div>
+    <div>
+      <div style="font-weight:700;color:var(--text);">${c.name}</div>
+      <div style="font-size:0.82rem;color:var(--teal);font-weight:600;">${c.post}</div>
+      <div style="font-size:0.78rem;color:var(--muted);">${c.batch}</div>
+    </div>
+  </div>
+`).join('');
+
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  if (btn) btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+});
+
+window.addEventListener('load', () => { if (typeof AOS !== 'undefined') AOS.init({ duration: 600, once: true }); });
+</script>
+</body>
+</html>

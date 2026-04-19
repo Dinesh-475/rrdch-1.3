@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Apply for Admission at Rajarajeshwari Dental College and Hospital for 2026–2027. BDS, MDS, PhD and Certificate Courses available.">
+    <title>Admission Enquiry 2026–2027 | RRDCH</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+      (function(){ try { const l = localStorage.getItem('rrdch_lang'); const lang = (l==='kn')?'kn':'en'; document.documentElement.setAttribute('data-lang', lang); document.documentElement.setAttribute('lang', lang);} catch(e) {} })();
+    </script>
+    <style>
+        /* Landing Page Specific Styles */
+        .landing-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #2A6F97 100%);
+            padding: 1.5rem 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .landing-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .landing-brand img {
+            height: 60px;
+            width: auto;
+            border-radius: 6px;
+        }
+
+        .landing-brand-text h1 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.3;
+        }
+
+        .landing-brand-text p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        /* Right side: logos on top, contact below */
+        .landing-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.75rem;
+        }
+
+        .landing-accreditations {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .landing-acc-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .landing-acc-item:hover {
+            background: rgba(255,255,255,0.28);
+            border-color: rgba(255,255,255,0.5);
+            transform: scale(1.1);
+        }
+
+        .landing-acc-item img {
+            max-height: 100%;
+            max-width: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .landing-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            align-items: flex-end;
+        }
+
+        .contact-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #e2e8f0;
+            font-size: 0.8rem;
+        }
+
+        .contact-pill .icon {
+            color: var(--accent);
+            font-size: 1rem;
+        }
+
+        @media (max-width: 900px) {
+            .landing-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .landing-right { align-items: flex-start; }
+            .landing-accreditations { justify-content: flex-start; }
+            .landing-contact { align-items: flex-start; }
+        }
+
+        /* Application Section */
+        .application-section {
+            padding: 3rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .application-heading {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .application-heading h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .application-heading p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .application-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .application-banner img {
+            width: 100%;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            object-fit: cover;
+            object-position: center center;
+            aspect-ratio: 4/3;
+            image-rendering: crisp-edges;
+        }
+
+        .application-banner-notice {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(42,111,151,0.08), rgba(126,217,87,0.06));
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .application-form-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .application-form-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .application-form-card .sub-heading {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .captcha-row {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .captcha-box {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            padding: 0.65rem 1rem;
+            border-radius: var(--radius-md);
+            min-width: 110px;
+            text-align: center;
+            text-decoration: line-through;
+            user-select: none;
+        }
+
+        .captcha-row .form-control {
+            flex: 1;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 14px rgba(42, 111, 151, 0.35);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(42, 111, 151, 0.45);
+        }
+
+        /* Success Overlay */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.active {
+            display: flex;
+        }
+
+        .success-popup {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 3rem 2.5rem;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            animation: fadeUp 0.4s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .success-popup .check-icon {
+            width: 72px;
+            height: 72px;
+            background: var(--accent);
+            border-radius: 50%;
+            color: white;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .success-popup h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+
+        .success-popup p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .success-popup .close-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .success-popup .close-btn:hover {
+            background: var(--primary-light);
+        }
+
+        /* Experience Section */
+        .experience-section {
+            background: linear-gradient(135deg, rgba(42,111,151,0.05), rgba(126,217,87,0.05));
+            padding: 4rem 5%;
+            margin-top: 3rem;
+        }
+
+        .experience-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .experience-inner h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .experience-inner .sub {
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        .experience-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            text-align: left;
+        }
+
+        .experience-point {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: white;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .experience-point:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(42,111,151,0.2);
+        }
+
+        .experience-point .ep-icon {
+            font-size: 1.75rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .experience-point h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }
+
+        .experience-point p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 900px) {
+            .application-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .landing-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .landing-accreditations {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body data-public-page="true" data-page-id="admission-enquiry">
+
+    <header class="landing-header">
+        <!-- Left: Logo + College Name -->
+        <div class="landing-brand">
+            <img src="images/logo.png" alt="RRDCH Logo">
+            <div class="landing-brand-text">
+                <h1>Rajarajeshwari Dental College<br>&amp; Hospital, Bangalore</h1>
+                <p>Affiliated to RGUHS &nbsp;|&nbsp; Recognized by DCI &nbsp;|&nbsp; Est. 1992</p>
+            </div>
+        </div>
+
+        <!-- Right: 6 Accreditation Logos + Contact below -->
+        <div class="landing-right">
+            <div class="landing-accreditations">
+                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/09/RRDCH-NABH-accredited.pdf" target="_blank" class="landing-acc-item" title="NABH"><img src="images/media__1776162900120.png" alt="NABH"></a>
+                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2013/08/Certificate-of-Accreditation.pdf" target="_blank" class="landing-acc-item" title="NAAC"><img src="images/media__1776162900148.png" alt="NAAC"></a>
+                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2026/02/ISO-certificate-of-registration-12.05.2027.pdf" target="_blank" class="landing-acc-item" title="ISO"><img src="images/media__1776162900187.png" alt="ISO"></a>
+                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/07/SLMC.pdf" target="_blank" class="landing-acc-item" title="SLMC"><img src="images/media__1776163089873.png" alt="SLMC"></a>
+                <a href="#" class="landing-acc-item" title="Royal College of Physicians and Surgeons of Glasgow"><img src="images/media__1776163089935.png" alt="RCPSG"></a>
+                <a href="#" class="landing-acc-item" title="International Accreditation Organization"><img src="images/media__1776163089970.png" alt="IAO"></a>
+            </div>
+            <div class="landing-contact">
+                <div class="contact-pill">
+                    <span class="icon">✉️</span>
+                    <a href="mailto:admission@rrdch.org" style="color: #e2e8f0;">admission@rrdch.org</a>
+                </div>
+                <div class="contact-pill">
+                    <span class="icon">📞</span>
+                    <span>8028 437 150 &nbsp;/&nbsp; 9180 284 374 68 &nbsp;/&nbsp; 9901 559 955</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="index.html" class="nav-brand">
+            <img src="images/logo.png" alt="RRDCH Logo" class="nav-logo">
+        </a>
+                <ul class="nav-links unified-nav">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                
+                <li class="nav-item popup-nav-item">
+                    <a href="#" class="nav-link has-popup">About Us</a>
+                    <div class="popup-menu">
+                        <a href="about.html#trust" class="popup-item">Trust</a>
+                        <a href="about.html#management" class="popup-item">Management</a>
+                        <a href="about.html#governing" class="popup-item">Governing Council</a>
+                        <a href="about.html#vision" class="popup-item">Vision and Mission</a>
+                    </div>
+                </li>
+
+                <li class="nav-item popup-nav-item">
+                    <a href="#" class="nav-link has-popup">Departments</a>
+                    <div class="popup-menu mega-menu">
+                        <a href="departments.html" class="popup-item">Oral Medicine and Radiology</a>
+                        <a href="departments.html" class="popup-item">Prosthodontics and Crown & Bridge</a>
+                        <a href="departments.html" class="popup-item">Oral and Maxillofacial Surgery</a>
+                        <a href="departments.html" class="popup-item">Periodontology</a>
+                        <a href="departments.html" class="popup-item">Conservative Dentistry and Endodontics</a>
+                        <a href="departments.html" class="popup-item">Orthodontics and Dentofacial Orthopedics</a>
+                        <a href="departments.html" class="popup-item">Public Health Dentistry</a>
+                        <a href="departments.html" class="popup-item">Oral and Maxillofacial Pathology</a>
+                        <a href="departments.html" class="popup-item">Implantology</a>
+                        <a href="departments.html" class="popup-item">Research and Publications</a>
+                        <a href="departments.html" class="popup-item">Orofacial Pain</a>
+                    </div>
+                </li>
+
+                <li class="nav-item popup-nav-item">
+                    <a href="#" class="nav-link has-popup">Courses Offered</a>
+                    <div class="popup-menu">
+                        <a href="#" class="popup-item">BDS – Bachelor of Dental Surgery</a>
+                        <a href="#" class="popup-item">MDS – Master of Dental Surgery</a>
+                        <a href="#" class="popup-item">PhD</a>
+                        <a href="#" class="popup-item">Certificate Courses</a>
+                    </div>
+                </li>
+
+                <li class="nav-item popup-nav-item">
+                    <a href="#" class="nav-link has-popup">Academics</a>
+                    <div class="popup-menu">
+                        <a href="admission_enquiry.html" class="popup-item">Admission Enquiry (2025–2026)</a>
+                        <a href="#" class="popup-item">Results</a>
+                        <a href="#" class="popup-item">E-Content</a>
+                        <a href="#" class="popup-item">Achievements</a>
+                        <a href="#" class="popup-item">Extracurricular Activities</a>
+                    </div>
+                </li>
+
+                <li class="nav-item popup-nav-item">
+                    <a href="#" class="nav-link has-popup">Facilities</a>
+                    <div class="popup-menu mega-menu">
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="projector" width="16" height="16"></i></span> Auditorium</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="coffee" width="16" height="16"></i></span> Cafeteria</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="book-open" width="16" height="16"></i></span> Classrooms</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="laptop" width="16" height="16"></i></span> Digital Library</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="dumbbell" width="16" height="16"></i></span> Gymnasium</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="building" width="16" height="16"></i></span> Hostel</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="dribbble" width="16" height="16"></i></span> Sports & Recreation</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="bus" width="16" height="16"></i></span> Transportation</a>
+                        <a href="#" class="popup-item"><span class="dropdown-icon"><i data-lucide="wifi" width="16" height="16"></i></span> Wi-Fi</a>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a href="admissions.html" class="nav-link">Admissions</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                
+                <li class="nav-item popup-nav-item">
+                    <a href="#" class="nav-link has-popup">Portal</a>
+                    <div class="popup-menu">
+                        <a href="students.html" class="popup-item">Student</a>
+                        <a href="patients.html" class="popup-item">Patient</a>
+                        <a href="doctors.html" class="popup-item">Doctor</a>
+                    </div>
+                </li>
+            </ul>
+        <div class="nav-actions">
+            <button class="lang-toggle" id="langToggle">
+                <span id="lang-en" class="active">EN</span> | <span id="lang-kn">ಕನ್ನಡ</span>
+            </button>
+        </div>
+        <button class="mobile-toggle" id="mobileToggle">☰</button>
+    </nav>
+
+    <!-- Application Section -->
+    <div class="application-section">
+        <div class="application-heading">
+            <h2>Apply Online – RRDCH Admissions (2026–2027)</h2>
+            <p>Take the first step towards a distinguished dental career. Fill in the details below and our team will get in touch with you shortly.</p>
+        </div>
+
+        <div class="application-grid">
+            <!-- Left: Banner Image -->
+            <div class="application-banner">
+                <img src="images/media__1776159687835.jpg" alt="RRDCH College Entrance">
+                <div class="application-banner-notice">
+                    🏆 <strong>Recognized by the Royal College of Physicians and Surgeons of Glasgow, UK</strong>, for Part 1 and 2 MFDS Examinations — one of the few dental institutions in India to hold this prestigious international recognition.
+                </div>
+            </div>
+
+            <!-- Right: Application Form -->
+            <div class="application-form-card">
+                <h3>Admission Enquiry Form</h3>
+                <p class="sub-heading">Academic Year 2026 – 2027 &nbsp;|&nbsp; All fields are required</p>
+
+                <form id="admissionForm" novalidate>
+                    <div class="form-group">
+                        <label class="form-label" for="adm-name">Full Name</label>
+                        <input type="text" id="adm-name" class="form-control" placeholder="Enter your full name" required>
+                        <div class="form-feedback">Please enter your full name.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adm-phone">Mobile Number</label>
+                        <input type="tel" id="adm-phone" class="form-control" placeholder="Enter your mobile number" pattern="[0-9]{10}" required>
+                        <div class="form-feedback">Please enter a valid 10-digit mobile number.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adm-email">Email Address</label>
+                        <input type="email" id="adm-email" class="form-control" placeholder="you@example.com" required>
+                        <div class="form-feedback">Please enter a valid email address.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adm-course">Select Course</label>
+                        <select id="adm-course" class="form-control" required>
+                            <option value="">-- Select a Course --</option>
+                            <optgroup label="UG Courses">
+                                <option value="bds">BDS – Bachelor of Dental Surgery</option>
+                            </optgroup>
+                            <optgroup label="PG Courses (MDS)">
+                                <option value="mds-op">Oral Pathology and Microbiology</option>
+                                <option value="mds-phd">Public Health Dentistry</option>
+                                <option value="mds-ortho">Orthodontics and Dentofacial Orthopedics</option>
+                            </optgroup>
+                        </select>
+                        <div class="form-feedback">Please select a course.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="adm-query">Your Query</label>
+                        <textarea id="adm-query" class="form-control" placeholder="Type any questions or specific requirements here..." rows="3" required></textarea>
+                        <div class="form-feedback">Please enter your query.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Captcha Verification</label>
+                        <div class="captcha-row">
+                            <div class="captcha-box" id="captchaDisplay">7 + 3</div>
+                            <input type="text" id="adm-captcha" class="form-control" placeholder="Enter result">
+                        </div>
+                        <div class="form-feedback" id="captcha-feedback">Incorrect captcha. The answer is 10.</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Apply Now →</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Experience Section -->
+    <section class="experience-section">
+        <div class="experience-inner">
+            <h2>Experience More Than Just Education at RRDCH</h2>
+            <p class="sub">A campus where excellence in dentistry meets vibrant student life</p>
+            <div class="experience-points">
+                <div class="experience-point animate-on-scroll">
+                    <div class="ep-icon">🏛️</div>
+                    <div>
+                        <h4>State-of-the-Art Infrastructure</h4>
+                        <p>Modern facilities with advanced labs, digital libraries, and simulation clinics.</p>
+                    </div>
+                </div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.1s">
+                    <div class="ep-icon"><i data-lucide="projector" width="16" height="16"></i></div>
+                    <div>
+                        <h4>Student Activities & Cultural Events</h4>
+                        <p>Clubs, annual fests, sports meets, and vibrant campus life activities.</p>
+                    </div>
+                </div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.2s">
+                    <div class="ep-icon">👨‍<i data-lucide="book-open" width="16" height="16"></i></div>
+                    <div>
+                        <h4>Supportive Faculty & Mentoring</h4>
+                        <p>Experienced faculty with dedicated mentoring programs and student guidance cells.</p>
+                    </div>
+                </div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.3s">
+                    <div class="ep-icon">🤝</div>
+                    <div>
+                        <h4>Industry Collaboration & Internships</h4>
+                        <p>Partnerships with hospitals and dental organizations for practical clinical exposure.</p>
+                    </div>
+                </div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.4s">
+                    <div class="ep-icon">🚀</div>
+                    <div>
+                        <h4>Placement Support</h4>
+                        <p>Strong placement cell with connections to top dental clinics and healthcare recruiters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-popup">
+            <div class="check-icon">✓</div>
+            <h3>Application Submitted!</h3>
+            <p>Your application has been recorded successfully. Our admissions team will contact you within 24–48 hours.</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Thank you for choosing RRDCH – Where Excellence Meets Education.</p>
+            <button class="close-btn" id="closeSuccess">Back to Home</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>RRDCH</h3>
+                <p>Rajarajeshwari Dental College & Hospital, #14, Ramohalli Cross, Mysore Road, Kumbalgodu, Bangalore – 560074.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="admissions.html">Admissions</a></li>
+                    <li><a href="departments.html">Departments</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Contact</h4>
+                <ul>
+                    <li>📧 admission@rrdch.org</li>
+                    <li>📞 8028 437 150</li>
+                    <li>📞 9901 559 955</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 Rajarajeshwari Dental College & Hospital. All Rights Reserved.</p>
+        </div>
+    </footer>
+    <script>
+        // Admission Form Handler (now submits to /api/admission-enquiry)
+        document.getElementById('admissionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            // Validate all required fields
+            ['adm-name', 'adm-phone', 'adm-email', 'adm-course', 'adm-query'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el.value.trim()) {
+                    el.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    el.classList.remove('is-invalid');
+                }
+            });
+
+            // Validate captcha (7+3=10)
+            const captchaAnswer = document.getElementById('adm-captcha').value.trim();
+            if (captchaAnswer !== '10') {
+                document.getElementById('adm-captcha').classList.add('is-invalid');
+                document.getElementById('captcha-feedback').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('adm-captcha').classList.remove('is-invalid');
+                document.getElementById('captcha-feedback').style.display = 'none';
+            }
+
+            if (!isValid) return;
+
+            const payload = {
+                name: document.getElementById('adm-name').value.trim(),
+                phone: document.getElementById('adm-phone').value.trim(),
+                email: document.getElementById('adm-email').value.trim(),
+                course: document.getElementById('adm-course').value.trim(),
+                query: document.getElementById('adm-query').value.trim()
+            };
+
+            const btn = this.querySelector('button[type="submit"]');
+            const prev = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+            try {
+                const r = await fetch('/api/admission-enquiry', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await r.json();
+                if (!r.ok || data.ok === false) throw new Error(data.msg || 'Submission failed');
+                document.getElementById('successOverlay').classList.add('active');
+                this.reset();
+            } catch (err) {
+                window.RRDCH_UTILS?.showToast(err.message || 'Could not submit application.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = prev;
+            }
+        });
+
+        // Close success popup
+        document.getElementById('closeSuccess').addEventListener('click', function() {
+            document.getElementById('successOverlay').classList.remove('active');
+            window.location.href = 'index.html';
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add('is-visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/site-context.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/public-shell.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>

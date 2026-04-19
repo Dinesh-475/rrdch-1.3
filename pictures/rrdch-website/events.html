@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events &amp; Calendar | RRDCH — Rajarajeswari Dental College</title>
+  <meta name="description" content="Stay updated on RRDCH academic events, CDE programs, cultural festivals, community health camps, and inter-college competitions. Register for upcoming events.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/events.html">
+  <meta property="og:title" content="Events &amp; Calendar | RRDCH">
+  <meta property="og:description" content="Academic programs, cultural festivals, sports day, and community camps at Rajarajeswari Dental College.">
+  <meta property="og:url" content="https://rrdch.edu.in/events.html">
+  <meta property="og:image" content="/assets/images/campus/auditorium.jpg">
+  <meta name="description" content="RRDCH Events & News — CDE programs, cultural events, exams and announcements.">
+  <title>News & Events — RRDCH</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar"><div class="navbar-inner" style="max-width:1280px;margin:0 auto;">
+  <a href="index.html" class="navbar-brand"><img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;"><div class="navbar-brand-text"><div class="navbar-brand-name">RRDCH</div><div class="navbar-brand-sub">Rajarajeswari Dental College & Hospital</div></div></a>
+  <ul class="navbar-nav" id="navMenu"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="departments.html">Departments</a></li><li><a href="appointments.html">Appointments</a></li><li><a href="admissions.html">Admissions</a></li><li><a href="events.html" class="active">Events</a></li><li><a href="research.html">Research</a></li><li><a href="contact.html">Contact</a></li><li><a href="login.html" style="color:var(--gold);">Portal Login</a></li></ul>
+  <div class="navbar-actions"><button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button><button class="dark-toggle" id="darkToggle">🌙</button><div class="hamburger" id="hamburger"><span></span><span></span><span></span></div></div>
+</div></nav>
+
+<section style="background:linear-gradient(135deg,var(--navy),var(--teal));padding:6rem 0 3rem;text-align:center;color:#fff;margin-top:72px;">
+  <div class="container">
+    <div class="label" style="display:inline-block;background:rgba(200,169,81,0.2);border:1px solid rgba(200,169,81,0.4);color:var(--gold-light);font-size:0.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:0.35rem 1rem;border-radius:var(--radius-pill);margin-bottom:1rem;">Stay Updated</div>
+    <h1 style="color:#fff;margin-bottom:0.75rem;">News & Events</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto;">CDE programs, workshops, cultural events, exam schedules, and college announcements.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <!-- Filter Buttons -->
+    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2.5rem;">
+      <button class="btn btn-navy btn-sm" onclick="filterEvents('all',this)">All Events</button>
+      <button class="btn btn-sm" style="border:1.5px solid var(--border);background:var(--surface);" onclick="filterEvents('academic',this)">🎓 Academic</button>
+      <button class="btn btn-sm" style="border:1.5px solid var(--border);background:var(--surface);" onclick="filterEvents('patient',this)">🏥 Patient</button>
+      <button class="btn btn-sm" style="border:1.5px solid var(--border);background:var(--surface);" onclick="filterEvents('cultural',this)">🎭 Cultural</button>
+      <button class="btn btn-sm" style="border:1.5px solid var(--border);background:var(--surface);" onclick="filterEvents('exam',this)">📝 Examination</button>
+    </div>
+
+    <!-- Pinned Announcement -->
+    <div id="dynamicPinnedAnnouncement">
+      <div class="alert alert-info" style="margin-bottom:2rem;">
+        <span>📌</span><div><strong>PINNED:</strong> BDS Admissions 2026–27 are now OPEN. Apply before May 31, 2026. Contact: +91-9743277777</div>
+      </div>
+    </div>
+
+    <!-- Events Grid -->
+    <!-- Events Grid / Calendar -->
+    <div class="card" style="padding:2rem;" data-aos="fade-up">
+      <div id="calendar"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2026 RRDCH, Bengaluru.</p></div></div></footer>
+
+<script src="assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+<script>
+let calendar;
+
+document.addEventListener('DOMContentLoaded', async () => {
+  if(typeof AOS !== 'undefined') AOS.init({ duration: 600, once: true });
+  
+  loadPinnedCircular();
+
+  const calendarEl = document.getElementById('calendar');
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,listWeek'
+    },
+    events: fetchEventsForCalendar,
+    eventClick: function(info) {
+      const e = info.event;
+      const html = `
+        <div style="padding:1rem;">
+          <h3 style="margin-bottom:0.5rem;color:var(--text);">${e.title}</h3>
+          <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">${e.extendedProps.description}</p>
+          <div style="font-size:0.875rem;margin-bottom:0.25rem;"><strong>Venue:</strong> ${e.extendedProps.venue}</div>
+          <div style="font-size:0.875rem;margin-bottom:1rem;"><strong>Type:</strong> ${e.extendedProps.type}</div>
+          <button class="btn btn-navy btn-sm" onclick="showToast('Registration email sent to your inbox','success')">Register</button>
+        </div>
+      `;
+      // Custom overlay
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;';
+      overlay.innerHTML = `<div style="background:var(--surface);width:400px;max-width:90%;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-card);">
+        <div style="display:flex;justify-content:flex-end;padding:0.5rem;border-bottom:1px solid var(--border);"><button style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text);" onclick="this.parentNode.parentNode.parentNode.remove()">✕</button></div>
+        ${html}
+      </div>`;
+      document.body.appendChild(overlay);
+    }
+  });
+  
+  calendar.render();
+});
+
+async function loadPinnedCircular() {
+  try {
+    const res = await fetch('/api/public/circulars');
+    const data = await res.json();
+    if(data.ok && data.data.length > 0) {
+      const pinned = data.data.find(c => c.is_important === 1) || data.data[0];
+      const container = document.getElementById('dynamicPinnedAnnouncement');
+      if(container) {
+        container.innerHTML = `
+          <div class="alert alert-info" style="margin-bottom:2rem;">
+            <span>📌</span><div><strong>PINNED:</strong> ${pinned.title} — ${new Date(pinned.date).toLocaleDateString()}</div>
+          </div>
+        `;
+      }
+    }
+  } catch(e) { console.error("Error loading circulars:", e); }
+}
+
+async function fetchEventsForCalendar(info, successCallback, failureCallback) {
+  try {
+    const res = await fetch('/api/public/events');
+    const data = await res.json();
+    let eventsData = [];
+    
+    if (data.ok && data.data.length > 0) {
+      eventsData = data.data.map(e => ({
+        id: e.id,
+        title: e.title,
+        start: e.date,
+        end: e.end_date || e.date,
+        description: e.description || '',
+        venue: e.venue || 'RRDCH Campus',
+        type: e.type,
+        color: e.type === 'exam' ? '#c0392b' : e.type === 'cultural' ? '#f39c12' : '#2980b9'
+      }));
+    } else {
+      eventsData = [{ title: 'No upcoming events found', start: new Date(), allDay: true }];
+    }
+    successCallback(eventsData);
+  } catch (err) {
+    console.error(err);
+    failureCallback(err);
+  }
+}
+
+function filterEvents(type, btn) {
+  document.querySelectorAll('.btn-navy').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  calendar.refetchEvents();
+}
+</script>

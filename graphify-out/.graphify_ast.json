@@ -1,0 +1,1938 @@
+{
+  "nodes": [
+    {
+      "id": "pictures_rrdch_website_tailwind_config_js",
+      "label": "tailwind.config.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/tailwind.config.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_js",
+      "label": "server.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_vite_config_js",
+      "label": "vite.config.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/vite.config.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_postcss_config_js",
+      "label": "postcss.config.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/postcss.config.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_sw_js",
+      "label": "sw.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/sw.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_database_js",
+      "label": "database.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "database_initschema",
+      "label": "initSchema()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L27"
+    },
+    {
+      "id": "database_seeddata",
+      "label": "seedData()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L350"
+    },
+    {
+      "id": "database_seedmanagement",
+      "label": "seedManagement()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L381"
+    },
+    {
+      "id": "database_seedstudents",
+      "label": "seedStudents()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L391"
+    },
+    {
+      "id": "database_seeddepartments",
+      "label": "seedDepartments()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L397"
+    },
+    {
+      "id": "database_seedcirculars",
+      "label": "seedCirculars()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L419"
+    },
+    {
+      "id": "database_seedstats",
+      "label": "seedStats()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L429"
+    },
+    {
+      "id": "database_seedachievements",
+      "label": "seedAchievements()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L447"
+    },
+    {
+      "id": "database_seedevents",
+      "label": "seedEvents()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L469"
+    },
+    {
+      "id": "database_seedticker",
+      "label": "seedTicker()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L491"
+    },
+    {
+      "id": "database_seedappointments",
+      "label": "seedAppointments()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L509"
+    },
+    {
+      "id": "database_seedattendance",
+      "label": "seedAttendance()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L524"
+    },
+    {
+      "id": "database_seedfees",
+      "label": "seedFees()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L568"
+    },
+    {
+      "id": "database_seedcomplaints",
+      "label": "seedComplaints()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L581"
+    },
+    {
+      "id": "database_seedactivitylog",
+      "label": "seedActivityLog()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L592"
+    },
+    {
+      "id": "database_seedresearch",
+      "label": "seedResearch()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L609"
+    },
+    {
+      "id": "pictures_rrdch_website_server_middleware_validate_middleware_js",
+      "label": "validate.middleware.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/middleware/validate.middleware.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "validate_middleware_validate",
+      "label": "validate()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/middleware/validate.middleware.js",
+      "source_location": "L12"
+    },
+    {
+      "id": "pictures_rrdch_website_server_middleware_auth_middleware_js",
+      "label": "auth.middleware.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/middleware/auth.middleware.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "auth_middleware_authmiddleware",
+      "label": "authMiddleware()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/middleware/auth.middleware.js",
+      "source_location": "L10"
+    },
+    {
+      "id": "auth_middleware_roleguard",
+      "label": "roleGuard()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/middleware/auth.middleware.js",
+      "source_location": "L26"
+    },
+    {
+      "id": "pictures_rrdch_website_server_utils_sockethandlers_js",
+      "label": "socketHandlers.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "sockethandlers_initsockets",
+      "label": "initSockets()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "sockethandlers_startqueuesimulation",
+      "label": "startQueueSimulation()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L57"
+    },
+    {
+      "id": "sockethandlers_emitannouncement",
+      "label": "emitAnnouncement()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L108"
+    },
+    {
+      "id": "sockethandlers_emitdbchange",
+      "label": "emitDbChange()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L117"
+    },
+    {
+      "id": "sockethandlers_emitadminrealtime",
+      "label": "emitAdminRealtime()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L124"
+    },
+    {
+      "id": "pictures_rrdch_website_server_utils_gemini_js",
+      "label": "gemini.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "gemini_buildguidesystem",
+      "label": "buildGuideSystem()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L23"
+    },
+    {
+      "id": "gemini_togeminicontents",
+      "label": "toGeminiContents()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L40"
+    },
+    {
+      "id": "gemini_callgemini",
+      "label": "callGemini()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L48"
+    },
+    {
+      "id": "gemini_normalizemessages",
+      "label": "normalizeMessages()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L103"
+    },
+    {
+      "id": "gemini_guidechat",
+      "label": "guideChat()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L115"
+    },
+    {
+      "id": "gemini_symptomchat",
+      "label": "symptomChat()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L147"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_patient_routes_js",
+      "label": "patient.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/patient.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_auth_routes_js",
+      "label": "auth.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/auth.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_appointments_routes_js",
+      "label": "appointments.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/appointments.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_public_routes_js",
+      "label": "public.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/public.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_feedback_routes_js",
+      "label": "feedback.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/feedback.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_telemetry_routes_js",
+      "label": "telemetry.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/telemetry.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "telemetry_routes_done",
+      "label": "done()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/telemetry.routes.js",
+      "source_location": "L25"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_doctor_routes_js",
+      "label": "doctor.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/doctor.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_admissions_routes_js",
+      "label": "admissions.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/admissions.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_student_routes_js",
+      "label": "student.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/student.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_ai_public_routes_js",
+      "label": "ai.public.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/ai.public.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "ai_public_routes_parsebody",
+      "label": "parseBody()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/ai.public.routes.js",
+      "source_location": "L7"
+    },
+    {
+      "id": "pictures_rrdch_website_server_routes_admin_routes_js",
+      "label": "admin.routes.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/admin.routes.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "admin_routes_finish",
+      "label": "finish()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/server/routes/admin.routes.js",
+      "source_location": "L120"
+    },
+    {
+      "id": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "label": "traffic-manager.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "traffic_manager_sessionid",
+      "label": "sessionId()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L9"
+    },
+    {
+      "id": "traffic_manager_scheduleflush",
+      "label": "scheduleFlush()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L28"
+    },
+    {
+      "id": "traffic_manager_flush",
+      "label": "flush()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L33"
+    },
+    {
+      "id": "traffic_manager_enqueue",
+      "label": "enqueue()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L61"
+    },
+    {
+      "id": "traffic_manager_collectheadings",
+      "label": "collectHeadings()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L67"
+    },
+    {
+      "id": "traffic_manager_bindtrackedclicks",
+      "label": "bindTrackedClicks()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L75"
+    },
+    {
+      "id": "traffic_manager_bindsectionviews",
+      "label": "bindSectionViews()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L92"
+    },
+    {
+      "id": "traffic_manager_requestgeoonce",
+      "label": "requestGeoOnce()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L114"
+    },
+    {
+      "id": "traffic_manager_usercoords",
+      "label": "userCoords()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L155"
+    },
+    {
+      "id": "pictures_rrdch_website_assets_js_auth_js",
+      "label": "auth.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "auth_gettoken",
+      "label": "getToken()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L18"
+    },
+    {
+      "id": "auth_getuser",
+      "label": "getUser()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L26"
+    },
+    {
+      "id": "auth_setauth",
+      "label": "setAuth()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L46"
+    },
+    {
+      "id": "auth_clearauth",
+      "label": "clearAuth()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L54"
+    },
+    {
+      "id": "auth_requireauth",
+      "label": "requireAuth()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L67"
+    },
+    {
+      "id": "auth_guardpage",
+      "label": "guardPage()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L93"
+    },
+    {
+      "id": "auth_getcurrentuser",
+      "label": "getCurrentUser()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L98"
+    },
+    {
+      "id": "auth_logout",
+      "label": "logout()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L108"
+    },
+    {
+      "id": "auth_apifetch",
+      "label": "apiFetch()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L133"
+    },
+    {
+      "id": "auth_injectuserheader",
+      "label": "injectUserHeader()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L158"
+    },
+    {
+      "id": "auth_dologin",
+      "label": "doLogin()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L183"
+    },
+    {
+      "id": "auth_redirectifloggedin",
+      "label": "redirectIfLoggedIn()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L215"
+    },
+    {
+      "id": "auth_geturlparam",
+      "label": "getUrlParam()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L230"
+    },
+    {
+      "id": "pictures_rrdch_website_assets_js_header_js",
+      "label": "header.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/header.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_assets_js_rrdch_assistant_js",
+      "label": "rrdch-assistant.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "rrdch_assistant_pagecontext",
+      "label": "pageContext()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L12"
+    },
+    {
+      "id": "rrdch_assistant_postai",
+      "label": "postAI()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L26"
+    },
+    {
+      "id": "rrdch_assistant_bubble",
+      "label": "bubble()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L39"
+    },
+    {
+      "id": "rrdch_assistant_mountui",
+      "label": "mountUI()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L48"
+    },
+    {
+      "id": "pictures_rrdch_website_assets_js_main_js",
+      "label": "main.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "main_rrdchassetpath",
+      "label": "rrdchAssetPath()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L5"
+    },
+    {
+      "id": "main_inittheme",
+      "label": "initTheme()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L15"
+    },
+    {
+      "id": "main_readcookie",
+      "label": "readCookie()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L34"
+    },
+    {
+      "id": "main_applylang",
+      "label": "applyLang()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L49"
+    },
+    {
+      "id": "main_animatecounter",
+      "label": "animateCounter()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L125"
+    },
+    {
+      "id": "main_showtoast",
+      "label": "showToast()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L156"
+    },
+    {
+      "id": "main_initstandardnav",
+      "label": "initStandardNav()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L193"
+    },
+    {
+      "id": "main_highlightactivenav",
+      "label": "highlightActiveNav()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L228"
+    },
+    {
+      "id": "main_observetranslatelayout",
+      "label": "observeTranslateLayout()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L251"
+    },
+    {
+      "id": "pictures_rrdch_website_src_main_jsx",
+      "label": "main.jsx",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/main.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_src_app_jsx",
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_app",
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L14"
+    },
+    {
+      "id": "pictures_rrdch_website_src_locales_i18n_js",
+      "label": "i18n.js",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/locales/i18n.js",
+      "source_location": "L1"
+    },
+    {
+      "id": "pictures_rrdch_website_src_components_layout_header_jsx",
+      "label": "Header.jsx",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/components/layout/Header.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "header_header",
+      "label": "Header()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/components/layout/Header.jsx",
+      "source_location": "L6"
+    },
+    {
+      "id": "pictures_rrdch_website_src_components_layout_footer_jsx",
+      "label": "Footer.jsx",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/components/layout/Footer.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "footer_footer",
+      "label": "Footer()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/components/layout/Footer.jsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "pictures_rrdch_website_src_components_layout_topbar_jsx",
+      "label": "TopBar.jsx",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/components/layout/TopBar.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "topbar_topbar",
+      "label": "TopBar()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/components/layout/TopBar.jsx",
+      "source_location": "L4"
+    },
+    {
+      "id": "pictures_rrdch_website_src_pages_home_jsx",
+      "label": "Home.jsx",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/pages/Home.jsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "home_home",
+      "label": "Home()",
+      "file_type": "code",
+      "source_file": "pictures/rrdch-website/src/pages/Home.jsx",
+      "source_location": "L6"
+    }
+  ],
+  "edges": [
+    {
+      "source": "pictures_rrdch_website_vite_config_js",
+      "target": "vite",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/vite.config.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_vite_config_js",
+      "target": "plugin_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/vite.config.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_initschema",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seeddata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L350",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedmanagement",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L381",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedstudents",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L391",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seeddepartments",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L397",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedcirculars",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L419",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedstats",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L429",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedachievements",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L447",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedevents",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L469",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedticker",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L491",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedappointments",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L509",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedattendance",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L524",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedfees",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L568",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedcomplaints",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L581",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedactivitylog",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L592",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_database_js",
+      "target": "database_seedresearch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L609",
+      "weight": 1.0
+    },
+    {
+      "source": "database_seedmanagement",
+      "target": "database_seedstudents",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L388",
+      "weight": 1.0
+    },
+    {
+      "source": "database_seedstudents",
+      "target": "database_seeddepartments",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L394",
+      "weight": 1.0
+    },
+    {
+      "source": "database_seedcirculars",
+      "target": "database_seedstats",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/database.js",
+      "source_location": "L426",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_middleware_validate_middleware_js",
+      "target": "validate_middleware_validate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/middleware/validate.middleware.js",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_middleware_auth_middleware_js",
+      "target": "auth_middleware_authmiddleware",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/middleware/auth.middleware.js",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_middleware_auth_middleware_js",
+      "target": "auth_middleware_roleguard",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/middleware/auth.middleware.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_sockethandlers_js",
+      "target": "sockethandlers_initsockets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_sockethandlers_js",
+      "target": "sockethandlers_startqueuesimulation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L57",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_sockethandlers_js",
+      "target": "sockethandlers_emitannouncement",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_sockethandlers_js",
+      "target": "sockethandlers_emitdbchange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L117",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_sockethandlers_js",
+      "target": "sockethandlers_emitadminrealtime",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L124",
+      "weight": 1.0
+    },
+    {
+      "source": "sockethandlers_initsockets",
+      "target": "sockethandlers_startqueuesimulation",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/socketHandlers.js",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_gemini_js",
+      "target": "gemini_buildguidesystem",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_gemini_js",
+      "target": "gemini_togeminicontents",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_gemini_js",
+      "target": "gemini_callgemini",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_gemini_js",
+      "target": "gemini_normalizemessages",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L103",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_gemini_js",
+      "target": "gemini_guidechat",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_utils_gemini_js",
+      "target": "gemini_symptomchat",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L147",
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_guidechat",
+      "target": "gemini_normalizemessages",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_guidechat",
+      "target": "gemini_buildguidesystem",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L141",
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_guidechat",
+      "target": "gemini_togeminicontents",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_guidechat",
+      "target": "gemini_callgemini",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L144",
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_symptomchat",
+      "target": "gemini_normalizemessages",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L148",
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_symptomchat",
+      "target": "gemini_togeminicontents",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L159",
+      "weight": 1.0
+    },
+    {
+      "source": "gemini_symptomchat",
+      "target": "gemini_callgemini",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/utils/gemini.js",
+      "source_location": "L160",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_routes_telemetry_routes_js",
+      "target": "telemetry_routes_done",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/routes/telemetry.routes.js",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_routes_ai_public_routes_js",
+      "target": "ai_public_routes_parsebody",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/routes/ai.public.routes.js",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_server_routes_admin_routes_js",
+      "target": "admin_routes_finish",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/server/routes/admin.routes.js",
+      "source_location": "L120",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_sessionid",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_scheduleflush",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_flush",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_enqueue",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L61",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_collectheadings",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_bindtrackedclicks",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_bindsectionviews",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L92",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_requestgeoonce",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_usercoords",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_traffic_manager_js",
+      "target": "traffic_manager_sessionid",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L155",
+      "weight": 1.0
+    },
+    {
+      "source": "traffic_manager_enqueue",
+      "target": "traffic_manager_flush",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L63",
+      "weight": 1.0
+    },
+    {
+      "source": "traffic_manager_enqueue",
+      "target": "traffic_manager_scheduleflush",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/traffic-manager.js",
+      "source_location": "L64",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_gettoken",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_getuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_setauth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L46",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_clearauth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_requireauth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L67",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_guardpage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L93",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_getcurrentuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_logout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_apifetch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L133",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_injectuserheader",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L158",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_dologin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L183",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_redirectifloggedin",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L215",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_auth_js",
+      "target": "auth_geturlparam",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_getuser",
+      "target": "auth_gettoken",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_getuser",
+      "target": "auth_clearauth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_requireauth",
+      "target": "auth_getuser",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_guardpage",
+      "target": "auth_requireauth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L95",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_getcurrentuser",
+      "target": "auth_getuser",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L99",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_logout",
+      "target": "auth_gettoken",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L109",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_logout",
+      "target": "auth_clearauth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L118",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_apifetch",
+      "target": "auth_gettoken",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L134",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_apifetch",
+      "target": "auth_clearauth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L144",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_injectuserheader",
+      "target": "auth_getuser",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L159",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_dologin",
+      "target": "auth_apifetch",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_dologin",
+      "target": "auth_setauth",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "auth_redirectifloggedin",
+      "target": "auth_getuser",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/auth.js",
+      "source_location": "L216",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_rrdch_assistant_js",
+      "target": "rrdch_assistant_pagecontext",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_rrdch_assistant_js",
+      "target": "rrdch_assistant_postai",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L26",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_rrdch_assistant_js",
+      "target": "rrdch_assistant_bubble",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_rrdch_assistant_js",
+      "target": "rrdch_assistant_mountui",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/rrdch-assistant.js",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_rrdchassetpath",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_inittheme",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_readcookie",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_applylang",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_animatecounter",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_showtoast",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_initstandardnav",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L193",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_highlightactivenav",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L228",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_assets_js_main_js",
+      "target": "main_observetranslatelayout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/assets/js/main.js",
+      "source_location": "L251",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_main_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/main.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_main_jsx",
+      "target": "client",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/main.jsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_main_jsx",
+      "target": "react_router_dom",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/main.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_main_jsx",
+      "target": "pictures_rrdch_website_src_styles_globals_css",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/main.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_main_jsx",
+      "target": "pictures_rrdch_website_src_app",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/main.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_main_jsx",
+      "target": "pictures_rrdch_website_src_locales_i18n",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/main.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "react_router_dom",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "react_i18next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "pictures_rrdch_website_src_components_layout_topbar",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "pictures_rrdch_website_src_components_layout_header",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "pictures_rrdch_website_src_components_layout_footer",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "pictures_rrdch_website_src_pages_home",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_app_jsx",
+      "target": "app_app",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/App.jsx",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_locales_i18n_js",
+      "target": "i18next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/locales/i18n.js",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_locales_i18n_js",
+      "target": "react_i18next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/locales/i18n.js",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_locales_i18n_js",
+      "target": "pictures_rrdch_website_src_locales_en_translation_json",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/locales/i18n.js",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_locales_i18n_js",
+      "target": "pictures_rrdch_website_src_locales_kn_translation_json",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/locales/i18n.js",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_header_jsx",
+      "target": "react_i18next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Header.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_header_jsx",
+      "target": "react_router_dom",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Header.jsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_header_jsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Header.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_header_jsx",
+      "target": "react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Header.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_header_jsx",
+      "target": "header_header",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Header.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_footer_jsx",
+      "target": "react_i18next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Footer.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_footer_jsx",
+      "target": "react_router_dom",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Footer.jsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_footer_jsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Footer.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_footer_jsx",
+      "target": "footer_footer",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/Footer.jsx",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_topbar_jsx",
+      "target": "react_i18next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/TopBar.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_topbar_jsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/TopBar.jsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_components_layout_topbar_jsx",
+      "target": "topbar_topbar",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/components/layout/TopBar.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_pages_home_jsx",
+      "target": "react_i18next",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/pages/Home.jsx",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_pages_home_jsx",
+      "target": "framer_motion",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/pages/Home.jsx",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_pages_home_jsx",
+      "target": "react_router_dom",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/pages/Home.jsx",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_pages_home_jsx",
+      "target": "lucide_react",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/pages/Home.jsx",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "pictures_rrdch_website_src_pages_home_jsx",
+      "target": "home_home",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "pictures/rrdch-website/src/pages/Home.jsx",
+      "source_location": "L6",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

@@ -1,0 +1,22 @@
+{
+  "name": "RRDCH — Rajarajeswari Dental College & Hospital",
+  "short_name": "RRDCH",
+  "description": "RRDCH Bengaluru — Book appointments, access student portal, track OPD queue, and explore campus.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1B3A6B",
+  "theme_color": "#1B3A6B",
+  "orientation": "any",
+  "categories": ["medical", "education", "health"],
+  "lang": "en",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    { "name": "Book Appointment", "url": "/appointments.html", "description": "Book a dental appointment quickly" },
+    { "name": "Student Portal", "url": "/portals/student.html", "description": "Access student dashboard" },
+    { "name": "OPD Queue", "url": "/appointments.html#queue", "description": "Check live OPD queue status" }
+  ]
+}

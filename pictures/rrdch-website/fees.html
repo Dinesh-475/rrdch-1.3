@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RRDCH | Rajarajeswari Dental College &amp; Hospital, Bangalore</title>
+  <meta name="description" content="Rajarajeswari Dental College &amp; Hospital (RRDCH) is a premier NAAC 'A' Grade dental institution in Bangalore offering BDS, MDS programs with 350 electronic dental chairs and 800+ daily OPD patients.">
+  <meta name="keywords" content="RRDCH, Rajarajeswari Dental College, Dental College Bangalore, BDS MDS, NAAC A Grade Dental">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RRDCH | Rajarajeswari Dental College &amp; Hospital">
+  <meta property="og:description" content="Premier dental institution in Bangalore. NAAC 'A' Grade, Guinness World Record holder, NIRF Rank 34. BDS &amp; MDS admissions open.">
+  <meta property="og:url" content="https://rrdch.edu.in/">
+  <meta property="og:image" content="/assets/images/campus/college.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <meta name="description" content="Rajarajeswari Dental College & Hospital (RRDCH), Bengaluru — NAAC 'A' accredited, 350 dental chairs, 600+ patients daily. Book appointments, explore courses, and access student portal.">
+  <title>RRDCH — Rajarajeswari Dental College & Hospital, Bengaluru</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1B3A6B">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <!-- Toastify -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+  <!-- Map & 360 Libraries -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+  <style>
+    .news-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+    .news-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .news-item:last-child { border-bottom: none; }
+    .news-img { width: 80px; height: 65px; border-radius: var(--radius-sm); object-fit: cover; background: linear-gradient(135deg, var(--navy), var(--teal)); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+    .news-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .news-title { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 0.25rem; }
+    .events-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .event-item { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .event-date-block { background: var(--navy); color: #fff; border-radius: var(--radius-sm); padding: 0.4rem 0.75rem; text-align: center; flex-shrink: 0; min-width: 50px; }
+    .event-day { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; line-height: 1; }
+    .event-mon { font-size: 0.65rem; text-transform: uppercase; color: var(--gold); letter-spacing: 0.5px; }
+    .event-info h4 { font-size: 0.875rem; color: var(--text); }
+    .event-info p { font-size: 0.78rem; margin-top: 0.15rem; }
+    .virtual-tour-cta {
+      background: linear-gradient(135deg, var(--navy), var(--teal));
+      border-radius: var(--radius-lg);
+      padding: 3.5rem;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .virtual-tour-cta::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: rgba(200,169,81,0.08);
+      border-radius: 50%;
+      top: -100px; right: -100px;
+    }
+    .hero-carousel { position: relative; }
+    .carousel-dots { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.5rem; }
+    .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); cursor: pointer; transition: all var(--transition); }
+    .carousel-dot.active { background: var(--gold); width: 24px; border-radius: 4px; }
+    #mapSection { scroll-margin-top: 90px; }
+    .dir-step { display: flex; gap: 0.75rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .dir-step:last-child { border-bottom: none; }
+    .dir-num { width: 28px; height: 28px; background: var(--navy); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
+  </style>
+</head>
+<body style="background:var(--bg); color:var(--text);">
+
+<header class="img2-header" id="rrdch-header">
+  <div class="img2-top">
+    <div>
+      📞 +91-80-2843 7150, +91-80-2843 7468 & +91 9901559955 &nbsp;&nbsp;&nbsp; ✉️ principalrrdch@gmail.com
+    </div>
+    <div class="img2-top-right">
+      <div><a href="fees.html" title="Eduwize ERP">ERP</a> | <a href="#">ESI</a> | <a href="#">Accreditation ▾</a> | <a href="#">DCI</a> | <a href="#">Brochure ▾</a> | <a href="#">Recognitions</a> | <a href="#">Committee ▾</a> | <a href="#">Schedule ▾</a> | <a href="#">Newsletter</a> | <a href="/feedback.html">Feedback</a> | <a href="#">Career</a></div>
+      <div><a href="#">Webmail</a> <a href="#"><strong>*NAAC*</strong></a> <a href="#"><strong>*NIRF*</strong></a> <a href="#">Circulars</a> <a href="#">E-Content</a> <a href="fees.html"><strong>*ONLINE FEES*</strong></a> <a href="fees.html">FEE (Terms)</a></div>
+    </div>
+  </div>
+
+  <div class="img2-ticker">
+    <span class="img2-new-badge">new</span>
+    <span class="img2-ticker-scroll">'Application are invited from eligible candidates for Certificate Course in Implantology 2026-27. Interested candidates send your application to: pgrrdch@gmail.com' &nbsp; | &nbsp; Ph.D Entrance Exam Notification</span>
+  </div>
+
+  <div class="img2-brand-row">
+    <a href="index.html" class="img2-brand-left notranslate" translate="no">
+      <img src="assets/images/badges/rrdch-logo.png" class="img2-logo-img" alt="RRDCH Logo">
+      <div class="img2-brand-names">
+        <h1>RajaRajeswari</h1>
+        <h2>Dental College & Hospital</h2>
+        <p>RECOGNIZED BY DENTAL COUNCIL OF INDIA & GOVT.OF INDIA<br>AFFILIATED TO RAJIVGANDHI UNIVERSITY OF HEALTH SCIENCE, BANGALORE</p>
+      </div>
+    </a>
+    <div class="img2-brand-right">
+      <div class="img2-badges-imgs">
+         <img src="assets/images/badges/NABH.png" alt="NABH">
+         <img src="assets/images/badges/naac.png" alt="NAAC">
+         <img src="assets/images/badges/iso1.png" alt="ISO">
+         <img src="assets/images/badges/IAOFINAL.png" alt="IAO">
+         <img src="assets/images/badges/RCPSG3.png" alt="UK">
+         <img src="assets/images/badges/SLMC9.png" alt="SLMC">
+      </div>
+      <div class="img2-badges-subtitle">
+         Recognised by Royal College of Physicians and Surgeons of Glasgow, UK for part 1 & 2 MFDS Examinations
+      </div>
+    </div>
+  </div>
+
+  <!-- We keep standard JS classes here for backwards compatibility with main.js script -->
+  <nav class="img2-nav-wrapper navbar" style="position: relative; border-bottom: none;" id="main-nav-replacement">
+    <div class="img2-nav-inner">
+      <ul class="img2-nav-menu nav-menu" id="navMenu">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About Us ▾</a></li>
+        <li><a href="admissions.html">Courses Offered ▾</a></li>
+        <li><a href="departments.html">Department ▾</a></li>
+        <li><a href="admissions.html">Academics ▾</a></li>
+        <li><a href="about.html">Facilities ▾</a></li>
+        <li><a href="events.html">News & Events</a></li>
+        <li><a href="research.html">Gallery ▾</a></li>
+        <li><a href="research.html">Alumni</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+      </ul>
+      <div class="img2-nav-actions">
+        <div class="img2-search">
+          <input type="text" placeholder="">
+          <button>Search</button>
+        </div>
+        <div class="img2-lang-dark navbar-actions">
+          <button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button>
+          <button class="dark-toggle" id="darkToggle">🌙</button>
+          <div class="hamburger img2-hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main style="padding: 60px 20px; max-width: 1000px; margin: 0 auto;">
+    <div style="background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 40px; margin-bottom: 40px;">
+        <h2 style="color: var(--navy); border-bottom: 2px solid var(--navy); padding-bottom: 15px; margin-bottom: 30px;">Online Fee Payment Portal</h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+                <h3 style="font-size: 1.2rem; color: #333; margin-bottom: 15px;">Student Login (Eduwize ERP)</h3>
+                <p style="color: #666; margin-bottom: 20px; font-size: 0.95rem;">Login to the Eduwize ERP portal to pay your tuition, hostel, and examination fees.</p>
+                <form action="https://rrdch.eduwizerp.com/logincode.php" method="post" style="display:flex; flex-direction:column; gap:15px;" id="erplogin">
+                    <div>
+                        <label style="display:block; font-weight:bold; margin-bottom:5px;">Username / Roll No:</label>
+                        <input type="text" name="username" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" required>
+                    </div>
+                    <div>
+                        <label style="display:block; font-weight:bold; margin-bottom:5px;">Password:</label>
+                        <input type="password" name="password" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;" required>
+                    </div>
+                    <button type="submit" style="background: var(--navy); color: white; padding: 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem;">Sign in to Pay Fees</button>
+                    <a href="#" style="color: var(--teal); font-size: 0.85rem; text-decoration: underline;">Forgot Password?</a>
+                </form>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 6px; border: 1px solid #eee;">
+                <h3 style="font-size: 1.1rem; color: #333; margin-bottom: 15px;"><i class="fas fa-info-circle" style="color:var(--teal);"></i> Payment Instructions</h3>
+                <ul style="line-height: 1.8; color: #555; padding-left: 20px; font-size: 0.9rem;">
+                    <li>Ensure you have a stable internet connection before initiating the payment.</li>
+                    <li>We accept All Credit/Debit Cards, Net Banking, and UPI.</li>
+                    <li>Do not refresh or close the window while the transaction is processing.</li>
+                    <li>Fee receipts will be generated immediately after a successful transaction.</li>
+                    <li>For transaction failures, amount will be refunded within 5-7 working days.</li>
+                </ul>
+                <div style="margin-top: 25px; font-weight: bold; color: var(--danger); font-size: 0.85rem;">
+                    For Payment Queries: <br>
+                    📧 accounts@rrdch.org<br>
+                    📞 +91-80-2843 7150 (Ext: 205)
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+</body>
+</html>

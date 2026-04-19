@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RRDCH Feedback — Rate your experience as a patient or student. Help us improve.">
+  <title>Feedback — RRDCH</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .star-rating { display:flex; gap:0.5rem; font-size:2rem; }
+    .star-rating span { cursor:pointer; transition:transform 0.15s; }
+    .star-rating span:hover { transform:scale(1.2); }
+    .star-rating span.lit { color:var(--gold); }
+    .star-rating span.unlit { color:var(--border); }
+  </style>
+</head>
+<body>
+<nav class="navbar"><div class="navbar-inner" style="max-width:1280px;margin:0 auto;">
+  <a href="index.html" class="navbar-brand"><img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;"><div class="navbar-brand-text"><div class="navbar-brand-name">RRDCH</div><div class="navbar-brand-sub">Feedback Portal</div></div></a>
+  <ul class="navbar-nav" id="navMenu"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="departments.html">Departments</a></li><li><a href="appointments.html">Appointments</a></li><li><a href="contact.html">Contact</a></li><li><a href="login.html" style="color:var(--gold);">Portal Login</a></li></ul>
+  <div class="navbar-actions"><button class="dark-toggle" id="darkToggle">🌙</button><div class="hamburger" id="hamburger"><span></span><span></span><span></span></div></div>
+</div></nav>
+<section style="background:linear-gradient(135deg,var(--navy),var(--teal));padding:5rem 0 3rem;text-align:center;color:#fff;margin-top:72px;">
+  <div class="container">
+    <h1 style="color:#fff;margin-bottom:0.75rem;">⭐ Your Feedback Matters</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto;">Help us serve you better. Your honest feedback drives continuous improvement at RRDCH.</p>
+  </div>
+</section>
+<section class="section">
+  <div class="container">
+    <div class="grid-2" style="gap:3rem;align-items:start;">
+      <div>
+        <div style="display:flex;border-bottom:2px solid var(--border);margin-bottom:2rem;">
+          <button id="tabPatient" style="background:none;border:none;padding:0.75rem 1.5rem;font-weight:600;color:var(--navy);border-bottom:3px solid var(--navy);margin-bottom:-2px;cursor:pointer;" onclick="switchFeedback('patient',this)">🏥 Patient Feedback</button>
+          <button id="tabStudent" style="background:none;border:none;padding:0.75rem 1.5rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;" onclick="switchFeedback('student',this)">🎓 Student Feedback</button>
+        </div>
+
+        <div id="panelPatient" class="card">
+          <h3 style="color:var(--text);margin-bottom:1.5rem;">Patient Experience Form</h3>
+          <div class="form-group"><label class="form-label">Department Visited</label>
+            <select class="form-control"><option>Conservative Dentistry & Endodontics</option><option>Oral Surgery</option><option>Orthodontics</option><option>Prosthodontics</option><option>Periodontology</option><option>Oral Pathology</option><option>Oral Medicine & Radiology</option><option>Pediatric Dentistry</option><option>Public Health</option><option>Implantology</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Overall Experience</label><div class="star-rating" id="patientStars"><span class="unlit" onclick="setStars('patientStars',1)">★</span><span class="unlit" onclick="setStars('patientStars',2)">★</span><span class="unlit" onclick="setStars('patientStars',3)">★</span><span class="unlit" onclick="setStars('patientStars',4)">★</span><span class="unlit" onclick="setStars('patientStars',5)">★</span></div></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Doctor's Behavior</label><select class="form-control"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select></div>
+            <div class="form-group"><label class="form-label">Wait Time</label><select class="form-control"><option>&lt;15 min</option><option>15–30 min</option><option>30–60 min</option><option>&gt;60 min</option></select></div>
+          </div>
+          <div class="form-group"><label class="form-label">Cleanliness Rating</label><div class="star-rating" id="cleanStars"><span class="unlit" onclick="setStars('cleanStars',1)">★</span><span class="unlit" onclick="setStars('cleanStars',2)">★</span><span class="unlit" onclick="setStars('cleanStars',3)">★</span><span class="unlit" onclick="setStars('cleanStars',4)">★</span><span class="unlit" onclick="setStars('cleanStars',5)">★</span></div></div>
+          <div class="form-group"><label class="form-label">Comments</label><textarea class="form-control" rows="4" placeholder="Share your experience in detail..."></textarea></div>
+          <div class="form-group"><label style="display:flex;gap:0.5rem;cursor:pointer;font-size:0.875rem;color:var(--text);"><input type="checkbox" id="anon1"> Submit anonymously</label></div>
+          <button class="btn btn-primary w-full" id="patientSubmitBtn" style="justify-content:center;" onclick="submitPatientFeedback()">⭐ Submit Patient Feedback</button>
+        </div>
+
+        <div id="panelStudent" class="card hidden">
+          <h3 style="color:var(--text);margin-bottom:1.5rem;">Student Experience Form</h3>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Course</label><select class="form-control"><option>BDS</option><option>MDS</option><option>PhD</option></select></div>
+            <div class="form-group"><label class="form-label">Year</label><select class="form-control"><option>Year 1</option><option>Year 2</option><option>Year 3</option><option>Year 4</option><option>MDS Yr 1</option><option>MDS Yr 2</option></select></div>
+          </div>
+          <div class="form-group"><label class="form-label">Academic Quality</label><div class="star-rating" id="acadStars"><span class="unlit" onclick="setStars('acadStars',1)">★</span><span class="unlit" onclick="setStars('acadStars',2)">★</span><span class="unlit" onclick="setStars('acadStars',3)">★</span><span class="unlit" onclick="setStars('acadStars',4)">★</span><span class="unlit" onclick="setStars('acadStars',5)">★</span></div></div>
+          <div class="form-group"><label class="form-label">Hostel & Facilities</label><div class="star-rating" id="hostelStars"><span class="unlit" onclick="setStars('hostelStars',1)">★</span><span class="unlit" onclick="setStars('hostelStars',2)">★</span><span class="unlit" onclick="setStars('hostelStars',3)">★</span><span class="unlit" onclick="setStars('hostelStars',4)">★</span><span class="unlit" onclick="setStars('hostelStars',5)">★</span></div></div>
+          <div class="form-group"><label class="form-label">Food Quality</label><div class="star-rating" id="foodStars"><span class="unlit" onclick="setStars('foodStars',1)">★</span><span class="unlit" onclick="setStars('foodStars',2)">★</span><span class="unlit" onclick="setStars('foodStars',3)">★</span><span class="unlit" onclick="setStars('foodStars',4)">★</span><span class="unlit" onclick="setStars('foodStars',5)">★</span></div></div>
+          <div class="form-group"><label class="form-label">Overall Satisfaction</label><div class="star-rating" id="overallStars"><span class="unlit" onclick="setStars('overallStars',1)">★</span><span class="unlit" onclick="setStars('overallStars',2)">★</span><span class="unlit" onclick="setStars('overallStars',3)">★</span><span class="unlit" onclick="setStars('overallStars',4)">★</span><span class="unlit" onclick="setStars('overallStars',5)">★</span></div></div>
+          <div class="form-group"><label class="form-label">Suggestions for Improvement</label><textarea class="form-control" rows="4" placeholder="What can RRDCH do better?"></textarea></div>
+          <div class="form-group"><label style="display:flex;gap:0.5rem;cursor:pointer;font-size:0.875rem;color:var(--text);"><input type="checkbox" id="anon2"> Submit anonymously</label></div>
+          <button class="btn btn-navy w-full" id="studentSubmitBtn" style="justify-content:center;" onclick="submitStudentFeedback()">⭐ Submit Student Feedback</button>
+        </div>
+      </div>
+
+      <!-- Testimonials -->
+      <div>
+        <h3 style="color:var(--text);margin-bottom:1.5rem;">Recent Testimonials</h3>
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+          <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">"The orthodontics department transformed my smile completely. Highly professional and caring staff throughout my treatment."</p><div class="testimonial-author"><div class="testimonial-avatar">RS</div><div><div class="testimonial-name">Rahul Sharma</div><div class="testimonial-role">Patient — Orthodontics</div></div></div></div>
+          <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">"As a BDS student, the practical training here is second to none. 350 chairs means real clinical experience from day one!"</p><div class="testimonial-author"><div class="testimonial-avatar">PK</div><div><div class="testimonial-name">Priya Krishnamurthy</div><div class="testimonial-role">BDS 4th Year Student</div></div></div></div>
+          <div class="testimonial-card"><div class="stars">★★★★★</div><p class="testimonial-text">"Got my root canal done painlessly. CBCT imaging showed exact anatomy. Extremely professional institution!"</p><div class="testimonial-author"><div class="testimonial-avatar">LD</div><div><div class="testimonial-name">Lakshmi Devi</div><div class="testimonial-role">Patient — Endodontics</div></div></div></div>
+          <div class="card" style="background:rgba(27,58,107,0.04);border:2px dashed var(--border);text-align:center;padding:1.5rem;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">⭐</div>
+            <p style="font-size:0.875rem;">Share your experience and it may be featured here!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2026 RRDCH, Bengaluru.</p></div></div></footer>
+<script src="assets/js/main.js"></script>
+<script>
+const starValues = {};
+
+function switchFeedback(type, btn) {
+  document.getElementById('panelPatient').classList.toggle('hidden', type !== 'patient');
+  document.getElementById('panelStudent').classList.toggle('hidden', type !== 'student');
+  document.getElementById('tabPatient').style.cssText = type==='patient' ? 'background:none;border:none;padding:0.75rem 1.5rem;font-weight:600;color:var(--navy);border-bottom:3px solid var(--navy);margin-bottom:-2px;cursor:pointer;' : 'background:none;border:none;padding:0.75rem 1.5rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;';
+  document.getElementById('tabStudent').style.cssText = type==='student' ? 'background:none;border:none;padding:0.75rem 1.5rem;font-weight:600;color:var(--navy);border-bottom:3px solid var(--navy);margin-bottom:-2px;cursor:pointer;' : 'background:none;border:none;padding:0.75rem 1.5rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;';
+}
+
+function setStars(id, n) {
+  starValues[id] = n;
+  document.getElementById(id).querySelectorAll('span').forEach((s,i) => { s.className = i < n ? 'lit' : 'unlit'; s.style.color = i < n ? 'var(--gold)' : 'var(--border)'; });
+}
+
+async function postFeedback(payload, btnId, label) {
+  const btn = document.getElementById(btnId);
+  btn.disabled = true;
+  btn.textContent = '⏳ Submitting...';
+  try {
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    showToast(data.ok ? '✅ ' + data.msg : '❌ ' + data.msg, data.ok ? 'success' : 'error');
+  } catch {
+    showToast('⚠️ Network error. Please try again.', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = label;
+  }
+}
+
+function submitPatientFeedback() {
+  const dept    = document.querySelector('#panelPatient select')?.value || 'General';
+  const overall = starValues['patientStars'] || 0;
+  const clean   = starValues['cleanStars'] || 0;
+  const comment = document.querySelector('#panelPatient textarea')?.value || '';
+  const anon    = document.getElementById('anon1').checked;
+  postFeedback({
+    feedback_type: 'patient',
+    dept_id: null,
+    ratings_json: { overall, cleanliness: clean, dept },
+    comment,
+    user_id: anon ? null : (RRDCH.getUser()?.id || null),
+  }, 'patientSubmitBtn', '⭐ Submit Patient Feedback');
+}
+
+function submitStudentFeedback() {
+  const course  = document.querySelectorAll('#panelStudent select')[0]?.value || 'BDS';
+  const year    = document.querySelectorAll('#panelStudent select')[1]?.value || 'Year 1';
+  const acad    = starValues['acadStars'] || 0;
+  const hostel  = starValues['hostelStars'] || 0;
+  const food    = starValues['foodStars'] || 0;
+  const overall = starValues['overallStars'] || 0;
+  const comment = document.querySelector('#panelStudent textarea')?.value || '';
+  const anon    = document.getElementById('anon2').checked;
+  postFeedback({
+    feedback_type: 'student',
+    dept_id: null,
+    ratings_json: { course, year, academic: acad, hostel, food, overall },
+    comment,
+    user_id: anon ? null : (RRDCH.getUser()?.id || null),
+  }, 'studentSubmitBtn', '⭐ Submit Student Feedback');
+}
+</script>
+</body>
+</html>

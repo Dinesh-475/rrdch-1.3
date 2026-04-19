@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | RRDCH — Rajarajeswari Dental College &amp; Hospital</title>
+  <meta name="description" content="Contact RRDCH Bangalore. Phone: +91-9743277777. Address: No. 14, Ramohalli Cross, Kumbalgodu, Mysore Road, Bengaluru 560074. Get directions, email, and appointment links.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/contact.html">
+  <meta property="og:title" content="Contact RRDCH | Bangalore Dental College">
+  <meta property="og:description" content="Rajarajeswari Dental College &amp; Hospital, Mysore Road, Bengaluru. Call +91-9743277777.">
+  <meta property="og:url" content="https://rrdch.edu.in/contact.html">
+
+  <meta name="description" content="Contact RRDCH — Phone, email, directions and inquiry form. Located on Mysore Road, Bengaluru.">
+  <title>Contact Us — RRDCH</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Map & 360 Libraries -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+  <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+  <!-- Animations & Toasts -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+  <style>
+    .pano-container { position:relative; overflow:hidden; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); border:1px solid var(--border); height:350px; }
+    .map-container { position:relative; overflow:hidden; border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); border:1px solid var(--border); height:350px; background:#e0e0e0; }
+    .route-btn { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); z-index:1000; background:var(--navy); color:#fff; border:none; padding:10px 20px; border-radius:30px; font-weight:bold; cursor:pointer; box-shadow:0 10px 25px rgba(0,0,0,0.3); transition:all 0.3s ease; display:flex; gap:8px; align-items:center; }
+    .route-btn:hover { background:var(--teal); transform:translate(-50%, -3px); box-shadow:0 15px 35px rgba(0,0,0,0.4); }
+    /* Hide some routing instruction bloat to keep map clean */
+    .leaflet-routing-container { opacity: 0.9; max-height: 200px; overflow-y: auto; background: var(--surface) !important; color: var(--text) !important; display: none; }
+    .leaflet-routing-container.leaflet-routing-container-hide { display: none; }
+    .map-actions { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.75rem; }
+  </style>
+</head>
+<body>
+<nav class="navbar"><div class="navbar-inner" style="max-width:1280px;margin:0 auto;">
+  <a href="index.html" class="navbar-brand"><img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;"><div class="navbar-brand-text"><div class="navbar-brand-name">RRDCH</div><div class="navbar-brand-sub">Rajarajeswari Dental College & Hospital</div></div></a>
+  <ul class="navbar-nav" id="navMenu"><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="departments.html">Departments</a></li><li><a href="appointments.html">Appointments</a></li><li><a href="admissions.html">Admissions</a></li><li><a href="events.html">Events</a></li><li><a href="contact.html" class="active">Contact</a></li><li><a href="login.html" style="color:var(--gold);">Portal Login</a></li></ul>
+  <div class="navbar-actions"><button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button><button class="dark-toggle" id="darkToggle">🌙</button><div class="hamburger" id="hamburger"><span></span><span></span><span></span></div></div>
+</div></nav>
+
+<section style="background:linear-gradient(135deg,var(--navy),var(--teal));padding:6rem 0 3rem;text-align:center;color:#fff;margin-top:72px;">
+  <div class="container">
+    <div class="label" style="display:inline-block;background:rgba(200,169,81,0.2);border:1px solid rgba(200,169,81,0.4);color:var(--gold-light);font-size:0.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:0.35rem 1rem;border-radius:var(--radius-pill);margin-bottom:1rem;">Get in Touch</div>
+    <h1 style="color:#fff;margin-bottom:0.75rem;">Contact RRDCH</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto;">We're here to help. Reach us by phone, email, or visit us at our campus on Mysore Road.</p>
+  </div>
+</section>
+
+<!-- EMERGENCY BANNER -->
+<div style="background:linear-gradient(90deg,var(--danger),#c0392b);padding:1rem 0;text-align:center;">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;color:#fff;">
+      <span style="font-size:1.3rem;">🚨</span>
+      <span style="font-weight:700;font-size:1.1rem;">24×7 Dental Emergency: +91-9901559955</span>
+      <a href="tel:+919901559955" class="btn btn-sm" style="background:#fff;color:var(--danger);border:none;">Call Now</a>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="grid-2" style="gap:3rem;align-items:start;">
+      <!-- Contact Info -->
+      <div>
+        <h2 style="margin-bottom:2rem;color:var(--text);">Get in Touch</h2>
+        <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2.5rem;">
+          <div class="card" style="display:flex;gap:1.25rem;align-items:flex-start;padding:1.5rem;">
+            <div style="width:48px;height:48px;background:rgba(27,58,107,0.1);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📍</div>
+            <div>
+              <h4 style="color:var(--text);margin-bottom:0.3rem;">Address</h4>
+              <p style="font-size:0.9rem;margin:0;">No.14, Ramohalli Cross, Kumbalgodu, Mysore Road, Bengaluru – 560074, Karnataka</p>
+            </div>
+          </div>
+          <div class="card" style="display:flex;gap:1.25rem;align-items:flex-start;padding:1.5rem;">
+            <div style="width:48px;height:48px;background:rgba(27,58,107,0.1);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📞</div>
+            <div>
+              <h4 style="color:var(--text);margin-bottom:0.3rem;">Phone Numbers</h4>
+              <div style="font-size:0.9rem;display:flex;flex-direction:column;gap:0.35rem;">
+                <div style="color:var(--text);"><strong>Hospital:</strong> 080-28437150</div>
+                <div style="color:var(--text);"><strong>Admissions:</strong> +91-9743277777</div>
+                <div style="color:var(--text);"><strong>Admissions 2:</strong> +91-9901559955</div>
+                <div style="color:var(--danger);font-weight:600;"><strong>Emergency (24×7):</strong> +91-9901559955</div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="display:flex;gap:1.25rem;align-items:flex-start;padding:1.5rem;">
+            <div style="width:48px;height:48px;background:rgba(27,58,107,0.1);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">✉️</div>
+            <div>
+              <h4 style="color:var(--text);margin-bottom:0.3rem;">Email</h4>
+              <div style="font-size:0.9rem;display:flex;flex-direction:column;gap:0.2rem;">
+                <div><strong>General:</strong> info@rrdch.org</div>
+                <div><strong>Admissions:</strong> admissions@rrdch.org</div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="display:flex;gap:1.25rem;align-items:flex-start;padding:1.5rem;">
+            <div style="width:48px;height:48px;background:rgba(27,58,107,0.1);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">🕐</div>
+            <div>
+              <h4 style="color:var(--text);margin-bottom:0.3rem;">OPD Hours</h4>
+              <div style="font-size:0.9rem;display:flex;flex-direction:column;gap:0.2rem;">
+                <div><strong>Monday–Saturday:</strong> 9:00 AM – 5:00 PM</div>
+                <div><strong>Sunday:</strong> Closed (Emergency Only)</div>
+                <div><strong>Emergency:</strong> 24 hours / 7 days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Map & 360 View -->
+        <h3 style="color:var(--text);margin-top:2rem;margin-bottom:1rem;">Campus Map & 360° Preview</h3>
+        <div class="grid-2" style="gap:1.5rem; margin-bottom: 2rem;">
+          
+          <!-- Routing Map -->
+          <div class="map-container animate-on-scroll" data-aos="fade-right">
+            <div id="rrdchMap" style="width:100%; height:100%;"></div>
+            <button class="route-btn" id="getRouteBtn" onclick="requestRoute()">
+              <i class="fas fa-location-arrow"></i> Get Route
+            </button>
+          </div>
+
+          <!-- 360 View -->
+          <div class="pano-container animate-on-scroll" data-aos="fade-left">
+            <div id="panoViewer" style="width:100%; height:100%;"></div>
+          </div>
+          
+        </div>
+        <div class="card" style="padding:1rem;">
+          <h4 style="margin-bottom:0.5rem;color:var(--text);">Google 360 Street View</h4>
+          <iframe id="google360Frame" title="RRDCH Google Street View" style="width:100%;height:320px;border:0;border-radius:12px;" loading="lazy"></iframe>
+          <div class="map-actions">
+            <a id="googleMapDirections" class="btn btn-teal btn-sm" target="_blank" rel="noopener">Open Google Directions</a>
+            <a href="virtual-tour.html" class="btn btn-navy btn-sm">Open Campus Tour</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div>
+        <div class="card" style="position:sticky;top:90px;">
+          <h2 style="color:var(--text);margin-bottom:1.75rem;">Send Us a Message</h2>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Your Name *</label><input class="form-control" id="cName" placeholder="Full name"></div>
+            <div class="form-group"><label class="form-label">Phone *</label><input class="form-control" id="cPhone" type="tel" placeholder="+91 XXXXX XXXXX"></div>
+          </div>
+          <div class="form-group"><label class="form-label">Email *</label><input class="form-control" id="cEmail" type="email" placeholder="your@email.com"></div>
+          <div class="form-group">
+            <label class="form-label">Query Type *</label>
+            <select class="form-control" id="cType">
+              <option>General Inquiry</option>
+              <option>Appointment Query</option>
+              <option>Admissions Information</option>
+              <option>Feedback / Complaint</option>
+              <option>Research Collaboration</option>
+              <option>Emergency</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Message *</label><textarea class="form-control" id="cMsg" rows="5" placeholder="Describe your query in detail..."></textarea></div>
+          <button class="btn btn-navy btn-lg w-full" onclick="submitContact()" style="justify-content:center;">📤 Send Message</button>
+          <p style="font-size:0.78rem;color:var(--muted);text-align:center;margin-top:0.75rem;">We typically respond within 24 hours on working days.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2026 Rajarajeswari Dental College & Hospital, Bengaluru. Phone: 080-28437150</p></div></div></footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+async function submitContact() {
+  const name    = document.getElementById('cName').value.trim();
+  const phone   = document.getElementById('cPhone').value.trim();
+  const email   = document.getElementById('cEmail').value.trim();
+  const subject = document.getElementById('cType').value;
+  const message = document.getElementById('cMsg').value.trim();
+
+  if (!name || !phone || !message) {
+    showToast('Please fill in Name, Phone and Message.', 'error');
+    return;
+  }
+
+  const btn = document.querySelector('button[onclick="submitContact()"]');
+  const original = btn.innerHTML;
+  btn.innerHTML = '⏳ Sending...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch('/api/public/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, phone, email, subject, message }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      showToast('✅ ' + data.msg, 'success');
+      ['cName','cPhone','cEmail','cMsg'].forEach(id => document.getElementById(id).value = '');
+    } else {
+      showToast('❌ ' + (data.msg || 'Failed to send. Please try again.'), 'error');
+    }
+  } catch {
+    showToast('⚠️ Network error. Please try again.', 'error');
+  } finally {
+    btn.innerHTML = original;
+    btn.disabled = false;
+  }
+}
+
+// Map & 360 Initialization
+document.addEventListener("DOMContentLoaded", () => {
+  let mapsApiKey = '';
+  fetch('/api/public/config')
+    .then((r) => r.json())
+    .then((cfg) => {
+      if (cfg?.ok && cfg.data) {
+        mapsApiKey = cfg.data.googleMapsApiKey || '';
+        const lat = cfg.data.campusCoords?.lat || 12.9279;
+        const lng = cfg.data.campusCoords?.lng || 77.4713;
+        const svSrc = mapsApiKey
+          ? `https://www.google.com/maps/embed/v1/streetview?key=${encodeURIComponent(mapsApiKey)}&location=${lat},${lng}&heading=210&pitch=10&fov=90`
+          : `https://www.google.com/maps?q=${lat},${lng}&hl=en&z=18&output=embed`;
+        document.getElementById('google360Frame').src = svSrc;
+        document.getElementById('googleMapDirections').href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+      }
+    })
+    .catch(() => {});
+
+  // Init AOS
+  AOS.init({ duration: 800, once: true });
+
+  // Init Pannellum 360 View
+  try {
+    pannellum.viewer('panoViewer', {
+      "type": "equirectangular",
+      "panorama": "https://pannellum.org/images/alma.jpg",
+      "autoLoad": true,
+      "compass": false,
+      "pitch": -5,
+      "yaw": 20,
+      "hfov": 100,
+      "strings": {
+        "loadingLabel": "Loading RRDCH Campus..."
+      }
+    });
+  } catch(e) { console.error("Pannellum init error", e); }
+
+  // Init Leaflet Map
+  try {
+    window.rrdchCoords = [12.9279, 77.4713];
+
+    window.lMap = L.map('rrdchMap').setView(window.rrdchCoords, 14);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(window.lMap);
+
+    const hospitalIcon = L.icon({
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      shadowSize: [41, 41]
+    });
+
+    L.marker(window.rrdchCoords, {icon: hospitalIcon}).addTo(window.lMap)
+      .bindPopup("<b>RRDCH Campus</b><br>Mysore Road")
+      .openPopup();
+      
+  } catch(e) { console.error("Leaflet init error", e); }
+});
+
+// Request Geolocation and Route
+function requestRoute() {
+  const btn = document.getElementById('getRouteBtn');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+  btn.disabled = true;
+
+  if (!navigator.geolocation) {
+    showToast("Geolocation is not supported by your browser", "error");
+    btn.innerHTML = '<i class="fas fa-location-arrow"></i> Get Route';
+    btn.disabled = false;
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const userCoords = [position.coords.latitude, position.coords.longitude];
+      
+      showToast("Location found! Plotting shortest route...", "success");
+      
+      // Clear existing routes if any
+      if (window.routeControl) {
+        window.lMap.removeControl(window.routeControl);
+      }
+
+      // Add routing machine
+      window.routeControl = L.Routing.control({
+        waypoints: [
+          L.latLng(userCoords[0], userCoords[1]),
+          L.latLng(window.rrdchCoords[0], window.rrdchCoords[1])
+        ],
+        routeWhileDragging: false,
+        addWaypoints: false,
+        show: true, 
+        lineOptions: {
+          styles: [{color: '#2E86AB', opacity: 0.8, weight: 6}]
+        },
+        createMarker: function(i, wp, nWps) {
+          if (i === 0) {
+            return L.marker(wp.latLng, { draggable: false }).bindPopup("<b>Your Location</b>");
+          } else {
+            return L.marker(wp.latLng, { draggable: false }).bindPopup("<b>RRDCH Campus</b>");
+          }
+        }
+      }).addTo(window.lMap);
+
+      // Make instruction container visible if needed:
+      const container = document.querySelector('.leaflet-routing-container');
+      if(container) { container.style.display = 'block'; }
+
+      btn.style.display = 'none'; // Hide button after routing
+    },
+    (error) => {
+      console.error(error);
+      showToast("Error locating you. Please allow location permissions.", "error");
+      btn.innerHTML = '<i class="fas fa-location-arrow"></i> Get Route';
+      btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PG Doctor Portal — RRDCH</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar" style="top:0;">
+  <div class="navbar-inner">
+    <a href="../index.html" class="navbar-brand"><img src="../assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;"><div class="navbar-brand-text"><div class="navbar-brand-name">RRDCH PG Portal</div><div class="navbar-brand-sub">Postgraduate Doctor Dashboard</div></div></a>
+    <div class="navbar-actions"><button class="dark-toggle" id="darkToggle">🌙</button><button class="btn btn-sm" style="background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);color:#c0392b;" onclick="logout()">🚪 Logout</button></div>
+  </div>
+</nav>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><div style="font-size:2rem;margin-bottom:0.75rem;">👨‍⚕️</div><div class="sidebar-user-name" id="sidebarName">PG Doctor</div><div class="sidebar-user-role" style="color:var(--teal);">Postgraduate Resident</div></div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Clinical</div>
+      <a class="sidebar-item active" onclick="showPanel('today')"><i class="fas fa-list"></i> Today's Patients</a>
+      <a class="sidebar-item" onclick="showPanel('schedule')"><i class="fas fa-calendar"></i> My Schedule</a>
+      <a class="sidebar-item" onclick="showPanel('records')"><i class="fas fa-folder"></i> Patient Records</a>
+      <a class="sidebar-item" onclick="showPanel('followup')"><i class="fas fa-redo"></i> Follow-up Queue</a>
+      <div class="sidebar-section">Academic</div>
+      <a class="sidebar-item" onclick="showPanel('cde')"><i class="fas fa-certificate"></i> CDE Attendance</a>
+      <a class="sidebar-item" href="../index.html"><i class="fas fa-globe"></i> Main Website</a>
+      <a class="sidebar-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="portal-main">
+    <div id="panel-today">
+      <div class="portal-header flex-between"><div><h1>Today's Patients 👨‍⚕️</h1><p>April 12, 2026 · Conservative Dentistry & Endodontics</p></div><span class="badge badge-success" style="font-size:0.85rem;">On Duty</span></div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="kpi-card"><div class="kpi-icon teal"><i class="fas fa-users" style="color:var(--teal);font-size:1.3rem;"></i></div><div><div class="kpi-num">12</div><div class="kpi-label">Assigned Today</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon success"><i class="fas fa-check" style="color:var(--success);font-size:1.3rem;"></i></div><div><div class="kpi-num">7</div><div class="kpi-label">Treated</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon warning"><i class="fas fa-clock" style="color:var(--warning);font-size:1.3rem;"></i></div><div><div class="kpi-num">5</div><div class="kpi-label">Remaining</div></div></div>
+      </div>
+      <div class="card mt-3">
+        <h3 style="color:var(--text);margin-bottom:1rem;">Patient List — Today</h3>
+        <div class="table-wrap">
+          <table class="table"><thead><tr><th>Queue</th><th>Patient</th><th>Chief Complaint</th><th>Time</th><th>Status</th><th>Notes</th></tr></thead><tbody id="todayPatientsBody">
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+    <div id="panel-schedule" class="hidden">
+      <div class="portal-header"><h1>📅 My Schedule</h1></div>
+      <div class="card">
+        <div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Time</th><th>Type</th><th>Details</th></tr></thead><tbody>
+          <tr><td>Apr 12</td><td>9AM–1PM</td><td><span class="badge badge-teal">Clinical</span></td><td>Clinic duty — Conservative Dentistry</td></tr>
+          <tr><td>Apr 13</td><td>9AM–5PM</td><td><span class="badge badge-navy">Academic</span></td><td>Journal Club + Case Presentations — Lecture Hall 1</td></tr>
+          <tr><td>Apr 14</td><td>2PM–5PM</td><td><span class="badge badge-teal">Clinical</span></td><td>Clinic duty + 1 supervision case</td></tr>
+          <tr><td>Apr 15</td><td>9AM–12PM</td><td><span class="badge badge-success">CDE</span></td><td>Advances in Implantology — Auditorium (as Observer)</td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+    <div id="panel-records" class="hidden">
+      <div class="portal-header"><h1>📁 Patient Records</h1></div>
+      <div class="card">
+        <p style="margin-bottom:1rem;">Search and view case histories for patients assigned to you.</p>
+        <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;">
+          <input class="form-control" placeholder="Search by patient name or case ID..." style="max-width:350px;">
+          <button class="btn btn-teal">Search</button>
+        </div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Case ID</th><th>Patient</th><th>Diagnosis</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+          <tr><td style="font-family:monospace;font-size:0.8rem;">CASE-2026-041</td><td>Ramesh Naidu</td><td>Pulpitis — #36</td><td>Apr 12</td><td><span class="badge badge-success">Completed</span></td><td><button class="btn btn-sm btn-teal" onclick="showToast('Case history opened','success')">View</button></td></tr>
+          <tr><td style="font-family:monospace;font-size:0.8rem;">CASE-2026-038</td><td>Lakshmi Devi</td><td>Periapical Abscess — #11</td><td>Apr 10</td><td><span class="badge badge-warning">Follow-up</span></td><td><button class="btn btn-sm btn-teal" onclick="showToast('Case history opened','success')">View</button></td></tr>
+        </tbody></table></div>
+      </div>
+    </div>
+    <div id="panel-followup" class="hidden">
+      <div class="portal-header"><h1>🔁 Follow-up Queue</h1></div>
+      <div class="card">
+        <div style="display:flex;flex-direction:column;gap:0.85rem;">
+          <div style="padding:1rem;background:rgba(230,126,34,0.06);border-radius:var(--radius-md);border:1px solid rgba(230,126,34,0.2);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;"><span style="font-weight:600;color:var(--text);">Lakshmi Devi — Post-RCT #11</span><span class="badge badge-warning">Due Apr 15</span></div>
+            <p style="font-size:0.82rem;">RCT completed on #11. Follow-up for obturation verification X-ray + symptom check.</p>
+            <button class="btn btn-sm btn-teal mt-1" onclick="showToast('Reminded patient via SMS','success')">📱 Send Reminder</button>
+          </div>
+          <div style="padding:1rem;background:rgba(52,152,219,0.06);border-radius:var(--radius-md);border:1px solid rgba(52,152,219,0.2);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;"><span style="font-weight:600;color:var(--text);">Arjun Singh — Crown Prep #16</span><span class="badge badge-info">Due Apr 20</span></div>
+            <p style="font-size:0.82rem;">Crown preparation completed. Trial crown appointment pending before cementation.</p>
+            <button class="btn btn-sm btn-teal mt-1" onclick="showToast('Reminded patient via SMS','success')">📱 Send Reminder</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="panel-cde" class="hidden">
+      <div class="portal-header"><h1>🎓 CDE Attendance Log</h1></div>
+      <div class="card">
+        <div class="table-wrap"><table class="table"><thead><tr><th>Date</th><th>Program Title</th><th>CPD Points</th><th>Status</th></tr></thead><tbody>
+          <tr><td>Mar 15, 2026</td><td>Digital Dentistry & CAD/CAM — Day 1</td><td>4</td><td><span class="badge badge-success">Attended</span></td></tr>
+          <tr><td>Mar 16, 2026</td><td>Digital Dentistry & CAD/CAM — Day 2</td><td>4</td><td><span class="badge badge-success">Attended</span></td></tr>
+          <tr><td>Feb 20, 2026</td><td>Endo Workshop — Rotary Systems</td><td>6</td><td><span class="badge badge-success">Attended</span></td></tr>
+          <tr><td>Apr 20, 2026</td><td>Advances in Implantology</td><td>8</td><td><span class="badge badge-warning">Upcoming</span></td></tr>
+        </tbody></table></div>
+        <div style="margin-top:1rem;font-size:0.875rem;color:var(--text);">Total CPD Points Earned (2025–26): <strong style="color:var(--success);">14</strong> / Required: <strong>20</strong></div>
+        <div class="progress mt-1" style="height:10px;"><div class="progress-bar progress-warning" style="width:70%;"></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+const user = guardPage(['doctor','hod']);
+if (user) document.getElementById('sidebarName').textContent = user.name;
+function showPanel(name) {
+  document.querySelectorAll('[id^="panel-"]').forEach(p => p.classList.add('hidden'));
+  document.getElementById('panel-' + name).classList.remove('hidden');
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  event.target.closest('.sidebar-item').classList.add('active');
+}
+
+async function loadDoctorSchedule() {
+  try {
+    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+    const res = await fetch(API_BASE + '/doctor/schedule', {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('rrdch_token')}` }
+    });
+    const data = await res.json();
+    
+    if (data.ok) {
+      const tbody = document.getElementById('todayPatientsBody');
+      if (data.data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;">No patients assigned or scheduled for today.</td></tr>';
+      } else {
+        // Update KPIs
+        const treated = data.data.filter(a => a.status === 'done').length;
+        document.querySelectorAll('.kpi-num')[0].textContent = data.data.length;
+        document.querySelectorAll('.kpi-num')[1].textContent = treated;
+        document.querySelectorAll('.kpi-num')[2].textContent = data.data.length - treated;
+
+        tbody.innerHTML = data.data.map(p => `
+          <tr>
+            <td style="font-weight:700;">#${p.queue_position}</td>
+            <td style="font-weight:500;">${p.patient_name} <div style="font-size:0.7rem;color:var(--muted)">${p.patient_phone}</div></td>
+            <td style="font-size:0.875rem;">${p.chief_complaint || 'General Checkup'}</td>
+            <td>${p.time_slot}</td>
+            <td><span class="badge badge-${p.status==='done'?'success':p.status==='in_queue'?'warning':p.status==='called'?'gold':'navy'}">${p.status.toUpperCase()}</span></td>
+            <td>
+               <button class="btn btn-sm btn-teal" onclick="showToast('Treatment notes form opened','success')">📝 Notes</button>
+               ${p.status !== 'done' ? `<button class="btn btn-sm btn-success" onclick="updateAppt('${p.id}', 'done')">✓</button>` : ''}
+            </td>
+          </tr>
+        `).join('');
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load schedule', err);
+    document.getElementById('todayPatientsBody').innerHTML = '<tr><td colspan="6">Error loading patient data.</td></tr>';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadDoctorSchedule();
+});
+
+async function updateAppt(id, status) {
+  try {
+    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+    const res = await fetch(`${API_BASE}/doctor/appointments/${id}/status`, {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('rrdch_token')}` 
+      },
+      body: JSON.stringify({ status })
+    });
+    if((await res.json()).ok) {
+      showToast('Patient status updated', 'success');
+      loadDoctorSchedule();
+    }
+  } catch(e) { showToast('Error updating status', 'error'); }
+}
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+if (typeof io !== 'undefined') {
+  const socket = io();
+  socket.on('db_changed', () => {
+    loadDoctorSchedule();
+  });
+}
+setInterval(loadDoctorSchedule, 30000);
+</script>
+</body>
+</html>

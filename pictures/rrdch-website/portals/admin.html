@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — RRDCH Control Center</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<nav class="navbar" style="top:0;">
+  <div class="navbar-inner">
+    <a href="../index.html" class="navbar-brand">
+      <img src="../assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text">
+        <div class="navbar-brand-name">RRDCH Admin Center</div>
+        <div class="navbar-brand-sub">Control Panel — Super Administrator</div>
+      </div>
+    </a>
+    <div class="navbar-actions">
+      <div style="display:flex;align-items:center;gap:0.5rem;background:rgba(255,255,255,0.1);border-radius:var(--radius-pill);padding:0.3rem 0.75rem;">
+        <span class="pulse" style="width:8px;height:8px;background:#27AE60;border-radius:50%;display:inline-block;"></span>
+        <span style="color:rgba(255,255,255,0.8);font-size:0.78rem;">Live</span>
+      </div>
+      <button class="dark-toggle" id="darkToggle">🌙</button>
+      <button class="btn btn-sm" style="background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.3);color:#ff6b6b;" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+</nav>
+
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div style="width:44px;height:44px;background:rgba(231,76,60,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:0.75rem;">⚙️</div>
+      <div class="sidebar-user-name" id="sidebarName">Administrator</div>
+      <div class="sidebar-user-role" style="color:#ff6b6b;">Super Admin</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a class="sidebar-item active" onclick="showPanel('dashboard',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+      <a class="sidebar-item" onclick="showPanel('operations',this); loadOperationsConsole();"><i class="fas fa-broadcast-tower"></i> Operations</a>
+      <a class="sidebar-item" onclick="showPanel('appointments',this)"><i class="fas fa-calendar-alt"></i> Appointments</a>
+      <a class="sidebar-item" onclick="showPanel('users',this)"><i class="fas fa-users"></i> User Management</a>
+      <div class="sidebar-section">Academic</div>
+      <a class="sidebar-item" onclick="showPanel('admissions',this)"><i class="fas fa-file-signature"></i> Admissions Requests</a>
+      <a class="sidebar-item" onclick="showPanel('complaints',this)"><i class="fas fa-exclamation-circle"></i> Complaints</a>
+      <div class="sidebar-section">Analytics</div>
+      <a class="sidebar-item" onclick="showPanel('analytics',this)"><i class="fas fa-chart-pie"></i> Analytics</a>
+      <a class="sidebar-item" onclick="showPanel('traffic',this); loadTrafficSummary();"><i class="fas fa-globe"></i> Web traffic</a>
+      <a class="sidebar-item" href="../events.html"><i class="fas fa-calendar"></i> Events</a>
+      <div class="sidebar-section">System</div>
+      <a class="sidebar-item" href="../index.html"><i class="fas fa-globe"></i> View Website</a>
+      <a class="sidebar-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <main class="portal-main">
+
+    <!-- DASHBOARD -->
+    <div id="panel-dashboard">
+      <div class="portal-header flex-between">
+        <div>
+          <h1>Admin Control Center</h1>
+          <p>April 12, 2026 · Real-time hospital &amp; college overview</p>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+          <button class="btn btn-sm btn-primary" onclick="showToast('Announcement published!','success')">📢 Send Announcement</button>
+          <button class="btn btn-sm btn-navy" onclick="showPanel('users',null)">➕ Add User</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="kpi-card">
+          <div class="kpi-icon teal"><i class="fas fa-user-injured" style="color:var(--teal);font-size:1.3rem;"></i></div>
+          <div><div class="kpi-num">643</div><div class="kpi-label">Patients Today</div><div class="kpi-change up">↑ 8% vs yesterday</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon success"><i class="fas fa-calendar-check" style="color:var(--success);font-size:1.3rem;"></i></div>
+          <div><div class="kpi-num">187</div><div class="kpi-label">Appointments Today</div><div class="kpi-change up">↑ Scheduled: 187</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon danger"><i class="fas fa-exclamation-circle" style="color:var(--danger);font-size:1.3rem;"></i></div>
+          <div><div class="kpi-num">5</div><div class="kpi-label">Pending Complaints</div><div class="kpi-change down">↑ 2 new today</div></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon gold"><i class="fas fa-rupee-sign" style="color:var(--gold);font-size:1.3rem;"></i></div>
+          <div><div class="kpi-num">₹3.4L</div><div class="kpi-label">Fee Collected Today</div><div class="kpi-change up">↑ 12% vs target</div></div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">
+        <div class="chart-card">
+          <div class="chart-header"><h3>Appointments This Week</h3><span class="badge badge-success">Live</span></div>
+          <canvas id="appointmentsChart" height="180"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><h3>Patients by Department</h3></div>
+          <canvas id="deptPieChart" height="180"></canvas>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">
+        <div class="chart-card">
+          <div class="chart-header"><h3>Monthly Fee Collection vs Target</h3></div>
+          <canvas id="feeChart" height="180"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><h3>Attendance Trend (Monthly Avg %)</h3></div>
+          <canvas id="attendanceTrendChart" height="180"></canvas>
+        </div>
+      </div>
+
+      <div class="grid-2" style="gap:1.5rem;">
+        <div class="card">
+          <h3 style="margin-bottom:1rem;color:var(--text);">📋 Recent Activity</h3>
+          <div id="activityFeed"></div>
+        </div>
+        <div>
+          <div class="card mb-2">
+            <h3 style="margin-bottom:1rem;color:var(--text);">⚡ Quick Actions</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+              <button class="btn btn-navy" onclick="showPanel('users',null);showToast('Go to Users → Add User to create new accounts','success')">➕ Add User</button>
+              <button class="btn btn-teal" onclick="showToast('Event creation form opened','success')">📅 New Event</button>
+              <button class="btn btn-primary" onclick="showToast('Announcement editor opened','success')">📢 Announcement</button>
+              <button class="btn btn-navy" onclick="showPanel('analytics',null)">📊 View Analytics</button>
+              <button class="btn btn-teal" onclick="showPanel('traffic',null); loadTrafficSummary();">Web traffic</button>
+              <button class="btn btn-sm" style="border:1.5px solid var(--border);background:var(--surface);" onclick="showToast('System logs downloaded','success')">📥 Download Logs</button>
+              <button class="btn btn-sm" style="border:1.5px solid var(--border);background:var(--surface);" onclick="showToast('Database backup initiated','success')">💾 Backup DB</button>
+            </div>
+          </div>
+          <div class="card" style="border-left:4px solid var(--danger);">
+            <h4 style="color:var(--danger);margin-bottom:0.75rem;">🚨 Pending Actions</h4>
+            <div style="display:flex;flex-direction:column;gap:0.6rem;">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
+                <span style="color:var(--text);">Hostel complaint — Plumbing (B-204)</span>
+                <button class="btn btn-sm btn-success" onclick="showToast('Complaint marked resolved','success')">✓ Resolve</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
+                <span style="color:var(--text);">3 new student registrations pending</span>
+                <button class="btn btn-sm btn-teal" onclick="showPanel('users',null)">Review →</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.875rem;">
+                <span style="color:var(--text);">Fee waiver request — 1 student</span>
+                <button class="btn btn-sm btn-primary" onclick="showToast('Request opened for review','success')">Review →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPERATIONS: approvals, sessions, live feed -->
+    <div id="panel-operations" class="hidden">
+      <div class="portal-header flex-between">
+        <div>
+          <h1>Operations center</h1>
+          <p>Real-time sign-ins, pending approvals, and session audit (localhost demo credentials below).</p>
+        </div>
+        <button type="button" class="btn btn-sm btn-navy" onclick="loadOperationsConsole()">Refresh all</button>
+      </div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.25rem;">
+        <div class="kpi-card"><div class="kpi-num" id="opPendingAdm">0</div><div class="kpi-label">Admissions to review</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="opPendingContact">0</div><div class="kpi-label">New enquiries</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="opPendingCompl">0</div><div class="kpi-label">Hostel tickets</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="opPendingTotal">0</div><div class="kpi-label">Total pending</div></div>
+      </div>
+      <div class="grid-2" style="gap:1.25rem;margin-bottom:1.25rem;">
+        <div class="card" style="border-left:4px solid var(--teal);">
+          <h3 style="margin-bottom:0.75rem;color:var(--text);">Live activity</h3>
+          <div id="opLiveFeed" style="max-height:220px;overflow-y:auto;font-size:0.82rem;color:var(--muted);"></div>
+        </div>
+        <div class="card" style="border-left:4px solid var(--gold);">
+          <h3 style="margin-bottom:0.75rem;color:var(--text);">Demo credentials (local / SHOW_DEMO_CREDS)</h3>
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:0.75rem;">For QA only. Disable in production.</p>
+          <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>Role</th><th>Password</th></tr></thead><tbody id="opDemoCreds"></tbody></table></div>
+        </div>
+      </div>
+      <div class="grid-2" style="gap:1.25rem;margin-bottom:1.25rem;">
+        <div class="card">
+          <h3 style="margin-bottom:0.75rem;color:var(--text);">Pending admissions</h3>
+          <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Phone</th><th></th></tr></thead><tbody id="opAdmRows"></tbody></table></div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:0.75rem;color:var(--text);">New contact messages</h3>
+          <div class="table-wrap"><table class="table"><thead><tr><th>ID</th><th>Name</th><th>Subject</th><th></th></tr></thead><tbody id="opContactRows"></tbody></table></div>
+        </div>
+      </div>
+      <div class="card mb-3">
+        <h3 style="margin-bottom:0.75rem;color:var(--text);">Recent login sessions</h3>
+        <div class="table-wrap"><table class="table"><thead><tr><th>User</th><th>Role</th><th>IP</th><th>When</th><th>Session</th></tr></thead><tbody id="opSessionRows"></tbody></table></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:0.75rem;color:var(--text);">User profile lookup</h3>
+        <div style="display:flex;gap:0.75rem;flex-wrap:wrap;align-items:end;margin-bottom:1rem;">
+          <div><label class="form-label">User ID</label><input class="form-control" id="opUserLookup" placeholder="e.g. BDS2023001" style="min-width:220px;"></div>
+          <button type="button" class="btn btn-navy" onclick="loadUserDetail()">Load profile</button>
+        </div>
+        <div id="opUserDetail" style="font-size:0.85rem;color:var(--text);"></div>
+      </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div id="panel-appointments" class="hidden">
+      <div class="portal-header flex-between">
+        <div><h1>📅 Appointments Management</h1><p>All appointments today · April 12, 2026</p></div>
+        <div style="display:flex;gap:0.75rem;">
+          <input type="date" class="form-control" style="max-width:160px;" value="2026-04-12">
+          <select class="form-control" style="max-width:200px;">
+            <option>All Departments</option>
+            <option>Conservative Dentistry</option>
+            <option>Orthodontics</option>
+            <option>Periodontology</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table" id="apptTable">
+            <thead><tr><th>Appt ID</th><th>Patient</th><th>Department</th><th>Time</th><th>Status</th><th>Doctor</th><th>Actions</th></tr></thead>
+            <tbody id="apptTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="panel-analytics" class="hidden">
+      <div class="portal-header"><h1>📊 Analytics Dashboard</h1><p>Comprehensive institutional performance metrics</p></div>
+      <div class="kpi-grid" style="margin-bottom:1.5rem;">
+        <div class="kpi-card"><div class="kpi-icon navy"><i class="fas fa-users" style="color:var(--navy);font-size:1.3rem;"></i></div><div><div class="kpi-num">1,247</div><div class="kpi-label">Total Students</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon teal"><i class="fas fa-user-injured" style="color:var(--teal);font-size:1.3rem;"></i></div><div><div class="kpi-num">18,432</div><div class="kpi-label">Monthly Patients</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon gold"><i class="fas fa-graduation-cap" style="color:var(--gold);font-size:1.3rem;"></i></div><div><div class="kpi-num">100%</div><div class="kpi-label">Placement Rate</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon success"><i class="fas fa-star" style="color:var(--success);font-size:1.3rem;"></i></div><div><div class="kpi-num">4.8/5</div><div class="kpi-label">Patient Satisfaction</div></div></div>
+      </div>
+      <div class="grid-2" style="gap:1.5rem;">
+        <div class="chart-card"><div class="chart-header"><h3>Annual Appointments (2025–26)</h3></div><canvas id="annualChart" height="200"></canvas></div>
+        <div class="chart-card"><div class="chart-header"><h3>Fee Collection Monthly</h3></div><canvas id="feeAnnualChart" height="200"></canvas></div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div id="panel-users" class="hidden">
+      <div class="portal-header flex-between">
+        <div><h1>👥 User Management</h1><p>All system users — students, staff, patients, doctors</p></div>
+        <button class="btn btn-primary" onclick="document.getElementById('addUserModal').classList.remove('hidden')">➕ Add New User</button>
+      </div>
+
+      <div id="addUserModal" class="hidden" style="background:#fff; border:1px solid var(--border); padding:1.5rem; margin-bottom:1.5rem; border-radius:8px;">
+        <h3 style="margin-bottom:1rem;">Add New User</h3>
+        <form id="addUserForm" style="display:flex; gap:1rem; align-items:end; flex-wrap:wrap;">
+          <div><label class="form-label">Identifier (Email/ID)</label><input class="form-control" name="id" required></div>
+          <div><label class="form-label">Full Name</label><input class="form-control" name="name" required></div>
+          <div><label class="form-label">Password</label><input class="form-control" name="password" required></div>
+          <div><label class="form-label">Role</label>
+            <select class="form-control" name="role">
+              <option value="student">Student</option>
+              <option value="patient">Patient</option>
+              <option value="doctor">Doctor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-navy" style="height:42px;">Save User</button>
+          <button type="button" class="btn btn-outline" style="color:var(--text);height:42px;" onclick="document.getElementById('addUserModal').classList.add('hidden')">Cancel</button>
+        </form>
+      </div>
+      <div class="card" style="margin-bottom:1.5rem;">
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+          <input class="form-control" style="max-width:250px;" placeholder="🔍 Search by name, ID, email...">
+          <select class="form-control" style="max-width:150px;"><option>All Roles</option><option>Students</option><option>Patients</option><option>PG Doctors</option><option>Staff</option><option>Admin</option></select>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Department</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMISSIONS -->
+    <div id="panel-admissions" class="hidden">
+      <div class="portal-header"><h1>📝 Admission Requests</h1><p>Review and process incoming student applications</p></div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:1.5rem;">
+        <div class="kpi-card"><div class="kpi-icon warning"><i class="fas fa-spinner" style="color:var(--warning);font-size:1.3rem;"></i></div><div><div class="kpi-num" id="kpiAdmissionsPending">0</div><div class="kpi-label">Pending Requests</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon success"><i class="fas fa-check" style="color:var(--success);font-size:1.3rem;"></i></div><div><div class="kpi-num" id="kpiAdmissionsAccepted">0</div><div class="kpi-label">Accepted Requests</div></div></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:1rem;color:var(--text);">Application Pipeline</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>App ID</th><th>Applicant</th><th>Course Enquired</th><th>Previous Marks</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+            <tbody id="admissionsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEB TRAFFIC (anonymous telemetry aggregates) -->
+    <div id="panel-traffic" class="hidden">
+      <div class="portal-header flex-between">
+        <div>
+          <h1>Website traffic</h1>
+          <p>Aggregated page views, tracked clicks, and section visibility. No raw IP addresses are returned.</p>
+        </div>
+        <div class="flex gap-1 wrap" style="align-items:center;">
+          <label class="form-label" style="margin:0;">Period</label>
+          <select id="trafficDays" class="form-control" style="max-width:110px;" onchange="loadTrafficSummary()">
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+            <option value="30">30 days</option>
+          </select>
+          <button type="button" class="btn btn-sm btn-navy" onclick="loadTrafficSummary()">Refresh</button>
+        </div>
+      </div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.25rem;">
+        <div class="kpi-card"><div class="kpi-num" id="trTotalEvents">0</div><div class="kpi-label">Total events</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="trSessions">0</div><div class="kpi-label">Unique sessions</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="trGeo">0</div><div class="kpi-label">Location shares</div></div>
+        <div class="kpi-card"><div class="kpi-num" id="trSince" style="font-size:1.1rem;">—</div><div class="kpi-label">From (UTC date)</div></div>
+      </div>
+      <div class="grid-2" style="gap:1.25rem;">
+        <div class="card">
+          <h3 style="margin-bottom:0.75rem;color:var(--text);">Top paths</h3>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Path</th><th>Events</th></tr></thead>
+              <tbody id="trPaths"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:0.75rem;color:var(--text);">Event types</h3>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Type</th><th>Count</th></tr></thead>
+              <tbody id="trTypes"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:1.25rem;">
+        <h3 style="margin-bottom:0.75rem;color:var(--text);">Popular targets (nav labels, data-track, page titles)</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Target</th><th>Count</th></tr></thead>
+            <tbody id="trTargets"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLAINTS -->
+    <div id="panel-complaints" class="hidden">
+      <div class="portal-header"><h1>📋 Complaint Management</h1><p>Hostel and general complaints requiring admin attention</p></div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:1.5rem;">
+        <div class="kpi-card"><div class="kpi-icon danger"><i class="fas fa-clock" style="color:var(--danger);font-size:1.3rem;"></i></div><div><div class="kpi-num">5</div><div class="kpi-label">Pending</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon warning"><i class="fas fa-spinner" style="color:var(--warning);font-size:1.3rem;"></i></div><div><div class="kpi-num">3</div><div class="kpi-label">In Review</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon success"><i class="fas fa-check" style="color:var(--success);font-size:1.3rem;"></i></div><div><div class="kpi-num">47</div><div class="kpi-label">Resolved (MTD)</div></div></div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>ID</th><th>Student</th><th>Category</th><th>Room</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody id="complaintsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+// ─── Auth Guard ───────────────────────────────────────────────────────────────────────
+const _user = RRDCH.requireAuth('admin', 'hod');
+RRDCH.injectUserHeader();
+document.getElementById('sidebarName').textContent = _user.name;
+
+function logout() { RRDCH.logout(); }
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+function opEscape(s) {
+  const d = document.createElement('div');
+  d.textContent = s == null ? '' : String(s);
+  return d.innerHTML;
+}
+
+function appendOpLive(ev) {
+  const el = document.getElementById('opLiveFeed');
+  if (!el) return;
+  const line = document.createElement('div');
+  line.style.cssText = 'padding:0.35rem 0;border-bottom:1px solid var(--border);';
+  line.innerHTML = `<span style="color:var(--teal);font-weight:600;">${opEscape(ev.event)}</span> · ${opEscape(JSON.stringify(ev.payload || {}))} · <span style="font-size:0.72rem;">${opEscape(ev.time)}</span>`;
+  el.insertBefore(line, el.firstChild);
+  while (el.children.length > 40) el.removeChild(el.lastChild);
+}
+
+async function loadOperationsConsole() {
+  try {
+    const sum = await RRDCH.apiFetch('/api/admin/operations-summary');
+    if (sum.ok && sum.data) {
+      const c = sum.data.counts;
+      document.getElementById('opPendingAdm').textContent = c.pending_admissions;
+      document.getElementById('opPendingContact').textContent = c.pending_contacts;
+      document.getElementById('opPendingCompl').textContent = c.pending_complaints;
+      document.getElementById('opPendingTotal').textContent = c.pending_total;
+      const adm = sum.data.admissions || [];
+      document.getElementById('opAdmRows').innerHTML = adm.length
+        ? adm.map((a) => `<tr><td><code>${opEscape(a.id)}</code></td><td>${opEscape(a.applicant_name)}</td><td>${opEscape(a.course)}</td><td>${opEscape(a.phone)}</td><td><button class="btn btn-sm btn-success" onclick="acceptRequest('${opEscape(a.id)}')">Accept</button> <button class="btn btn-sm btn-danger" onclick="rejectRequest('${opEscape(a.id)}')">Reject</button></td></tr>`).join('')
+        : '<tr><td colspan="5" style="color:var(--muted);">None pending.</td></tr>';
+      const ct = sum.data.contacts || [];
+      document.getElementById('opContactRows').innerHTML = ct.length
+        ? ct.map((x) => `<tr><td>${x.id}</td><td>${opEscape(x.name)}</td><td>${opEscape(x.subject)}</td><td><button class="btn btn-sm btn-teal" onclick="resolveContact(${x.id})">Mark read</button></td></tr>`).join('')
+        : '<tr><td colspan="4" style="color:var(--muted);">No new messages.</td></tr>';
+    }
+    const sess = await RRDCH.apiFetch('/api/admin/login-sessions?limit=40');
+    if (sess.ok && sess.data) {
+      document.getElementById('opSessionRows').innerHTML = sess.data.map((s) =>
+        `<tr><td><code>${opEscape(s.user_id)}</code></td><td>${opEscape(s.role)}</td><td>${opEscape(s.ip)}</td><td>${opEscape(s.login_at)}</td><td style="font-size:0.72rem;"><code>${opEscape(s.session_token)}</code></td></tr>`
+      ).join('') || '<tr><td colspan="5">No sessions yet.</td></tr>';
+    }
+    const demo = await RRDCH.apiFetch('/api/admin/demo-credentials');
+    if (demo.ok && demo.data) {
+      document.getElementById('opDemoCreds').innerHTML = demo.data.map((d) =>
+        `<tr><td><code>${opEscape(d.id)}</code></td><td>${opEscape(d.role)}</td><td style="font-family:monospace;">${opEscape(d.password)}</td></tr>`
+      ).join('');
+    } else {
+      document.getElementById('opDemoCreds').innerHTML = '<tr><td colspan="3" style="color:var(--muted);">Demo list disabled (set NODE_ENV=development or SHOW_DEMO_CREDS=1).</td></tr>';
+    }
+  } catch (e) {
+    console.error(e);
+    showToast('Could not load operations console', 'error');
+  }
+}
+
+async function resolveContact(id) {
+  try {
+    await fetch(`${API_BASE}/admin/enquiries/${id}/status`, {
+      method: 'PUT',
+      headers: { ...fetchOpts.headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'resolved' }),
+    });
+    showToast('Enquiry marked', 'success');
+    loadOperationsConsole();
+  } catch (e) {
+    showToast('Failed', 'error');
+  }
+}
+
+async function loadUserDetail() {
+  const id = document.getElementById('opUserLookup').value.trim();
+  if (!id) return showToast('Enter user ID', 'error');
+  const box = document.getElementById('opUserDetail');
+  box.innerHTML = 'Loading…';
+  try {
+    const data = await RRDCH.apiFetch('/api/admin/users/' + encodeURIComponent(id) + '/detail');
+    if (!data.ok) throw new Error(data.msg || 'Failed');
+    const d = data.data;
+    const u = d.user;
+    const hint = d.demo_password_hint ? `<p><strong>Demo password:</strong> <code>${opEscape(d.demo_password_hint)}</code></p>` : '';
+    const sessRows = (d.sessions || []).slice(0, 12).map((s) => `<tr><td>${opEscape(s.login_at)}</td><td>${opEscape(s.ip)}</td><td style="font-size:0.7rem;">${opEscape((s.user_agent || '').slice(0, 60))}…</td></tr>`).join('');
+    box.innerHTML = `
+      <div class="card" style="background:var(--bg);">
+        <p><strong>${opEscape(u.name)}</strong> · ${opEscape(u.role)} · <code>${opEscape(u.id)}</code></p>
+        <p style="font-size:0.8rem;color:var(--muted);">Email: ${opEscape(u.email || '—')} · Phone: ${opEscape(u.phone || '—')} · Last login: ${opEscape(u.last_login || '—')}</p>
+        ${hint}
+        ${d.student ? `<p style="font-size:0.82rem;">Hostel room: ${opEscape(d.student.hostel_room || '—')} · Year: ${d.student.year || '—'}</p>` : ''}
+        ${d.patient ? `<p style="font-size:0.82rem;">Patient record · Appointments (count): ${d.appointment_count ?? 0}</p>` : ''}
+        <h4 style="margin:0.75rem 0 0.35rem;font-size:0.9rem;">Recent sessions</h4>
+        <div class="table-wrap"><table class="table"><thead><tr><th>When</th><th>IP</th><th>UA</th></tr></thead><tbody>${sessRows || '<tr><td colspan="3">None</td></tr>'}</tbody></table></div>
+      </div>`;
+  } catch (e) {
+    box.innerHTML = '<span style="color:var(--danger);">' + opEscape(e.message) + '</span>';
+  }
+}
+
+async function loadTrafficSummary() {
+  const daysEl = document.getElementById('trafficDays');
+  const days = daysEl ? daysEl.value : 7;
+  const pathsEl = document.getElementById('trPaths');
+  const typesEl = document.getElementById('trTypes');
+  const targetsEl = document.getElementById('trTargets');
+  if (!pathsEl) return;
+  pathsEl.innerHTML = '<tr><td colspan="2" style="color:var(--muted);">Loading…</td></tr>';
+  typesEl.innerHTML = '<tr><td colspan="2" style="color:var(--muted);">Loading…</td></tr>';
+  targetsEl.innerHTML = '<tr><td colspan="2" style="color:var(--muted);">Loading…</td></tr>';
+  try {
+    const data = await RRDCH.apiFetch(`/api/admin/traffic-summary?days=${encodeURIComponent(days)}`);
+    if (!data.ok) throw new Error(data.msg || 'Request failed');
+    const d = data.data;
+    document.getElementById('trTotalEvents').textContent = d.totals?.total_events ?? 0;
+    document.getElementById('trSessions').textContent = d.totals?.unique_sessions ?? 0;
+    document.getElementById('trGeo').textContent = d.geo_opt_in_count ?? 0;
+    document.getElementById('trSince').textContent = (d.since || '—').slice(0, 10);
+
+    const emptyRow = '<tr><td colspan="2" style="color:var(--muted);">No telemetry yet. Browse the public site to collect events.</td></tr>';
+    pathsEl.innerHTML = (d.by_path && d.by_path.length)
+      ? d.by_path.map((r) => `<tr><td><code style="font-size:0.78rem;">${escapeHtml(r.path || '/')}</code></td><td>${r.count}</td></tr>`).join('')
+      : emptyRow;
+    typesEl.innerHTML = (d.by_event_type && d.by_event_type.length)
+      ? d.by_event_type.map((r) => `<tr><td><code style="font-size:0.78rem;">${escapeHtml(r.event_type)}</code></td><td>${r.count}</td></tr>`).join('')
+      : emptyRow;
+    targetsEl.innerHTML = (d.top_targets && d.top_targets.length)
+      ? d.top_targets.map((r) => `<tr><td>${escapeHtml(r.target)}</td><td>${r.count}</td></tr>`).join('')
+      : emptyRow;
+  } catch (e) {
+    console.error(e);
+    showToast('Could not load traffic summary', 'error');
+    pathsEl.innerHTML = '<tr><td colspan="2" style="color:var(--danger);">Error loading data.</td></tr>';
+    typesEl.innerHTML = '';
+    targetsEl.innerHTML = '';
+  }
+}
+
+function showPanel(name, clickedEl) {
+  document.querySelectorAll('[id^="panel-"]').forEach(p => p.classList.add('hidden'));
+  document.getElementById('panel-' + name).classList.remove('hidden');
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  if (clickedEl) clickedEl.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// API Logic for Admin Panels
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+const fetchOpts = { headers: { 'Authorization': `Bearer ${localStorage.getItem('rrdch_token')}` } };
+
+async function renderAll() {
+  fetchAppointments();
+  fetchUsers();
+  fetchComplaints();
+  fetchAdmissions();
+  fetchActivityFeed();
+}
+
+// ─── Activity Feed ────────────────────────────────────────────────────────────────
+
+const typeIconMap = {
+  LOGIN:  { icon: '🔑', color: 'var(--navy)' },
+  CREATE: { icon: '➕', color: 'var(--success)' },
+  UPDATE: { icon: '✏️', color: 'var(--gold)' },
+  DELETE: { icon: '🗑️', color: 'var(--danger)' },
+};
+
+async function fetchActivityFeed() {
+  const feed = document.getElementById('activityFeed');
+  feed.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--muted);"><span style="font-size:0.85rem;">Loading…</span></div>';
+  try {
+    const data = await RRDCH.apiFetch('/api/admin/activity?limit=15');
+    if (!data.ok || !data.data.length) {
+      feed.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--muted);font-size:0.85rem;">No activity recorded yet.</div>';
+      return;
+    }
+    feed.innerHTML = data.data.map(a => {
+      const m = typeIconMap[a.type] || { icon: 'ℹ️', color: 'var(--muted)' };
+      const ts = new Date(a.created_at + 'Z').toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' });
+      return `<div style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.65rem 0;border-bottom:1px solid var(--border);">
+        <div style="width:30px;height:30px;border-radius:50%;background:${m.color}18;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.85rem;">${m.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.82rem;color:var(--text);line-height:1.4;">${a.action}</div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">${a.actor_name || a.actor_id} &middot; ${ts}</div>
+        </div>
+        <span style="font-size:0.68rem;color:var(--muted);white-space:nowrap;padding-top:3px;">${a.type}</span>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    feed.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--muted);font-size:0.85rem;">Could not load activity feed.</div>';
+  }
+}
+
+async function fetchAppointments() {
+  try {
+    const res = await fetch(API_BASE + '/admin/appointments', fetchOpts);
+    const data = await res.json();
+    if(data.ok) {
+      const sc = s => s==='done'?'success':s==='in_queue'?'warning':s==='called'?'gold':'navy';
+      document.getElementById('apptTableBody').innerHTML = data.data.map(a =>
+        `<tr>
+          <td style="font-family:monospace;font-size:0.8rem;">${a.token_no}</td>
+          <td style="font-weight:500;">${a.patient_name}</td>
+          <td style="font-size:0.875rem;">${a.dept_name || 'General'}</td>
+          <td>${a.time_slot}</td>
+          <td><span class="badge badge-${sc(a.status)}">${a.status}</span></td>
+          <td style="font-size:0.875rem;">${a.doctor_id || 'Pending'}</td>
+          <td>
+            <div style="display:flex;gap:0.4rem;">
+              <button class="btn btn-sm btn-danger" onclick="updateAppt('${a.id}', 'cancelled')">✕</button>
+            </div>
+          </td>
+        </tr>`
+      ).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function updateAppt(id, status) {
+  try {
+    await fetch(`${API_BASE}/admin/appointments/${id}`, {
+      method: 'PUT', headers: { ...fetchOpts.headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    fetchAppointments();
+    showToast('Appointment updated', 'success');
+  } catch(e) { showToast('Error updating', 'error'); }
+}
+
+async function fetchUsers() {
+  try {
+    const res = await fetch(API_BASE + '/admin/users', fetchOpts);
+    const data = await res.json();
+    if(data.ok) {
+      const rc = r => r==='student'?'navy':r==='patient'?'teal':r==='doctor'?'success':'gold';
+      document.getElementById('usersTableBody').innerHTML = data.data.map(u =>
+        `<tr>
+          <td style="font-family:monospace;font-size:0.8rem;">${u.id}</td>
+          <td style="font-weight:500;">${u.name}</td>
+          <td><span class="badge badge-${rc(u.role)}">${u.role.toUpperCase()}</span></td>
+          <td style="font-size:0.875rem;">${u.email||'—'}</td>
+          <td><span class="badge badge-success">${u.is_active?'Active':'Inactive'}</span></td>
+          <td style="font-size:0.8rem;">${u.last_login||'Never'}</td>
+          <td>
+            <div style="display:flex;gap:0.4rem;">
+              <button class="btn btn-sm btn-danger" onclick="toggleUserStore('${u.id}')">⛔</button>
+            </div>
+          </td>
+        </tr>`
+      ).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function toggleUserStore(id) {
+  try {
+    await fetch(`${API_BASE}/admin/users/${id}/toggle`, { method: 'PUT', ...fetchOpts });
+    fetchUsers();
+    showToast('User toggled', 'success');
+  } catch(e) {}
+}
+
+async function fetchComplaints() {
+  try {
+    const res = await fetch(API_BASE + '/admin/complaints', fetchOpts);
+    const data = await res.json();
+    if(data.ok) {
+      const cc = s => s==='resolved'?'success':s==='in_review'?'warning':'danger';
+      document.getElementById('complaintsTableBody').innerHTML = data.data.map(c =>
+        `<tr>
+          <td style="font-family:monospace;font-size:0.8rem;">${c.id}</td>
+          <td style="font-weight:500;">${c.student_id}</td>
+          <td>${c.category}</td>
+          <td>${c.urgency}</td>
+          <td><span class="badge badge-${cc(c.status)}">${c.status}</span></td>
+          <td>${c.created_at.split(' ')[0]}</td>
+          <td>
+            <div style="display:flex;gap:0.4rem;">
+              ${c.status !== 'resolved' ? `<button class="btn btn-sm btn-success" onclick="updateComplaint('${c.id}', 'resolved')">✓ Resolve</button>` : ''}
+            </div>
+          </td>
+        </tr>`
+      ).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+async function updateComplaint(id, status) {
+  try {
+    await fetch(`${API_BASE}/admin/complaints/${id}`, {
+      method: 'PUT', headers: { ...fetchOpts.headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    fetchComplaints();
+    showToast('Complaint resolved', 'success');
+  } catch(e) {}
+}
+
+async function fetchAdmissions() {
+  try {
+    const res = await fetch(API_BASE + '/admin/admissions', fetchOpts);
+    const data = await res.json();
+    if(data.ok) {
+      const pendingStates = ['pending', 'submitted', 'pending_review'];
+      const pendingCount = data.data.filter(a => pendingStates.includes(a.status)).length;
+      const acceptedCount = data.data.filter(a => a.status === 'accepted').length;
+      document.getElementById('kpiAdmissionsPending').textContent = pendingCount;
+      document.getElementById('kpiAdmissionsAccepted').textContent = acceptedCount;
+
+      const cc = s => s==='accepted'?'success':s==='rejected'?'danger':'warning';
+      document.getElementById('admissionsTableBody').innerHTML = data.data.map(a =>
+        `<tr>
+          <td style="font-family:monospace;font-size:0.8rem;">${a.id}</td>
+          <td style="font-weight:500;">${a.applicant_name} <div style="font-size:0.75rem;color:var(--muted);">${a.phone || ''}</div></td>
+          <td>${a.course || ''}</td>
+          <td>${a.neet_score != null ? a.neet_score : 'N/A'}</td>
+          <td><span class="badge badge-${cc(a.status)}">${(a.status || '').toUpperCase()}</span></td>
+          <td>${(a.created_at || '').split(' ')[0]}</td>
+          <td>
+            ${pendingStates.includes(a.status) ? `
+            <div style="display:flex;gap:0.4rem;">
+              <button class="btn btn-sm btn-success" onclick="acceptRequest('${a.id}')">✓ Accept</button>
+              <button class="btn btn-sm btn-danger" onclick="rejectRequest('${a.id}')">✕ Reject</button>
+            </div>
+            ` : `<span style="font-size:0.8rem;color:var(--muted);">Processed</span>`}
+          </td>
+        </tr>`
+      ).join('');
+    }
+  } catch(e) { console.error(e); }
+}
+
+// User explicitly requested this logic to accept requests and have it update UI properly
+async function acceptRequest(id) {
+  try {
+    const res = await fetch(`${API_BASE}/admin/admissions/${id}/status`, {
+      method: 'PUT',
+      headers: { ...fetchOpts.headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'accepted' })
+    });
+    if((await res.json()).ok) {
+      fetchAdmissions();
+      if (typeof loadOperationsConsole === 'function') loadOperationsConsole();
+      showToast('Application Accepted Successfully!', 'success');
+    }
+  } catch(e) { showToast('Error processing request', 'error'); }
+}
+
+async function rejectRequest(id) {
+  try {
+    const res = await fetch(`${API_BASE}/admin/admissions/${id}/status`, {
+      method: 'PUT',
+      headers: { ...fetchOpts.headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'rejected' })
+    });
+    if((await res.json()).ok) {
+      fetchAdmissions();
+      if (typeof loadOperationsConsole === 'function') loadOperationsConsole();
+      showToast('Application Rejected', 'error');
+    }
+  } catch(e) {}
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  renderAll();
+
+  // Fetch Live Analytics
+  try {
+    const dashRes = await fetch(API_BASE + '/admin/dashboard', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('rrdch_token') } });
+    const dashData = await dashRes.json();
+    if(dashData.ok) {
+       document.querySelectorAll('.kpi-num')[0].textContent = dashData.data.patients_today;
+       document.querySelectorAll('.kpi-num')[1].textContent = dashData.data.pending_appts;
+       document.querySelectorAll('.kpi-num')[2].textContent = dashData.data.pending_complaints;
+    }
+
+    const statRes = await fetch(API_BASE + '/admin/analytics', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('rrdch_token') } });
+    const statData = await statRes.json();
+    
+    if(statData.ok) {
+      const db = statData.data;
+
+      // Opd Trend Chart (Appointments This Week)
+      new Chart(document.getElementById('appointmentsChart'), {
+        type:'bar', data:{ labels: db.opd_trend.map(d=>d.date.substring(5)), datasets:[{ label:'Appointments', data:db.opd_trend.map(d=>d.count), backgroundColor:'rgba(27,58,107,0.7)', borderRadius:6 }] },
+        options:{ plugins:{legend:{display:false}}, scales:{ y:{beginAtZero:true}, x:{grid:{display:false}} } }
+      });
+
+      // Dept Distribution Pie
+      const bgColors = ['#1B3A6B','#2E86AB','#C8A951','#27AE60','#E67E22','#E74C3C','#9B59B6','#34495e','#16a085','#8e44ad'];
+      new Chart(document.getElementById('deptPieChart'), {
+        type:'doughnut', data:{ labels: db.dept_distribution.map(d=>d.name), datasets:[{ data:db.dept_distribution.map(d=>d.count), backgroundColor:bgColors.slice(0,db.dept_distribution.length), borderWidth:2, borderColor:'#fff' }] },
+        options:{ plugins:{legend:{position:'bottom',labels:{padding:10,font:{size:10}}}}, cutout:'62%' }
+      });
+
+      // Admissions trend
+      new Chart(document.getElementById('annualChart'), {
+        type:'line', data:{ labels: db.admissions_trend.map(d=>d.month).reverse(), datasets:[{ label:'New Admissions', data:db.admissions_trend.map(d=>d.count).reverse(), borderColor:'#1B3A6B', backgroundColor:'rgba(27,58,107,0.06)', tension:0.4, fill:true }] },
+        options:{ plugins:{legend:{display:false}}, scales:{ y:{beginAtZero:true}, x:{grid:{display:false}} } }
+      });
+    }
+
+  } catch(e) {
+    console.error('Failed to load live analytics', e);
+  }
+
+  // Static mocks for visual layout of non-implemented backend modules
+  new Chart(document.getElementById('feeChart'), {
+    type:'bar', data:{ labels:['Jul','Aug','Sep','Oct','Nov'], datasets:[
+      { label:'Collected (₹L)', data:[42,38,55,48,32], backgroundColor:'rgba(200,169,81,0.7)', borderRadius:4 },
+      { label:'Target (₹L)', data:[40,40,50,50,35], backgroundColor:'rgba(27,58,107,0.15)', borderRadius:4 },
+    ]},
+    options:{ plugins:{legend:{labels:{font:{size:10}}}}, scales:{ y:{beginAtZero:true}, x:{grid:{display:false}} } }
+  });
+
+  new Chart(document.getElementById('attendanceTrendChart'), {
+    type:'line', data:{ labels:['Jul','Aug','Sep','Oct','Nov'], datasets:[
+      { label:'BDS Avg %', data:[82,80,78,75,72], borderColor:'#2E86AB', tension:0.4 },
+      { label:'MDS Avg %', data:[88,86,85,84,82], borderColor:'#C8A951', tension:0.4 },
+    ]},
+    options:{ plugins:{legend:{labels:{font:{size:10}}}}, scales:{ y:{min:65,max:95,ticks:{callback:v=>v+'%'}}, x:{grid:{display:false}} } }
+  });
+
+  new Chart(document.getElementById('feeAnnualChart'), {
+    type:'bar', data:{ labels:['Q1','Q2','Q3','Q4'], datasets:[{ label:'₹ Lakhs', data:[135,148,156,167], backgroundColor:['rgba(200,169,81,0.7)','rgba(46,134,171,0.7)','rgba(27,58,107,0.7)','rgba(39,174,96,0.7)'], borderRadius:8 }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ y:{beginAtZero:false,min:100}, x:{grid:{display:false}} } }
+  });
+});
+</script>
+<script>
+document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData.entries());
+  data.portal = data.role === 'hod' ? 'admin' : data.role;
+  
+  try {
+    const result = await RRDCH.apiFetch('/api/admin/users', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+    if (result.ok) {
+      showToast('User added successfully!', 'success');
+      document.getElementById('addUserModal').classList.add('hidden');
+      e.target.reset();
+      fetchUsers();
+    } else {
+      showToast('Error: ' + result.msg, 'error');
+    }
+  } catch(err) { showToast('Network error', 'error'); }
+});
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const _tok = localStorage.getItem('rrdch_token');
+  const socket = io({ query: { token: _tok || '' }, transports: ['websocket', 'polling'] });
+  socket.emit('join_admin');
+  socket.on('db_changed', (data) => {
+    showToast(`🔔 ${data.message}`, 'info');
+    if (typeof fetchActivityFeed === 'function') fetchActivityFeed();
+    if (typeof loadOperationsConsole === 'function') loadOperationsConsole();
+  });
+  let _opRefreshT;
+  socket.on('admin_realtime', (payload) => {
+    appendOpLive(payload);
+    clearTimeout(_opRefreshT);
+    _opRefreshT = setTimeout(() => { if (typeof loadOperationsConsole === 'function') loadOperationsConsole(); }, 900);
+  });
+</script>
+</body>
+</html>

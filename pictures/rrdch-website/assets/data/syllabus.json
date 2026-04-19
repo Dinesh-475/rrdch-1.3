@@ -1,0 +1,105 @@
+{
+  "BDS": {
+    "1st Year": [
+      { "code":"GEN-101", "name":"General Human Anatomy (including Embryology & Histology)", "credits":6, "theory":120, "practical":60,
+        "topics":["Gross Anatomy","Osteology","Embryology","Histology","Neuroanatomy","Head & Neck Anatomy"],
+        "outcomes":"Students will describe the gross anatomical structure of the human body with special emphasis on head and neck region." },
+      { "code":"GEN-102", "name":"General Human Physiology & Biochemistry", "credits":6, "theory":120, "practical":60,
+        "topics":["Cell physiology","Blood & Immunity","Cardiovascular system","Respiratory system","Enzyme kinetics","Metabolism","Vitamins & Minerals"],
+        "outcomes":"Students will explain the normal functioning of the human body and apply biochemical principles to dental practice." },
+      { "code":"DEN-101", "name":"Dental Anatomy, Embryology & Oral Histology", "credits":5, "theory":90, "practical":90,
+        "topics":["Tooth morphology","Dental formulae","Tooth carving","Oral mucosa histology","Tooth development","Eruption sequences"],
+        "outcomes":"Students will identify, draw, and carve model teeth of all types and describe oral embryology." }
+    ],
+    "2nd Year": [
+      { "code":"GEN-201", "name":"General & Dental Pharmacology & Therapeutics", "credits":5, "theory":90, "practical":60,
+        "topics":["Drug receptors","Analgesics","Antibiotics in dentistry","Local anaesthetics","Anxiolytics","Fluoride pharmacology"],
+        "outcomes":"Students will prescribe appropriate drugs for common dental conditions safely." },
+      { "code":"GEN-202", "name":"Dental Materials", "credits":5, "theory":90, "practical":90,
+        "topics":["Impression materials","Gypsum products","Cements","Waxes","Metals & Alloys","Composites","Ceramics"],
+        "outcomes":"Students will select and manipulate dental materials correctly for clinical situations." },
+      { "code":"GEN-203", "name":"General Pathology & Microbiology", "credits":5, "theory":90, "practical":90,
+        "topics":["Cell injury","Inflammation","Wound healing","Neoplasia","Sterilization","MRSA","Oral infections","Hepatitis B & HIV"],
+        "outcomes":"Students will explain the pathological basis of disease and apply infection control principles." },
+      { "code":"PRE-201", "name":"Pre-Clinical Conservative Dentistry", "credits":4, "theory":60, "practical":120,
+        "topics":["Cavity classification","Hand instrumentation","Rotary instruments","Rubber dam","Cavity preparation on typodont"],
+        "outcomes":"Students will prepare standard cavities in all classes on phantom heads with confidence." },
+      { "code":"PRE-202", "name":"Pre-Clinical Prosthodontics", "credits":4, "theory":60, "practical":120,
+        "topics":["Complete denture impressions","Jaw relation records","Articulator use","Denture construction"],
+        "outcomes":"Students will fabricate a complete denture on articulators as per class I jaw relationship." }
+    ],
+    "3rd Year": [
+      { "code":"OMFS-301", "name":"Oral & Maxillofacial Surgery I", "credits":4, "theory":90, "practical":120,
+        "topics":["Local anesthesia in dentistry","Principles of extraction","Surgical anatomy","Impacted teeth","Alveoloplasty"],
+        "outcomes":"Students will perform forceps and elevator extractions under faculty supervision." },
+      { "code":"CDE-301", "name":"Conservative Dentistry & Endodontics I", "credits":4, "theory":90, "practical":120,
+        "topics":["Caries diagnosis","GV Black classifications","Cavity preparation","Pulp biology","Vital pulp therapy","Biomechanical preparation"],
+        "outcomes":"Students will perform Class I–V cavity preparations and begin root canal procedures." },
+      { "code":"ORT-301", "name":"Orthodontics & Dentofacial Orthopedics I", "credits":4, "theory":90, "practical":90,
+        "topics":["Occlusion classification","Cephalometric analysis","Growth & development","Removable appliances","Arch wire bending"],
+        "outcomes":"Students will read and trace cephalograms and fabricate simple removable orthodontic appliances." },
+      { "code":"OPM-301", "name":"Oral Pathology & Microbiology", "credits":4, "theory":90, "practical":90,
+        "topics":["Developmental anomalies","Cysts of jaw","Odontogenic tumours","Oral cancer","Vesiculobullous lesions","Salivary gland disorders"],
+        "outcomes":"Students will diagnose common oral pathological conditions from clinical and histopathological findings." }
+    ],
+    "4th Year": [
+      { "code":"OMFS-401", "name":"Oral & Maxillofacial Surgery II", "credits":5, "theory":90, "practical":180,
+        "topics":["Impaction surgery","Preprosthetic surgery","TMJ disorders","Cysts & tumours surgery","Minor implantology","Fractures"],
+        "outcomes":"Students will assist in and independently perform minor oral surgical procedures." },
+      { "code":"PRO-401", "name":"Prosthodontics & Crown & Bridge", "credits":5, "theory":90, "practical":180,
+        "topics":["Complete dentures","RPD design","Fixed prostheses","Implant prosthetics","CBCT-guided treatment planning"],
+        "outcomes":"Students will fabricate complete and partial dentures and basic fixed prostheses." },
+      { "code":"PED-401", "name":"Paediatric & Preventive Dentistry", "credits":4, "theory":90, "practical":120,
+        "topics":["Child behaviour management","Pit & fissure sealants","Fluoride therapy","Space maintenance","Pulpectomy in primary teeth"],
+        "outcomes":"Students will manage paediatric patients and perform preventive and basic restorative procedures." },
+      { "code":"PERIO-401", "name":"Periodontology", "credits":4, "theory":90, "practical":120,
+        "topics":["Gingival diseases","Periodontal assessment","Scaling & root planing","Surgical periodontics","Bone grafting"],
+        "outcomes":"Students will perform scaling, root planing, and basic periodontal surgeries." },
+      { "code":"OMR-401", "name":"Oral Medicine & Radiology", "credits":4, "theory":90, "practical":120,
+        "topics":["Case history taking","Soft tissue diagnosis","Digital radiographs","OPG interpretation","CBCT basics","Medically compromised patients"],
+        "outcomes":"Students will interpret dental radiographs and diagnose common oral medicine conditions." },
+      { "code":"PHD-401", "name":"Public Health Dentistry", "credits":4, "theory":90, "practical":60,
+        "topics":["Epidemiology","Community dental surveys","Health promotion","Fluoridation","National oral health programs","Biostatistics"],
+        "outcomes":"Students will conduct oral health surveys and design community dental programs." }
+    ]
+  },
+  "MDS": {
+    "Oral Surgery": [
+      { "code":"MDS-OS-501", "name":"Advanced Oral & Maxillofacial Surgery", "credits":8, "theory":120, "practical":240,
+        "topics":["Orthognathic surgery","Head & neck oncology","Advanced implantology","Facial trauma","TMJ surgery","Craniofacial anomalies"],
+        "outcomes":"PG students will independently perform complex surgical procedures under supervision." }
+    ],
+    "Conservative & Endodontics": [
+      { "code":"MDS-CDE-501", "name":"Advanced Conservative & Endodontics", "credits":8, "theory":120, "practical":240,
+        "topics":["Microscopic endodontics","Rotary NiTi systems","Regenerative endodontics","Bleaching","Aesthetic dentistry","Laser applications"],
+        "outcomes":"PG students will master advanced root canal and aesthetic restorative procedures." }
+    ],
+    "Orthodontics": [
+      { "code":"MDS-ORT-501", "name":"Advanced Orthodontics", "credits":8, "theory":120, "practical":240,
+        "topics":["Fixed appliance therapy","Clear aligner systems","Orthognathic surgical planning","Temporary anchorage devices","Digital orthodontics"],
+        "outcomes":"PG students will manage complex malocclusion cases with fixed and functional appliances." }
+    ],
+    "Periodontology": [
+      { "code":"MDS-PERIO-501", "name":"Advanced Periodontology", "credits":8, "theory":120, "practical":240,
+        "topics":["Advanced periodontal surgery","Bone augmentation","PRF & growth factors","Laser periodontics","Peri-implantitis","Full-mouth rehabilitation"],
+        "outcomes":"PG students will manage advanced periodontal cases and perform regenerative procedures." }
+    ]
+  },
+  "CERT": {
+    "Implantology": [
+      { "code":"CERT-IMP-01", "name":"Certificate in Oral Implantology (6 months)", "credits":0, "theory":60, "practical":120,
+        "topics":["Implant biology","Treatment planning with CBCT","Surgical placement","Guided surgery","Restorative phase","Complications"],
+        "outcomes":"Participants will perform basic implant placements under supervision with real-time CBCT guidance." }
+    ],
+    "Clear Aligners": [
+      { "code":"CERT-CA-01", "name":"Certificate in Clear Aligner Therapy (3 months)", "credits":0, "theory":30, "practical":60,
+        "topics":["Invisalign basics","Case selection","Digital scanning","Aligner fabrication","Monitoring progress"],
+        "outcomes":"Participants will plan and manage straightforward aligner cases independently." }
+    ],
+    "Laser Dentistry": [
+      { "code":"CERT-LD-01", "name":"Laser Dentistry — Hands-on Program (2 days)", "credits":0, "theory":8, "practical":8,
+        "topics":["Laser physics","Safety protocols","Soft tissue laser","Endo laser applications","Hands-on with Diode & Nd:YAG"],
+        "outcomes":"Participants will safely operate dental laser units for soft tissue and endodontic applications." }
+    ]
+  }
+}

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Portal — RRDCH</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar" style="top:0;">
+  <div class="navbar-inner">
+    <a href="../index.html" class="navbar-brand">
+      <img src="../assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text">
+        <div class="navbar-brand-name">RRDCH Patient Portal</div>
+        <div class="navbar-brand-sub">Your Health Dashboard</div>
+      </div>
+    </a>
+    <div class="navbar-actions">
+      <button class="dark-toggle" id="darkToggle">🌙</button>
+      <button class="btn btn-sm" style="background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);color:#c0392b;" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+</nav>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">🏥</div>
+      <div class="sidebar-user-name" id="sidebarName">Patient</div>
+      <div class="sidebar-user-role" style="color:var(--teal);">Registered Patient</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">My Health</div>
+      <a class="sidebar-item active" onclick="showPanel('dashboard')"><i class="fas fa-home"></i> Dashboard</a>
+      <a class="sidebar-item" onclick="showPanel('appointments')"><i class="fas fa-calendar-alt"></i> My Appointments</a>
+      <a class="sidebar-item" onclick="showPanel('history')"><i class="fas fa-history"></i> Treatment History</a>
+      <a class="sidebar-item" onclick="showPanel('followup')"><i class="fas fa-bell"></i> Follow-up Reminders</a>
+      <a class="sidebar-item" onclick="showPanel('feedback')"><i class="fas fa-star"></i> Give Feedback</a>
+      <div class="sidebar-section">Account</div>
+      <a class="sidebar-item" href="../index.html"><i class="fas fa-globe"></i> Main Website</a>
+      <a class="sidebar-item" href="../appointments.html"><i class="fas fa-plus"></i> Book New Appointment</a>
+      <a class="sidebar-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+  <main class="portal-main">
+    <div id="panel-dashboard">
+      <div class="portal-header"><h1>Welcome back, <span id="ptName">Patient</span>! 👋</h1><p>Your RRDCH health dashboard</p></div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);">
+        <div class="kpi-card"><div class="kpi-icon teal"><i class="fas fa-calendar" style="color:var(--teal);font-size:1.3rem;"></i></div><div><div class="kpi-num">2</div><div class="kpi-label">Upcoming Appointments</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon success"><i class="fas fa-check-circle" style="color:var(--success);font-size:1.3rem;"></i></div><div><div class="kpi-num">5</div><div class="kpi-label">Past Treatments</div></div></div>
+        <div class="kpi-card"><div class="kpi-icon gold"><i class="fas fa-bell" style="color:var(--gold);font-size:1.3rem;"></i></div><div><div class="kpi-num">1</div><div class="kpi-label">Follow-up Due</div></div></div>
+      </div>
+      <div class="alert alert-warning mt-3"><span>📅</span><strong>Follow-up Due:</strong> Your follow-up appointment in Conservative Dentistry is due by April 20, 2026. Please book an appointment soon.</div>
+      <div class="card mt-3">
+        <h3 style="color:var(--text);margin-bottom:1rem;">🔍 Live Queue Status</h3>
+        <div style="display:flex;gap:1rem;margin-bottom:1rem;align-items:center;">
+          <div style="background:rgba(46,134,171,0.1);border-radius:var(--radius-md);padding:1.25rem 2rem;text-align:center;">
+            <div id="queuePosition" style="font-family:var(--font-heading);font-size:2.5rem;color:var(--teal);font-weight:700;">--</div>
+            <div style="font-size:0.8rem;color:var(--muted);">Your Queue Position</div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:0.9rem;color:var(--text);margin-bottom:0.5rem;"><strong>Dept:</strong> <span id="queueDept">--</span></div>
+            <div style="font-size:0.9rem;color:var(--text);margin-bottom:0.5rem;"><strong>Time Slot:</strong> <span id="queueTime">--</span></div>
+            <div style="font-size:0.9rem;color:var(--text);margin-bottom:0.75rem;"><strong>Estimated Wait:</strong> <span id="queueWait" style="color:var(--teal);font-weight:600;">--</span></div>
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+              <span class="badge badge-success">OPD Open</span>
+              <span class="badge badge-info">Doctor Available</span>
+            </div>
+          </div>
+        </div>
+        <a href="../appointments.html" class="btn btn-teal btn-sm">Track Appointment →</a>
+      </div>
+      <div class="card mt-3">
+        <h3 style="color:var(--text);margin-bottom:1rem;">📅 Upcoming Appointments</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Appt ID</th><th>Department</th><th>Date & Time</th><th>Doctor</th><th>Status</th></tr></thead>
+            <tbody id="ptUpcomingTbody"></tbody>
+          </table>
+        </div>
+        <a href="../appointments.html" class="btn btn-primary mt-2">➕ Book New Appointment</a>
+      </div>
+    </div>
+    <div id="panel-appointments" class="hidden">
+      <div class="portal-header"><h1>📅 My Appointments</h1></div>
+      <div class="card">
+        <h3 style="margin-bottom:1rem;color:var(--text);">All Appointments</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Appt ID</th><th>Department</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="ptAllAppointments"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="panel-history" class="hidden">
+      <div class="portal-header"><h1>📋 Treatment History</h1></div>
+      <div class="card"><div id="ptHistoryList" style="display:flex;flex-direction:column;gap:1rem;"></div></div>
+    </div>
+    <div id="panel-followup" class="hidden">
+      <div class="portal-header"><h1>🔔 Follow-up Reminders</h1></div>
+      <div class="alert alert-warning"><span>⚠️</span><strong>Action Required:</strong> You have 1 follow-up appointment due within the next 10 days.</div>
+      <div class="card"><div id="ptFollowupList"></div></div>
+    </div>
+    <div id="panel-feedback" class="hidden">
+      <div class="portal-header"><h1>⭐ Give Feedback</h1></div>
+      <div class="card" style="max-width:600px;">
+        <h3 style="margin-bottom:1.5rem;color:var(--text);">Rate Your RRDCH Experience</h3>
+        <div class="form-group">
+          <label class="form-label">Department Visited</label>
+          <select class="form-control"><option>Conservative Dentistry & Endodontics</option><option>Periodontology</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Overall Rating</label>
+          <div style="display:flex;gap:0.5rem;font-size:2rem;" id="stars">
+            <span style="cursor:pointer;" onclick="setRating(1)">⭐</span>
+            <span style="cursor:pointer;" onclick="setRating(2)">⭐</span>
+            <span style="cursor:pointer;" onclick="setRating(3)">⭐</span>
+            <span style="cursor:pointer;" onclick="setRating(4)">⭐</span>
+            <span style="cursor:pointer;" onclick="setRating(5)">⭐</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Doctor's Behavior</label>
+          <select class="form-control"><option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Waiting Time</label>
+          <select class="form-control"><option>Less than 15 min</option><option>15–30 min</option><option>30–60 min</option><option>Over 60 min</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Comments / Suggestions</label>
+          <textarea class="form-control" rows="4" placeholder="Share your experience..."></textarea>
+        </div>
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.875rem;color:var(--text);">
+            <input type="checkbox"> Submit anonymously
+          </label>
+        </div>
+        <button class="btn btn-primary w-full" onclick="showToast('Thank you for your feedback! It helps us improve.','success')">⭐ Submit Feedback</button>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+const user = guardPage(['patient']);
+if (user) { document.getElementById('sidebarName').textContent = user.name; document.getElementById('ptName').textContent = user.name.split(' ')[0]; }
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+let allAppointments = [];
+
+function showPanel(name) {
+  document.querySelectorAll('[id^="panel-"]').forEach(p => p.classList.add('hidden'));
+  document.getElementById('panel-' + name).classList.remove('hidden');
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+  event.target.closest('.sidebar-item').classList.add('active');
+}
+function setRating(n) { document.getElementById('stars').querySelectorAll('span').forEach((s,i) => { s.style.opacity = i < n ? '1' : '0.3'; }); }
+
+function badgeForStatus(status) {
+  const map = { booked: 'info', confirmed: 'navy', in_queue: 'warning', called: 'gold', done: 'success', cancelled: 'danger' };
+  return map[status] || 'navy';
+}
+
+async function loadPatientData() {
+  const token = localStorage.getItem('rrdch_token');
+  if (!token) return;
+  try {
+    const [apptRes, histRes] = await Promise.all([
+      fetch(`${API_BASE}/patient/appointments`, { headers: { Authorization: `Bearer ${token}` } }),
+      fetch(`${API_BASE}/patient/history`, { headers: { Authorization: `Bearer ${token}` } })
+    ]);
+    const apptData = await apptRes.json();
+    const histData = await histRes.json();
+    if (apptData.ok) allAppointments = apptData.data || [];
+
+    const upcoming = allAppointments.filter((a) => !['done', 'cancelled'].includes(a.status)).slice(0, 5);
+    document.getElementById('ptUpcomingTbody').innerHTML = upcoming.length ? upcoming.map((a) => `
+      <tr>
+        <td style="font-family:monospace;font-size:0.8rem;">${a.token_no || a.id}</td>
+        <td>${a.dept_name || 'General'}</td>
+        <td>${a.date} · ${a.time_slot}</td>
+        <td>RRDCH Doctor</td>
+        <td><span class="badge badge-${badgeForStatus(a.status)}">${(a.status || '').toUpperCase()}</span></td>
+      </tr>
+    `).join('') : '<tr><td colspan="5" style="text-align:center;">No upcoming appointments</td></tr>';
+
+    document.getElementById('ptAllAppointments').innerHTML = allAppointments.length ? allAppointments.map((a) => `
+      <tr>
+        <td style="font-family:monospace;font-size:0.8rem;">${a.token_no || a.id}</td>
+        <td>${a.dept_name || 'General'}</td>
+        <td>${a.date}</td>
+        <td>${a.time_slot}</td>
+        <td><span class="badge badge-${badgeForStatus(a.status)}">${(a.status || '').toUpperCase()}</span></td>
+        <td>${a.status === 'done' ? '<button class="btn btn-sm btn-navy" onclick="showToast(\'Treatment summary available at desk\',\'info\')">Summary</button>' : '<a class="btn btn-sm btn-teal" href="../appointments.html#track">Track</a>'}</td>
+      </tr>
+    `).join('') : '<tr><td colspan="6" style="text-align:center;">No appointments found</td></tr>';
+
+    const history = histData.ok ? (histData.data || []) : [];
+    document.getElementById('ptHistoryList').innerHTML = history.length ? history.map((a) => `
+      <div style="padding:1.25rem;border:1px solid var(--border);border-radius:var(--radius-md);border-left:4px solid var(--success);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;"><span style="font-weight:600;color:var(--text);">${a.dept_name || 'Treatment'} Visit</span><span class="badge badge-success">COMPLETED</span></div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">${a.date} · ${a.time_slot}</div>
+        <p style="font-size:0.875rem;">${a.notes || a.chief_complaint || 'Treatment completed successfully.'}</p>
+      </div>
+    `).join('') : '<p style="color:var(--muted);">No completed treatment history yet.</p>';
+
+    document.getElementById('ptFollowupList').innerHTML = upcoming.length ? upcoming.slice(0, 2).map((a) => `
+      <div style="display:flex;gap:1rem;align-items:flex-start;padding:1rem;background:rgba(230,126,34,0.06);border-radius:var(--radius-md);border:1px solid rgba(230,126,34,0.2);margin-bottom:0.75rem;">
+        <div style="font-size:2rem;">🦷</div>
+        <div style="flex:1;">
+          <div style="font-weight:600;color:var(--text);">${a.dept_name || 'Dental'} Follow-up</div>
+          <div style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">Token: ${a.token_no} · ${a.date} ${a.time_slot}</div>
+        </div>
+        <a href="../appointments.html#track" class="btn btn-primary btn-sm">Track</a>
+      </div>
+    `).join('') : '<p style="color:var(--muted);">No follow-up reminders right now.</p>';
+
+    const active = upcoming.find((a) => ['booked', 'confirmed', 'in_queue', 'called'].includes(a.status));
+    if (active) {
+      document.getElementById('queuePosition').textContent = `#${active.queue_position || '--'}`;
+      document.getElementById('queueDept').textContent = active.dept_name || 'General';
+      document.getElementById('queueTime').textContent = `${active.date} ${active.time_slot}`;
+      document.getElementById('queueWait').textContent = active.queue_position ? `~${Math.max(5, active.queue_position * 3)} minutes` : '~15 minutes';
+    }
+  } catch (e) {
+    showToast('Could not load latest patient data', 'error');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', loadPatientData);
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+if (typeof io !== 'undefined') {
+  const socket = io();
+  socket.on('db_changed', () => {
+    loadPatientData();
+  });
+}
+</script>
+</body>
+</html>

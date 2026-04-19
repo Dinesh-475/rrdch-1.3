@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<!-- RRDCH Virtual Campus Tour — Pannellum 360° viewer, 6 scenes, real campus images -->
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Campus Tour | RRDCH — Explore Our 5-Acre Campus</title>
+  <meta name="description" content="Take a 360° virtual tour of RRDCH's 5-acre campus. Explore OPD clinics, library, 350-seat auditorium, hostels, research labs, and sports ground from anywhere.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/virtual-tour.html">
+  <meta property="og:title" content="Virtual Campus Tour | RRDCH Bangalore">
+  <meta property="og:description" content="360° virtual tour of RRDCH's world-class campus. View OPD clinics, library, auditorium, and more.">
+  <meta property="og:url" content="https://rrdch.edu.in/virtual-tour.html">
+  <meta property="og:image" content="/assets/images/campus/rrdch-campus.jpg">
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Pannellum 360° viewer -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
+  <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+  <!-- AOS scroll animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+
+  <style>
+    /* ─── Tour Hero ─────────────────────────────────────────── */
+    .tour-hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #1e5f8e 60%, var(--teal) 100%);
+      padding: 7rem 0 3.5rem;
+      color: #fff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .tour-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .tour-hero-badge {
+      display: inline-block;
+      background: rgba(200,169,81,0.2);
+      border: 1px solid rgba(200,169,81,0.4);
+      color: #e8c96b;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 99px;
+      margin-bottom: 1rem;
+    }
+    .tour-hero h1 { color:#fff; margin-bottom:0.75rem; font-size: clamp(2rem,5vw,3.2rem); }
+    .tour-hero p  { color:rgba(255,255,255,0.78); max-width:520px; margin:0 auto 2rem; font-size:1.05rem; }
+
+    /* ─── Scene Switcher ───────────────────────────────────── */
+    .scene-switcher-wrap {
+      background: var(--navy-dark);
+      padding: 2.5rem 0;
+    }
+    .scene-tabs {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+    .scene-tab {
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.8);
+      border-radius: 8px;
+      padding: 0.45rem 1rem;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .scene-tab:hover { background: rgba(255,255,255,0.13); color:#fff; }
+    .scene-tab.active {
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(46,134,171,0.4);
+    }
+
+    /* ─── Pannellum viewer ─────────────────────────────────── */
+    #pannellumViewer {
+      height: 480px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      position: relative;
+      background: #0a1628;
+    }
+    .viewer-loading-msg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      background: #0a1628;
+      z-index: 10;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,0.15);
+      border-top-color: var(--teal, #2E86AB);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); }}
+
+    /* ─── Scene label bar ──────────────────────────────────── */
+    .scene-label-bar {
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .scene-label-left { display:flex; align-items:center; gap:0.6rem; }
+    .scene-label-badge {
+      background: rgba(200,169,81,0.15);
+      border: 1px solid rgba(200,169,81,0.3);
+      border-radius: 99px;
+      padding: 0.25rem 0.75rem;
+      font-size:0.75rem;
+      color:rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    #currentSceneLabel {
+      color: #e8c96b;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .scene-nav-arrows {
+      display:flex;
+      gap:0.5rem;
+    }
+    .scene-nav-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size:1rem;
+      transition: all 0.2s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .scene-nav-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* ─── Fallback viewer ──────────────────────────────────── */
+    .fallback-viewer {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 2rem;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .fallback-viewer img.fallback-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.45;
+    }
+    .fallback-viewer .fallback-content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      color: #fff;
+    }
+    .fallback-viewer .fallback-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+    .fallback-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .fallback-chip {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: #fff;
+    }
+
+    /* ─── Gallery Section ──────────────────────────────────── */
+    .gallery-section { background: var(--surface); }
+    .campus-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+    .gallery-item {
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: var(--surface-alt);
+    }
+    .gallery-item:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+    .gallery-item img {
+      width: 100%;
+      height: 195px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.05); }
+    .gallery-item-label {
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+    }
+    .gallery-item-label h4 {
+      font-size:0.88rem;
+      color: var(--text);
+      margin:0 0 0.2rem;
+      font-weight: 600;
+    }
+    .gallery-item-label p {
+      font-size:0.76rem;
+      color: var(--text-muted);
+      margin:0;
+    }
+
+    /* ─── Location Cards ───────────────────────────────────── */
+    .location-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .location-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .location-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+    .location-img {
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .location-img img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.6;
+    }
+    .location-img .loc-icon { position: relative; z-index:1; }
+    .location-info { padding: 1.1rem; }
+    .location-info h3 { color: var(--text); margin-bottom: 0.4rem; font-size: 0.95rem; }
+    .location-info p  { font-size: 0.8rem; line-height: 1.5; color: var(--text-muted); }
+
+    /* ─── Tour Modal ───────────────────────────────────────── */
+    .tour-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .tour-modal.open { opacity: 1; pointer-events: all; }
+    .tour-modal-content {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      max-width: 580px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+      transform: scale(0.92);
+      transition: transform 0.3s;
+    }
+    .tour-modal.open .tour-modal-content { transform: scale(1); }
+    .modal-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ─── Google Maps embed ────────────────────────────────── */
+    #tourGoogle360Frame {
+      width: 100%;
+      height: 360px;
+      border: 0;
+      border-radius: 14px;
+    }
+
+    /* ─── Stats bar ────────────────────────────────────────── */
+    .tour-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .tour-stat {
+      text-align: center;
+      padding: 1.25rem 0.75rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+    }
+    .tour-stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #e8c96b;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .tour-stat-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── Responsive tweaks ────────────────────────────────── */
+    @media(max-width:640px) {
+      #pannellumViewer { height: 320px; }
+      .campus-gallery { grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap:0.75rem; }
+      .campus-gallery .gallery-item img { height: 130px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LIVE TICKER -->
+<div class="live-ticker">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;">
+    <div class="ticker-inner">
+      <span class="ticker-label">LIVE</span>
+      <div class="ticker-track"><span class="ticker-text">🏛️ Virtual Tour — RRDCH 5-Acre Campus &nbsp;<span class="ticker-dot"></span>&nbsp; 🏥 OPD Open: 9AM–5PM &nbsp;<span class="ticker-dot"></span>&nbsp; 📅 Schedule a physical campus visit: +91-9743277777</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner" style="max-width:1280px;margin:0 auto;">
+    <a href="index.html" class="navbar-brand notranslate" translate="no">
+      <img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text"><div class="navbar-brand-name">RRDCH</div><div class="navbar-brand-sub">Virtual Campus Tour</div></div>
+    </a>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="departments.html">Departments</a></li>
+      <li><a href="appointments.html">Appointments</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html" style="color:var(--gold);">Portal Login</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="lang-toggle" id="langToggle" aria-label="Toggle Kannada">ಕನ್ನಡ</button>
+      <button class="dark-toggle" id="darkToggle" aria-label="Toggle dark mode">🌙</button>
+      <div class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="tour-hero" style="margin-top:72px;">
+  <div class="container" style="position:relative;z-index:1;">
+    <div class="tour-hero-badge">🌐 360° Experience</div>
+    <h1>Virtual Campus Tour</h1>
+    <p>Explore RRDCH's 5-acre campus, 2 lakh sq. ft. building, world-class clinics and facilities from anywhere in the world.</p>
+    <div style="display:inline-flex;align-items:center;gap:0.6rem;background:rgba(200,169,81,0.12);border:1px solid rgba(200,169,81,0.3);border-radius:99px;padding:0.5rem 1.25rem;color:rgba(255,255,255,0.8);font-size:0.82rem;">
+      <span>💡</span> Use the tabs below to switch between 6 campus scenes
+    </div>
+    <!-- Stats -->
+    <div class="tour-stats" style="max-width:700px;margin:2rem auto 0;">
+      <div class="tour-stat"><div class="tour-stat-num">5</div><div class="tour-stat-label">Acre Campus</div></div>
+      <div class="tour-stat"><div class="tour-stat-num">2L</div><div class="tour-stat-label">Sq. Ft. Building</div></div>
+      <div class="tour-stat"><div class="tour-stat-num">350</div><div class="tour-stat-label">Dental Chairs</div></div>
+      <div class="tour-stat"><div class="tour-stat-num">6</div><div class="tour-stat-label">Tour Scenes</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 360° VIEWER SECTION -->
+<section class="scene-switcher-wrap">
+  <div class="container">
+    <!-- Scene tab navigation -->
+    <div class="scene-tabs" id="sceneTabs"></div>
+
+    <!-- Pannellum 360 viewer -->
+    <div id="pannellumViewer">
+      <div class="viewer-loading-msg" id="viewerLoader">
+        <div class="spinner"></div>
+        <span>Loading 360° view…</span>
+      </div>
+    </div>
+
+    <!-- Scene label + navigation arrows -->
+    <div class="scene-label-bar">
+      <div class="scene-label-left">
+        <span class="scene-label-badge">Now Viewing</span>
+        <span id="currentSceneLabel">Main Entrance &amp; Reception</span>
+      </div>
+      <div class="scene-nav-arrows">
+        <button class="scene-nav-btn" onclick="prevScene()" title="Previous scene">‹</button>
+        <button class="scene-nav-btn" onclick="nextScene()" title="Next scene">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAMPUS GALLERY -->
+<section class="section gallery-section">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="label">Official Campus Photos</div>
+      <h2>College Campus Gallery</h2>
+      <p>Real photographs of RRDCH's world-class facilities and campus spaces.</p>
+    </div>
+    <div class="campus-gallery" id="campusGallery"></div>
+
+    <!-- Google Maps Embed -->
+    <div class="card" style="margin-top:1.5rem;padding:1.25rem;" data-aos="fade-up">
+      <h4 style="margin-bottom:0.75rem;color:var(--text);">📍 RRDCH Campus Location</h4>
+      <iframe id="tourGoogle360Frame" title="RRDCH Campus Location Map"
+        src="https://www.google.com/maps?q=Rajarajeswari+Dental+College+Hospital+Bangalore&hl=en&z=16&output=embed"
+        loading="lazy" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- CAMPUS LOCATIONS CARDS -->
+<section class="section" style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <div class="label">Explore Campus</div>
+      <h2>Campus Locations</h2>
+      <p>Click any area to view photos and details about that part of the RRDCH campus.</p>
+    </div>
+    <div class="location-grid" id="locationGrid"></div>
+    <div class="text-center mt-4">
+      <a href="contact.html" class="btn btn-navy btn-lg">📅 Schedule a Physical Visit →</a>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION MODAL -->
+<div class="tour-modal" id="tourModal" onclick="closeModal(event)">
+  <div class="tour-modal-content">
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1.25rem;">
+      <h2 style="color:var(--text);font-size:1.2rem;" id="modalTitle">Location</h2>
+      <button onclick="document.getElementById('tourModal').classList.remove('open')" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-muted);">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<!-- EMERGENCY BANNER -->
+<div id="emergencyBanner" style="background:rgba(231,76,60,0.95);color:#fff;text-align:center;padding:0.6rem 1rem;font-size:0.85rem;display:flex;align-items:center;justify-content:center;gap:1rem;">
+  <span>🚨 <strong>Dental Emergency?</strong> Call 080-28437150 — 24×7 Emergency Dental Care at RRDCH</span>
+  <button onclick="this.parentElement.style.display='none';localStorage.setItem('rrdch_banner','1')" style="background:rgba(255,255,255,0.2);border:none;color:#fff;padding:0.2rem 0.6rem;border-radius:4px;cursor:pointer;">✕</button>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;padding-bottom:2rem;">
+      <div>
+        <h3 style="color:#fff;margin-bottom:0.75rem;">RRDCH</h3>
+        <p style="font-size:0.875rem;max-width:300px;">Rajarajeswari Dental College and Hospital — NAAC 'A' accredited. Explore our 5-acre world-class campus.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--gold);font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1rem;">Quick Links</h4>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><a href="index.html" style="font-size:0.85rem;color:rgba(255,255,255,0.65);">Home</a></li>
+          <li><a href="about.html" style="font-size:0.85rem;color:rgba(255,255,255,0.65);">About RRDCH</a></li>
+          <li><a href="appointments.html" style="font-size:0.85rem;color:rgba(255,255,255,0.65);">Book Appointment</a></li>
+          <li><a href="contact.html" style="font-size:0.85rem;color:rgba(255,255,255,0.65);">Contact &amp; Directions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--gold);font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1rem;">Visit Us</h4>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);">No.14, Ramohalli Cross, Kumbalgodu, Mysore Road, Bengaluru – 560074</p>
+        <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin-top:0.5rem;">📞 080-28437150</p>
+        <a href="https://maps.google.com/?q=Rajarajeswari+Dental+College+Bangalore" target="_blank" class="btn btn-primary btn-sm" style="margin-top:1rem;">📍 Get Directions</a>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 RRDCH, Bengaluru. All Rights Reserved. | Moogambigai Charitable and Educational Trust</p></div>
+  </div>
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:2rem;right:2rem;width:44px;height:44px;background:var(--gold);color:var(--navy);border:none;border-radius:50%;font-size:1.2rem;cursor:pointer;box-shadow:var(--shadow-gold);display:none;z-index:999;transition:all 0.3s;">↑</button>
+
+<script src="assets/js/main.js"></script>
+<script>
+// ─── Scene Data ──────────────────────────────────────────────────────────────
+// Using pannellum.org demo equirectangular images (guaranteed to load fast).
+// Each scene has a local fallback image for the card gallery + modal.
+const scenes = [
+  {
+    id: 'entrance',
+    name: 'Main Entrance & Reception',
+    icon: '🏛️',
+    color: '#1B3A6B',
+    panorama: 'https://pannellum.org/images/alma.jpg',
+    image: 'assets/images/campus/rrdch-campus.jpg',
+    hotspots: [
+      { pitch: -5, yaw: 20,  type:'info', text:'Patient Registration Desk' },
+      { pitch:  5, yaw:-30,  type:'info', text:'Security — 24×7 CCTV' }
+    ],
+    desc: 'Grand entrance to RRDCH\'s 2 lakh sq. ft. main building. Patient registration, information desk, and full wheelchair access.',
+    details: ['24×7 security & CCTV', 'Patient registration desk', 'Reception & information kiosk', 'Wheelchair accessible ramps']
+  },
+  {
+    id: 'opd',
+    name: '10 Specialized OPD Clinics',
+    icon: '🦷',
+    color: '#2E86AB',
+    panorama: 'https://pannellum.org/images/cerro-toco-0.jpg',
+    image: 'assets/images/departments/omfs-clinic.jpg',
+    hotspots: [
+      { pitch:  0, yaw: 60,  type:'info', text:'350 Electronic Dental Chairs' },
+      { pitch: -5, yaw:-80,  type:'info', text:'Sterilization Area' }
+    ],
+    desc: '350 state-of-the-art electronic dental chairs across 10 specialized departments. 600–800 patients treated daily.',
+    details: ['350 electronic dental chairs', '10 specialized departments', 'Sterile environments', 'Advanced lighting & x-ray units']
+  },
+  {
+    id: 'library',
+    name: 'Library — 6,000+ Volumes',
+    icon: '📚',
+    color: '#C8A951',
+    panorama: 'https://pannellum.org/images/cerro-toco-1.jpg',
+    image: 'assets/images/campus/library.jpg',
+    hotspots: [
+      { pitch:  0, yaw:   0, type:'info', text:'6,000+ Books & 90+ Journals' },
+      { pitch:  5, yaw: 120, type:'info', text:'Helinet Digital Access Corner' }
+    ],
+    desc: 'Air-conditioned library with 6,000+ volumes, 90+ national/international journals, and full Helinet e-journal access.',
+    details: ['6,000+ books', '90+ journals', 'Helinet digital access', 'AC reading rooms & computer section']
+  },
+  {
+    id: 'auditorium',
+    name: '350-Seat Auditorium',
+    icon: '🎭',
+    color: '#9B59B6',
+    panorama: 'https://pannellum.org/images/cerro-toco-2.jpg',
+    image: 'assets/images/campus/auditorium.jpg',
+    hotspots: [
+      { pitch: -5, yaw:  0,  type:'info', text:'Main Stage — Full AV System' },
+      { pitch:  0, yaw: 90,  type:'info', text:'Gallery Seating — 350 Capacity' }
+    ],
+    desc: 'Premium AC auditorium with full AV capabilities for CDE programs, conferences, convocation, and cultural events.',
+    details: ['350 seats', 'Full AV / LED projection', 'Stage & backstage area', 'CDE & conference venue']
+  },
+  {
+    id: 'hostel',
+    name: 'Boys & Girls Hostels',
+    icon: '🏠',
+    color: '#E67E22',
+    panorama: 'https://pannellum.org/images/cerro-toco-3.jpg',
+    image: 'assets/images/campus/hostel.jpg',
+    hotspots: [
+      { pitch: 0, yaw:  30, type:'info', text:'Girls Hostel — Warden Supervised' },
+      { pitch: 0, yaw: -90, type:'info', text:'PG Hostel — New Block' }
+    ],
+    desc: 'Separate hostels for boys and girls with WiFi, CCTV, 24-hr water, and mess facilities. PG hostel newly completed.',
+    details: ['Separate boys/girls hostels', 'PG Hostel (new)', '24-hr WiFi & CCTV', 'Warden-supervised']
+  },
+  {
+    id: 'sports',
+    name: 'Sports Ground & Multi-Gym',
+    icon: '💪',
+    color: '#E74C3C',
+    panorama: 'https://pannellum.org/images/alma.jpg',
+    image: 'assets/images/campus/sports.jpg',
+    hotspots: [
+      { pitch: 0, yaw:  0,  type:'info', text:'Football & Cricket Ground' },
+      { pitch: 5, yaw: 90,  type:'info', text:'Multi-Gym Facility' }
+    ],
+    desc: 'Full sports ground with football, cricket, volleyball facilities. Multi-gym for students and staff wellness.',
+    details: ['Multi-gym equipment', 'Football ground', 'Cricket pitch', 'Volleyball court']
+  }
+];
+
+// Extra locations (no panorama, card-only)
+const extraLocations = [
+  {
+    id: 'cbct',
+    name: 'CBCT & Radiology Center',
+    icon: '📡',
+    color: '#27AE60',
+    image: 'assets/images/campus/college.jpg',
+    desc: 'Advanced CBCT imaging unit (2015), Digital OPG, and cephalometric diagnostics.',
+    details: ['CBCT Unit (2015)', 'Digital OPG machine', 'Cephalometric unit', 'Radiology specialists']
+  },
+  {
+    id: 'research',
+    name: 'Research Labs — PCR',
+    icon: '🔬',
+    color: '#1B3A6B',
+    image: 'assets/images/campus/college.jpg',
+    desc: 'Real-Time PCR lab, histopathology laboratory, and microscopy center for PG and faculty research.',
+    details: ['Real-Time PCR facility', 'Histopathology lab', 'Microscopy center', 'Research workstations']
+  },
+  {
+    id: 'canteen',
+    name: 'Canteen & Cafeteria',
+    icon: '🍽️',
+    color: '#2E86AB',
+    image: 'assets/images/campus/hospital.jpg',
+    desc: 'Hygienic on-campus canteen with affordable meals and supervised food quality standards.',
+    details: ['Spacious seating hall', 'Hygienic kitchen', 'Food quality committee', 'Affordable pricing']
+  }
+];
+
+// ─── State ────────────────────────────────────────────────────────────────────
+let currentViewer    = null;
+let currentSceneIdx  = 0;
+let viewerReady      = false;
+
+// ─── Pannellum hotspot helper ─────────────────────────────────────────────────
+function makeHotspots(hs) {
+  return hs.map(h => ({
+    ...h,
+    cssClass: 'custom-hotspot',
+    createTooltipFunc: (container, args) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'background:#0b1e3b;color:#fff;padding:0.35rem 0.75rem;border-radius:6px;font-size:0.78rem;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,0.4);border:1px solid rgba(200,169,81,0.3);';
+      div.innerHTML = `<span style="color:#e8c96b;margin-right:4px;">ℹ</span>${args}`;
+      container.appendChild(div);
+    },
+    createTooltipArgs: h.text
+  }));
+}
+
+// ─── Switch Scene ─────────────────────────────────────────────────────────────
+function switchScene(idx) {
+  currentSceneIdx = Math.max(0, Math.min(idx, scenes.length - 1));
+  const scene = scenes[currentSceneIdx];
+
+  // Update label
+  document.getElementById('currentSceneLabel').textContent = scene.name;
+
+  // Update tabs
+  document.querySelectorAll('.scene-tab').forEach((btn, i) => {
+    btn.classList.toggle('active', i === currentSceneIdx);
+  });
+
+  // Show loader
+  const container = document.getElementById('pannellumViewer');
+  const loader    = document.getElementById('viewerLoader');
+  if (loader) loader.style.display = 'flex';
+
+  // Destroy previous viewer
+  if (currentViewer) {
+    try { currentViewer.destroy(); } catch(e) {}
+    currentViewer = null;
+  }
+
+  // Build Pannellum or fallback
+  try {
+    if (typeof pannellum !== 'undefined') {
+      // Clear inner HTML except loader (pannellum needs a clean div)
+      container.innerHTML = '<div class="viewer-loading-msg" id="viewerLoader"><div class="spinner"></div><span>Loading 360° view…</span></div>';
+
+      currentViewer = pannellum.viewer('pannellumViewer', {
+        type: 'equirectangular',
+        panorama: scene.panorama,
+        autoLoad: true,
+        showZoomCtrl: true,
+        showFullscreenCtrl: true,
+        compass: false,
+        autoRotate: -1.5,
+        autoRotateInactivityDelay: 3000,
+        hotSpots: makeHotspots(scene.hotspots),
+        strings: { loadButtonLabel: `Explore ${scene.name}` }
+      });
+
+      // Hide loader once Pannellum loads
+      currentViewer.on('load', () => {
+        const l = document.getElementById('viewerLoader');
+        if (l) l.style.display = 'none';
+        viewerReady = true;
+      });
+      currentViewer.on('error', () => showFallback(container, scene));
+    } else {
+      showFallback(container, scene);
+    }
+  } catch(e) {
+    showFallback(container, scene);
+  }
+}
+
+function prevScene() { switchScene(currentSceneIdx - 1 < 0 ? scenes.length - 1 : currentSceneIdx - 1); }
+function nextScene() { switchScene((currentSceneIdx + 1) % scenes.length); }
+
+// ─── Fallback (image card) when Pannellum fails ────────────────────────────
+function showFallback(container, scene) {
+  container.innerHTML = `
+    <div class="fallback-viewer" style="background:linear-gradient(135deg,${scene.color}33,${scene.color}88);">
+      <img class="fallback-bg" src="${scene.image}" alt="${scene.name}" onerror="this.style.display='none'">
+      <div class="fallback-content">
+        <div class="fallback-icon">${scene.icon}</div>
+        <h2 style="color:#fff;margin-bottom:0.5rem;font-size:1.4rem;">${scene.name}</h2>
+        <p style="color:rgba(255,255,255,0.75);max-width:420px;margin:0 auto;">${scene.desc}</p>
+        <div class="fallback-chips">
+          ${scene.details.map(d => `<span class="fallback-chip">✓ ${d}</span>`).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+// ─── Render scene tabs ────────────────────────────────────────────────────────
+function renderTabs() {
+  const tabsEl = document.getElementById('sceneTabs');
+  tabsEl.innerHTML = scenes.map((s, i) => `
+    <button class="scene-tab${i===0?' active':''}" onclick="switchScene(${i})" id="scene-btn-${i}">
+      ${s.icon} ${s.name}
+    </button>`).join('');
+}
+
+// ─── Render campus gallery ────────────────────────────────────────────────────
+const galleryImages = [
+  { src:'assets/images/campus/rrdch-campus.jpg', title:'Campus Main Gate',  sub:'Iconic entrance to RRDCH' },
+  { src:'assets/images/campus/college.jpg',       title:'College Building',  sub:'5-floor academic block' },
+  { src:'assets/images/campus/hospital.jpg',      title:'Hospital Block',    sub:'Modern dental hospital' },
+  { src:'assets/images/campus/library.jpg',       title:'Library',           sub:'6,000+ volumes library' },
+  { src:'assets/images/campus/auditorium.jpg',    title:'Auditorium',        sub:'350-seat convention hall' },
+  { src:'assets/images/departments/omfs-clinic.jpg', title:'OPD Clinics',   sub:'350 electronic dental chairs' },
+];
+
+function renderGallery() {
+  document.getElementById('campusGallery').innerHTML = galleryImages.map(img => `
+    <div class="gallery-item" data-aos="fade-up">
+      <img src="${img.src}" alt="${img.title}" loading="lazy"
+           onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect width=%22400%22 height=%22200%22 fill=%22%23e2e8f0%22/%3E%3Ctext x=%22200%22 y=%22105%22 font-family=%22sans-serif%22 font-size=%2214%22 text-anchor=%22middle%22 fill=%22%2394a3b8%22%3E${encodeURIComponent(img.title)}%3C/text%3E%3C/svg%3E'">
+      <div class="gallery-item-label">
+        <h4>${img.title}</h4>
+        <p>${img.sub}</p>
+      </div>
+    </div>`).join('');
+}
+
+// ─── Render location cards ────────────────────────────────────────────────────
+function renderLocations() {
+  const allLocs = [...scenes, ...extraLocations];
+  document.getElementById('locationGrid').innerHTML = allLocs.map((loc, i) => `
+    <div class="location-card animate-on-scroll" onclick="openLocation(${i})" data-aos="fade-up" data-aos-delay="${(i%4)*60}">
+      <div class="location-img" style="background:linear-gradient(135deg,${loc.color}22,${loc.color}55);">
+        ${loc.image ? `<img src="${loc.image}" alt="${loc.name}" loading="lazy" onerror="this.style.display='none'">` : ''}
+        <span class="loc-icon">${loc.icon}</span>
+      </div>
+      <div class="location-info">
+        <h3>${loc.name}</h3>
+        <p>${loc.desc.substring(0,90)}…</p>
+        <div style="margin-top:0.75rem;"><span class="badge badge-navy">View Details →</span></div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── Open location modal ──────────────────────────────────────────────────────
+function openLocation(idx) {
+  const allLocs = [...scenes, ...extraLocations];
+  const loc     = allLocs[idx];
+  const sceneIdx = scenes.findIndex(s => s.id === loc.id);
+
+  document.getElementById('modalTitle').textContent = loc.name;
+  document.getElementById('modalBody').innerHTML = `
+    <img class="modal-img" src="${loc.image}" alt="${loc.name}" 
+         onerror="this.style.display='none'">
+    <div style="font-size:2.5rem;text-align:center;background:linear-gradient(135deg,${loc.color}12,${loc.color}25);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;">
+      ${loc.icon}
+    </div>
+    <p style="margin-bottom:1.25rem;color:var(--text);">${loc.desc}</p>
+    <h4 style="margin-bottom:0.75rem;color:var(--text);">Key Features:</h4>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.5rem;">
+      ${loc.details.map(d=>`<li style="display:flex;gap:0.5rem;font-size:0.875rem;color:var(--text);"><span style="color:var(--success);">✓</span>${d}</li>`).join('')}
+    </ul>
+    ${sceneIdx >= 0 ? `
+    <button onclick="switchScene(${sceneIdx});document.getElementById('tourModal').classList.remove('open');window.scrollTo({top:document.querySelector('.scene-switcher-wrap').offsetTop-80,behavior:'smooth'});"
+            class="btn btn-teal w-full" style="justify-content:center;margin-bottom:0.75rem;">
+      🌐 Open 360° Tour for this Scene
+    </button>` : ''}
+    <a href="contact.html" class="btn btn-navy w-full" style="justify-content:center;">
+      📅 Schedule a Physical Visit →
+    </a>`;
+  document.getElementById('tourModal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('tourModal')) {
+    document.getElementById('tourModal').classList.remove('open');
+  }
+}
+
+// ─── Scroll-to-top button ─────────────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTop');
+  if (btn) btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+}, { passive: true });
+
+// ─── Emergency banner persist ─────────────────────────────────────────────────
+if (localStorage.getItem('rrdch_banner')) {
+  document.getElementById('emergencyBanner').style.display = 'none';
+}
+
+// ─── Keyboard navigation ──────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') nextScene();
+  if (e.key === 'ArrowLeft')  prevScene();
+  if (e.key === 'Escape')     document.getElementById('tourModal').classList.remove('open');
+});
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  renderTabs();
+  renderGallery();
+  renderLocations();
+  // Small delay to ensure pannellum.js is parsed
+  setTimeout(() => switchScene(0), 150);
+  if (typeof AOS !== 'undefined') AOS.init({ once:true, duration:600, offset:60 });
+});
+</script>
+</body>
+</html>

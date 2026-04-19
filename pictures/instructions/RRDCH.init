@@ -1,0 +1,204 @@
+# RRDCH.init — PROJECT INITIALIZATION GUIDE
+# Hyprlan Webathon 2026 | Start Here Every Session
+# =====================================================
+# Run this file as a checklist before every build session.
+# Feed this to your AI assistant (Claude/Cursor/Copilot) at the START of each session.
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## SECTION 1: PROJECT IDENTITY
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROJECT_NAME=RRDCH Webathon 2026
+CLIENT=Rajarajeswari Dental College and Hospital, Bengaluru
+COMPETITION=Hyprlan Webathon 2026
+BUILD_TYPE=Full-stack web portal (Frontend + Backend)
+DEPLOYMENT_TARGET_FRONTEND=GitHub Pages
+DEPLOYMENT_TARGET_BACKEND=Railway.app or Render.com
+TOTAL_PAGES=18
+TOTAL_API_ROUTES=45+
+REAL_TIME=Socket.IO v4 (OPD Queue)
+BILINGUAL=English + Kannada (ಕನ್ನಡ)
+PRIMARY_COLOR=#1B3A6B (Navy)
+ACCENT_COLOR=#C8A951 (Gold)
+SECONDARY_COLOR=#2E86AB (Teal)
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## SECTION 2: API KEYS NEEDED
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## ⚠️  ASK THE USER FOR THESE BEFORE STARTING — DO NOT HARDCODE
+
+API_KEYS_REQUIRED:
+  - ANTHROPIC_API_KEY        # For AI Symptom Checker (Claude claude-sonnet-4-20250514)
+                             # Get at: https://console.anthropic.com
+  - JWT_SECRET               # Generate: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+  - EMAIL_USER               # Gmail address for appointment confirmations
+  - EMAIL_PASS               # Gmail App Password (not regular password)
+  - GOOGLE_MAPS_API_KEY      # Optional — basic embed works without key
+
+## INSTRUCTION TO AI ASSISTANT:
+## Before generating any code that calls the Anthropic API or uses JWT,
+## STOP and ask the user:
+## "Please provide your ANTHROPIC_API_KEY and JWT_SECRET before I generate
+## the files that need them. I will not hardcode placeholder values."
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## SECTION 3: FOLDER STRUCTURE (EXPECTED AT START)
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EXPECTED_STRUCTURE:
+  rrdch-webathon-2026/
+  ├── index.html
+  ├── about.html
+  ├── departments.html
+  ├── appointments.html
+  ├── admissions.html
+  ├── events.html
+  ├── research.html
+  ├── contact.html
+  ├── virtual-tour.html
+  ├── feedback.html
+  ├── login.html
+  ├── students.html
+  ├── syllabus.html
+  ├── hostel-complaints.html
+  ├── portals/
+  │   ├── student.html       ← CURRENTLY EMPTY — MUST BUILD
+  │   ├── patient.html       ← CURRENTLY EMPTY — MUST BUILD
+  │   ├── doctor.html        ← CURRENTLY EMPTY — MUST BUILD
+  │   └── admin.html         ← CURRENTLY EMPTY — MUST BUILD
+  ├── assets/
+  │   ├── css/
+  │   │   └── main.css       ← CURRENTLY EMPTY — MUST BUILD
+  │   ├── js/
+  │   │   ├── main.js        ← MUST BUILD
+  │   │   ├── lang.js        ← Kannada/English toggle logic
+  │   │   ├── appointments.js
+  │   │   ├── portals/
+  │   │   │   ├── student.js
+  │   │   │   ├── patient.js
+  │   │   │   ├── doctor.js
+  │   │   │   └── admin.js
+  │   │   └── symptom-checker.js  ← Claude API integration
+  │   └── icons/
+  │       ├── icon-192.png
+  │       └── icon-512.png
+  ├── manifest.json           ← PWA manifest
+  ├── sw.js                   ← Service worker
+  ├── server/
+  │   ├── database.js
+  │   ├── routes/
+  │   │   ├── auth.routes.js
+  │   │   ├── public.routes.js
+  │   │   ├── appointments.routes.js
+  │   │   ├── patient.routes.js
+  │   │   ├── student.routes.js
+  │   │   ├── doctor.routes.js
+  │   │   ├── admin.routes.js
+  │   │   ├── admissions.routes.js
+  │   │   └── feedback.routes.js
+  │   ├── middleware/
+  │   │   ├── auth.middleware.js
+  │   │   ├── validate.js
+  │   │   └── rateLimit.js
+  │   ├── utils/
+  │   │   ├── tokenGenerator.js
+  │   │   ├── mailer.js
+  │   │   └── socketHandlers.js
+  │   └── data/
+  │       └── rrdch.db        ← auto-created
+  ├── server.js
+  ├── package.json
+  ├── .env                    ← NOT in git
+  ├── .gitignore
+  └── README.md
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## SECTION 4: BUILD PHASE TRACKER
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Check off each phase as completed. Feed this section to AI at each session.
+
+PHASE_STATUS:
+  PHASE_0_BUG_FIXES:       [x] COMPLETED
+  PHASE_1_CSS_SYSTEM:      [x] COMPLETED
+  PHASE_2_MAIN_JS:         [x] COMPLETED
+  PHASE_3_HOME:            [x] COMPLETED
+  PHASE_4_CORE_PAGES:      [x] COMPLETED
+  PHASE_5_PORTALS:         [x] COMPLETED
+  PHASE_6_BACKEND:         [x] COMPLETED
+  PHASE_7_AI_FEATURE:      [x] COMPLETED
+  PHASE_8_PWA:             [x] COMPLETED
+  PHASE_9_TESTING:         [ ] NOT STARTED
+  PHASE_10_DEPLOY:         [ ] NOT STARTED
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## SECTION 5: KNOWN BUGS (fix before anything else)
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+BUGS_TO_FIX:
+  [x] BUG_1: server.js uses better-sqlite3 API (synchronous) but package is sqlite3 (async)
+  [x] BUG_2: database.js never creates data/ directory → DB init fails
+  [x] BUG_3: package.json missing "start" and "dev" scripts
+  [x] BUG_4: io.emit() called before socket server confirmed up → race condition
+  [x] BUG_5: assets/css/main.css is empty → ALL styling broken
+  [x] BUG_6: Passwords stored in plain text
+  [x] BUG_7: JWT_SECRET has insecure fallback 'rrdch-secret'
+  [x] BUG_8: appointments.html form has no JS validation or handler
+  [x] BUG_9: Missing data-kn attributes on many elements → Kannada toggle broken
+  [x] BUG_10: Express v5 installed but code not v5 compatible
+  [x] BUG_11: login.html has no role-based redirect
+  [x] BUG_12: events.html uses static HTML, not FullCalendar.js
+  [x] BUG_13: virtual-tour.html missing Pannellum CDN in <head>
+  [x] BUG_14: Dark mode JS handler missing
+  [x] BUG_15: portals/ folder entirely empty
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## SECTION 6: TECH STACK REFERENCE
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+FRONTEND_STACK:
+  HTML: Semantic HTML5 (no frameworks — pure HTML/CSS/JS for GitHub Pages)
+  CSS: Custom design system (main.css) + AOS animations
+  JS: Vanilla ES6+ (no React/Vue — keeps it deployable to GitHub Pages)
+  Fonts: Playfair Display (headings) + Noto Sans Kannada (Kannada mode)
+  Icons: Font Awesome 6
+  Calendar: FullCalendar.js v6
+  Tour: Pannellum.js v2.5.6
+  Charts: Chart.js (in portals only)
+  Dates: Flatpickr
+  Toasts: Toastify.js
+  Animations: AOS (Animate on Scroll)
+  AI Chat: Direct Anthropic API fetch (no server proxy needed for demo)
+
+BACKEND_STACK:
+  Runtime: Node.js v20+ LTS
+  Framework: Express.js v4.18.2 (PINNED to v4, NOT v5)
+  Database: SQLite via sqlite3 (async/callback) for hackathon
+  Auth: jsonwebtoken + bcrypt
+  Real-time: Socket.IO v4
+  File uploads: multer
+  Email: nodemailer (Gmail SMTP)
+  Validation: express-validator
+  Rate limiting: express-rate-limit
+  Logging: morgan
+  Environment: dotenv
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## SECTION 7: SESSION HANDOFF NOTES
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Update this section at the END of every session so the next session knows where to pick up
+
+LAST_SESSION_DATE=April 2026
+LAST_COMPLETED_PHASE=PHASE_8_PWA
+FILES_MODIFIED_THIS_SESSION=index.html, contact.html, assets/js/main.js, assets/js/symptom-checker.js, server/database.js
+NEXT_TODO=PHASE_9_TESTING (Audit responsive breakpoints and WCAG), PHASE_10_DEPLOY (Push to GitHub Pages and Railway)
+BLOCKERS=None. Need API keys injected securely before prod deploy.
+NOTES=All critical backend fixes, UI/UX (CSS, JS, portals, appointments), AI symptom checker, PWA Service Workers, and interactive OSRM/Leaflet Geographic Routing Maps are fully operational in the local environment.
+
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## HOW TO USE THIS FILE
+## ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## 1. At the START of every new session, copy-paste this entire file into your AI assistant
+## 2. The AI will read PHASE_STATUS and LAST_SESSION_DATE to know what's been done
+## 3. At the END of every session, update LAST_SESSION_DATE, LAST_COMPLETED_PHASE,
+##    and NEXT_TODO so the next session can continue seamlessly
+## 4. When a phase is complete, change [ ] to [x] in PHASE_STATUS

@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RRDCH | Rajarajeswari Dental College &amp; Hospital, Bangalore</title>
+  <meta name="description" content="Rajarajeswari Dental College &amp; Hospital (RRDCH) is a premier NAAC 'A' Grade dental institution in Bangalore offering BDS, MDS programs with 350 electronic dental chairs and 800+ daily OPD patients.">
+  <meta name="keywords" content="RRDCH, Rajarajeswari Dental College, Dental College Bangalore, BDS MDS, NAAC A Grade Dental">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RRDCH | Rajarajeswari Dental College &amp; Hospital">
+  <meta property="og:description" content="Premier dental institution in Bangalore. NAAC 'A' Grade, Guinness World Record holder, NIRF Rank 34. BDS &amp; MDS admissions open.">
+  <meta property="og:url" content="https://rrdch.edu.in/">
+  <meta property="og:image" content="/assets/images/campus/college.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <meta name="description" content="Rajarajeswari Dental College & Hospital (RRDCH), Bengaluru — NAAC 'A' accredited, 350 dental chairs, 600+ patients daily. Book appointments, explore courses, and access student portal.">
+  <title>RRDCH — Rajarajeswari Dental College & Hospital, Bengaluru</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1B3A6B">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+  <!-- AOS -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <!-- Toastify -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js" defer></script>
+  <!-- Map & 360 Libraries -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+  <style>
+    .news-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+    .news-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .news-item:last-child { border-bottom: none; }
+    .news-img { width: 80px; height: 65px; border-radius: var(--radius-sm); object-fit: cover; background: linear-gradient(135deg, var(--navy), var(--teal)); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; }
+    .news-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .news-title { font-weight: 600; font-size: 0.9rem; color: var(--text); margin-bottom: 0.25rem; }
+    .events-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .event-item { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .event-date-block { background: var(--navy); color: #fff; border-radius: var(--radius-sm); padding: 0.4rem 0.75rem; text-align: center; flex-shrink: 0; min-width: 50px; }
+    .event-day { font-family: var(--font-heading); font-size: 1.4rem; font-weight: 700; line-height: 1; }
+    .event-mon { font-size: 0.65rem; text-transform: uppercase; color: var(--gold); letter-spacing: 0.5px; }
+    .event-info h4 { font-size: 0.875rem; color: var(--text); }
+    .event-info p { font-size: 0.78rem; margin-top: 0.15rem; }
+    .virtual-tour-cta {
+      background: linear-gradient(135deg, var(--navy), var(--teal));
+      border-radius: var(--radius-lg);
+      padding: 3.5rem;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .virtual-tour-cta::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: rgba(200,169,81,0.08);
+      border-radius: 50%;
+      top: -100px; right: -100px;
+    }
+    .hero-carousel { position: relative; }
+    .carousel-dots { display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.5rem; }
+    .carousel-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.35); cursor: pointer; transition: all var(--transition); }
+    .carousel-dot.active { background: var(--gold); width: 24px; border-radius: 4px; }
+    #mapSection { scroll-margin-top: 90px; }
+    .dir-step { display: flex; gap: 0.75rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .dir-step:last-child { border-bottom: none; }
+    .dir-num { width: 28px; height: 28px; background: var(--navy); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem; }
+  </style>
+</head>
+<body>
+
+<!-- Floating UI Elements -->
+<div class="floating-social-sidebar">
+  <a href="#" aria-label="Google Plus"><i class="fab fa-google-plus-g"></i></a>
+  <a href="#" aria-label="RSS"><i class="fas fa-rss"></i></a>
+  <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+  <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+  <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+  <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+  <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+</div>
+
+<a href="admissions.html" class="floating-apply-button">Apply Now</a>
+
+
+<!-- NEW ENHANCED HEADER MATCHING IMAGE 2 -->
+<style>
+/* Reset & normalize just for header */
+:root {
+  --header-top-bg: #f8f9fa;
+  --header-ticker-bg: #002147;
+  --header-brand-bg: #003b7a;
+  --header-nav-bg: #002147;
+  --header-text-dark: #333;
+}
+[data-theme="dark"] {
+  --header-top-bg: #121c32;
+  --header-ticker-bg: #00132b;
+  --header-brand-bg: #002147;
+  --header-nav-bg: #00132b;
+  --header-text-dark: #e8ecf4;
+}
+.img2-header {
+  font-family: var(--font-body), Arial, sans-serif;
+  width: 100%;
+  position: relative;
+  z-index: 1000;
+}
+.img2-top {
+  background: var(--header-top-bg);
+  padding: 4px 1rem;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  color: var(--header-text-dark);
+  align-items: center;
+  transition: background 0.3s, color 0.3s;
+}
+.img2-top a {
+  color: var(--header-text-dark);
+  text-decoration: none;
+  margin: 0 4px;
+}
+.img2-top a:hover { text-decoration: underline; }
+.img2-top-right { display: flex; flex-direction: column; align-items: flex-end; }
+.img2-ticker {
+  background: var(--header-ticker-bg);
+  color: #ffeb3b; 
+  padding: 5px 1rem;
+  font-size: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  transition: background 0.3s;
+}
+.img2-new-badge {
+  background: #f44336;
+  color: white;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-weight: bold;
+  font-size: 11px;
+  margin-right: 8px;
+  text-transform: uppercase;
+}
+.img2-ticker-scroll {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+}
+@keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+.img2-brand-row {
+  background: var(--header-brand-bg);
+  padding: 10px 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.3s;
+}
+.img2-brand-left {
+  display: flex;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+}
+.img2-logo-img {
+  height: 90px;
+  width: 90px;
+  border-radius: 50%;
+  background: white;
+  padding: 2px;
+  margin-right: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+  object-fit: contain; /* Prevents stretching */
+}
+.img2-logo-img:hover { transform: scale(1.05); }
+.img2-brand-names h1 {
+  margin: 0;
+  font-size: 38px;
+  font-family: var(--font-heading), 'Crimson Pro', serif;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+.img2-brand-names h2 {
+  margin: 0;
+  font-size: 24px;
+  font-family: var(--font-heading), 'Crimson Pro', serif;
+  font-weight: 600;
+  color: #ffeb3b;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+.img2-brand-names p {
+  margin: 5px 0 0 0;
+  font-size: 11px;
+  color: #a4c4e8;
+  line-height: 1.3;
+  letter-spacing: 0.5px;
+}
+.img2-brand-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.img2-badges-imgs {
+  display: flex;
+  gap: 6px;
+  background: rgba(255,255,255,0.1);
+  padding: 6px 12px;
+  border-radius: 6px;
+  align-items: center;
+  transition: background 0.3s;
+}
+[data-theme="dark"] .img2-badges-imgs {
+  background: rgba(0,0,0,0.25);
+}
+.img2-badges-imgs img {
+  height: 48px;
+  background: white;
+  border-radius: 50%;
+  padding: 2px;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+.img2-badges-imgs img[alt="UK"], .img2-badges-imgs img[alt="SLMC"] {
+  border-radius: 4px;
+  background: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  height: 42px;
+}
+.img2-badges-subtitle {
+  color: #d8e5f5;
+  font-size: 12px;
+  margin-top: 6px;
+}
+.img2-nav-wrapper {
+  background: var(--header-nav-bg);
+  transition: background 0.3s;
+}
+.img2-nav-wrapper.scrolled {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.img2-nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.img2-nav-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 1.5rem;
+}
+.img2-nav-menu li a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 15px 0;
+  display: block;
+  transition: color 0.2s, border 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.img2-nav-menu li a:hover, .img2-nav-menu li a.active {
+  color: #fff;
+  border-bottom: 2px solid #ffeb3b;
+}
+.img2-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.img2-search {
+  display: flex;
+}
+.img2-search input {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  font-size: 0.9rem;
+  background: rgba(255,255,255,0.9);
+  color: #333;
+}
+[data-theme="dark"] .img2-search input {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+.img2-search button {
+  background: #333;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 0 4px 4px 0;
+  font-weight: bold;
+}
+[data-theme="dark"] .img2-search button {
+  background: #000;
+}
+.img2-lang-dark {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.img2-lang-dark button {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.img2-lang-dark button:hover {
+  background: rgba(255,255,255,0.1);
+}
+.img2-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+.img2-hamburger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+}
+@media(max-width: 1024px) {
+  .img2-brand-names h1 { font-size: 28px; }
+  .img2-brand-names h2 { font-size: 18px; }
+  .img2-badges-imgs { display: none; }
+  .img2-badges-subtitle { display: none; }
+  .img2-nav-menu { display: none; }
+  .img2-search { display: none; }
+  .img2-hamburger { display: flex; }
+}
+</style>
+
+<header class="img2-header" id="rrdch-header">
+  <div class="img2-top">
+    <div>
+      📞 +91-80-2843 7150, +91-80-2843 7468 & +91 9901559955 &nbsp;&nbsp;&nbsp; ✉️ principalrrdch@gmail.com
+    </div>
+    <div class="img2-top-right">
+      <div><a href="fees.html" title="Eduwize ERP">ERP</a> | <a href="#">ESI</a> | <a href="#">Accreditation ▾</a> | <a href="#">DCI</a> | <a href="#">Brochure ▾</a> | <a href="#">Recognitions</a> | <a href="#">Committee ▾</a> | <a href="#">Schedule ▾</a> | <a href="#">Newsletter</a> | <a href="/feedback.html">Feedback</a> | <a href="#">Career</a></div>
+      <div><a href="#">Webmail</a> <a href="#"><strong>*NAAC*</strong></a> <a href="#"><strong>*NIRF*</strong></a> <a href="#">Circulars</a> <a href="#">E-Content</a> <a href="fees.html"><strong>*ONLINE FEES*</strong></a> <a href="fees.html">FEE (Terms)</a></div>
+    </div>
+  </div>
+
+  <div class="img2-ticker">
+    <span class="img2-new-badge">new</span>
+    <span class="img2-ticker-scroll">'Application are invited from eligible candidates for Certificate Course in Implantology 2026-27. Interested candidates send your application to: pgrrdch@gmail.com' &nbsp; | &nbsp; Ph.D Entrance Exam Notification</span>
+  </div>
+
+  <div class="img2-brand-row">
+    <a href="index.html" class="img2-brand-left notranslate" translate="no">
+      <img src="assets/images/badges/rrdch-logo.png" class="img2-logo-img" alt="RRDCH Logo">
+      <div class="img2-brand-names">
+        <h1>RajaRajeswari</h1>
+        <h2>Dental College & Hospital</h2>
+        <p>RECOGNIZED BY DENTAL COUNCIL OF INDIA & GOVT.OF INDIA<br>AFFILIATED TO RAJIVGANDHI UNIVERSITY OF HEALTH SCIENCE, BANGALORE</p>
+      </div>
+    </a>
+    <div class="img2-brand-right">
+      <div class="img2-badges-imgs">
+         <img src="assets/images/badges/NABH.png" alt="NABH">
+         <img src="assets/images/badges/naac.png" alt="NAAC">
+         <img src="assets/images/badges/iso1.png" alt="ISO">
+         <img src="assets/images/badges/IAOFINAL.png" alt="IAO">
+         <img src="assets/images/badges/RCPSG3.png" alt="UK">
+         <img src="assets/images/badges/SLMC9.png" alt="SLMC">
+      </div>
+      <div class="img2-badges-subtitle">
+         Recognised by Royal College of Physicians and Surgeons of Glasgow, UK for part 1 & 2 MFDS Examinations
+      </div>
+    </div>
+  </div>
+
+  <!-- We keep standard JS classes here for backwards compatibility with main.js script -->
+  <nav class="img2-nav-wrapper navbar" style="position: relative; border-bottom: none;" id="main-nav-replacement">
+    <div class="img2-nav-inner">
+      <ul class="img2-nav-menu nav-menu" id="navMenu">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About Us ▾</a></li>
+        <li><a href="admissions.html">Courses Offered ▾</a></li>
+        <li><a href="departments.html">Department ▾</a></li>
+        <li><a href="admissions.html">Academics ▾</a></li>
+        <li><a href="about.html">Facilities ▾</a></li>
+        <li><a href="events.html">News & Events</a></li>
+        <li><a href="research.html">Gallery ▾</a></li>
+        <li><a href="research.html">Alumni</a></li>
+        <li><a href="contact.html">Contact us</a></li>
+      </ul>
+      <div class="img2-nav-actions">
+        <div class="img2-search">
+          <input type="text" placeholder="">
+          <button>Search</button>
+        </div>
+        <div class="img2-lang-dark navbar-actions">
+          <button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button>
+          <button class="dark-toggle" id="darkToggle">🌙</button>
+          <div class="hamburger img2-hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+<!-- HERO SECTION -->
+<section class="hero-christ">
+  <style>
+    .hero-christ {
+      position: relative;
+      width: 100%;
+      height: 85vh;
+      min-height: 500px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .hero-image-slider {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('assets/images/campus/rrdch-campus.jpg') center/cover no-repeat;
+      z-index: 1;
+    }
+    .hero-image-slider::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,33,71,0.9) 0%, rgba(0,0,0,0.2) 60%);
+    }
+    .find-degree-box {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 8px 8px 0 0;
+      border-top: 5px solid var(--gold);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+      max-width: 1200px;
+      width: 95%;
+      text-align: center;
+      transform: translateY(0%);
+    }
+    [data-theme="dark"] .find-degree-box {
+      background: rgba(10, 20, 35, 0.95);
+    }
+    .find-degree-box h2 {
+      font-size: 32px;
+      font-family: var(--font-heading);
+      color: var(--navy);
+      margin-bottom: 15px;
+      letter-spacing: 0.5px;
+    }
+    [data-theme="dark"] .find-degree-box h2 {
+      color: var(--gold);
+    }
+    .find-degree-box p {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 30px;
+      line-height: 1.6;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    [data-theme="dark"] .find-degree-box p {
+      color: #ccc;
+    }
+    .degree-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .degree-links a {
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+      border: 2px solid var(--navy);
+      text-decoration: none;
+    }
+    .degree-links a:hover {
+      background: var(--gold);
+      color: var(--navy);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .hero-christ-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+      margin-bottom: auto;
+      margin-top: 20vh;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      padding: 0 20px;
+    }
+    .hero-christ-content h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .hero-christ-content p {
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      color: #ffeb3b; /* Christ yellow */
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+  </style>
+  
+  <div class="hero-image-slider"></div>
+  
+  <div class="hero-christ-content">
+    <h1>Excellence in Dental Education</h1>
+    <p>NAAC 'A' Accredited • 32 Years of Excellence • DCI Recognized</p>
+  </div>
+
+  <div class="find-degree-box">
+    <h2>Find your Degree or Service</h2>
+    <p>RRDCH offers rigorous dental programs, valuable clinical resources, and countless opportunities that will enable you to pursue your desired course of study or receive the best patient care.</p>
+    <div class="degree-links">
+      <a href="admissions.html">Doctoral (PhD)</a>
+      <a href="admissions.html">Postgraduate (MDS)</a>
+      <a href="admissions.html">Undergraduate (BDS)</a>
+      <a href="appointments.html">Patient Services</a>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT SECTIONS - CHRIST UNIVERSITY STYLE -->
+
+<!-- CAMPUS LIFE -->
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Campus Life</h2>
+    </div>
+    <div class="grid-2">
+      <div style="position: relative; overflow: hidden; border-radius: 4px;">
+        <img src="assets/images/campus/college.jpg" alt="Campus Life" style="width:100%; height:300px; object-fit:cover; transition: transform 0.5s;">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,33,71,0.8); color: white; padding: 15px;">
+          <h3 style="margin: 0; font-size: 18px;">Academic Excellence</h3>
+          <p style="margin: 5px 0 0; font-size: 14px; color: #ccc;">World-class education environment</p>
+        </div>
+      </div>
+      <div style="position: relative; overflow: hidden; border-radius: 4px;">
+        <img src="assets/images/campus/auditorium.jpg" alt="Student Activities" style="width:100%; height:300px; object-fit:cover; transition: transform 0.5s;">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,33,71,0.8); color: white; padding: 15px;">
+          <h3 style="margin: 0; font-size: 18px;">Student Activities</h3>
+          <p style="margin: 5px 0 0; font-size: 14px; color: #ccc;">Vibrant cultural and sports events</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESOURCE FACILITIES -->
+<section class="section" style="background: var(--bg);">
+  <div class="container">
+    <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Resource Facilities</h2>
+    </div>
+    <div class="grid-4">
+      <a href="about.html" style="display:block; text-align:center; background:var(--surface); padding:30px 20px; border-radius:8px; box-shadow:var(--shadow-sm); transition:all 0.3s;">
+        <div style="font-size:40px; color:var(--gold); margin-bottom:15px;">🦷</div>
+        <h3 style="color:var(--navy); font-size:16px;">Speciality Clinics</h3>
+        <p style="font-size:13px; margin-top:10px; color:var(--muted);">10 Advanced Departments</p>
+      </a>
+      <a href="about.html" style="display:block; text-align:center; background:var(--surface); padding:30px 20px; border-radius:8px; box-shadow:var(--shadow-sm); transition:all 0.3s;">
+        <div style="font-size:40px; color:var(--gold); margin-bottom:15px;">📚</div>
+        <h3 style="color:var(--navy); font-size:16px;">Library</h3>
+        <p style="font-size:13px; margin-top:10px; color:var(--muted);">Digital resources & journals</p>
+      </a>
+      <a href="about.html" style="display:block; text-align:center; background:var(--surface); padding:30px 20px; border-radius:8px; box-shadow:var(--shadow-sm); transition:all 0.3s;">
+        <div style="font-size:40px; color:var(--gold); margin-bottom:15px;">🔬</div>
+        <h3 style="color:var(--navy); font-size:16px;">Research Labs</h3>
+        <p style="font-size:13px; margin-top:10px; color:var(--muted);">State-of-the-art facilities</p>
+      </a>
+      <a href="about.html" style="display:block; text-align:center; background:var(--surface); padding:30px 20px; border-radius:8px; box-shadow:var(--shadow-sm); transition:all 0.3s;">
+        <div style="font-size:40px; color:var(--gold); margin-bottom:15px;">🏨</div>
+        <h3 style="color:var(--navy); font-size:16px;">Hostel & Dining</h3>
+        <p style="font-size:13px; margin-top:10px; color:var(--muted);">Comfortable accommodation</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CAMPUS EVENTS & NEWS -->
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <div class="grid-2">
+      <!-- Events -->
+      <div>
+        <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+          <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Campus Events</h2>
+          <select style="float: right; margin-top: -30px; padding: 5px; border: 1px solid #ccc; border-radius: 4px;">
+            <option>All Events</option>
+            <option>Academic</option>
+            <option>Cultural</option>
+          </select>
+        </div>
+        <div class="events-list" id="eventsListContainer">
+          <div class="event-item" style="padding: 15px; border-left: 4px solid var(--gold); background: var(--bg); margin-bottom: 10px;">
+            <div style="color: var(--navy); font-weight: bold; font-size: 14px; margin-bottom: 5px;">25 MAY 2026</div>
+            <h4 style="color: #333; margin: 0 0 5px;">National Dental Conference</h4>
+            <p style="font-size: 13px; margin: 0; color: #666;">Main Auditorium, RRDCH Campus</p>
+          </div>
+          <div class="event-item" style="padding: 15px; border-left: 4px solid var(--gold); background: var(--bg); margin-bottom: 10px;">
+            <div style="color: var(--navy); font-weight: bold; font-size: 14px; margin-bottom: 5px;">10 JUN 2026</div>
+            <h4 style="color: #333; margin: 0 0 5px;">Annual Convocation 2026</h4>
+            <p style="font-size: 13px; margin: 0; color: #666;">University Grounds</p>
+          </div>
+        </div>
+        <a href="events.html" style="display:inline-block; margin-top: 15px; color: var(--navy); font-weight: 600; text-decoration: none;">View All Events <i class="fas fa-angle-right"></i></a>
+      </div>
+      
+      <!-- News -->
+      <div>
+         <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+          <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Campus News</h2>
+        </div>
+        <div style="position: relative; overflow: hidden; border-radius: 4px; margin-bottom: 20px;">
+           <img src="assets/images/campus/hospital.jpg" alt="News update" style="width:100%; height:200px; object-fit:cover;">
+           <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 20px 15px 10px;">
+             <h3 style="margin: 0; font-size: 16px;">New Advanced Imaging Center Inaugurated</h3>
+           </div>
+        </div>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+            <a href="#" style="color: #333; font-size: 14px; text-decoration: none; display: flex; justify-content: space-between;">
+              <span>RRDCH partners with international dental boards</span>
+              <span style="color: #999; font-size: 12px;">12 May 2026</span>
+            </a>
+          </li>
+          <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+            <a href="#" style="color: #333; font-size: 14px; text-decoration: none; display: flex; justify-content: space-between;">
+              <span>Student excellence awards announced for 2025-26</span>
+              <span style="color: #999; font-size: 12px;">05 May 2026</span>
+            </a>
+          </li>
+        </ul>
+        <a href="events.html" style="display:inline-block; margin-top: 15px; color: var(--navy); font-weight: 600; text-decoration: none;">View All News <i class="fas fa-angle-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE / WITH WIDE NUMBERS SECTION -->
+<section class="section" style="background: url('assets/images/campus/college.jpg') center/cover fixed; position: relative; color: white; text-align: center; padding: 80px 0;">
+  <div style="position: absolute; inset: 0; background: rgba(0, 33, 71, 0.85);"></div>
+  <div class="container" style="position: relative; z-index: 1;">
+    <h2 style="font-family: var(--font-heading); font-size: 36px; margin-bottom: 10px; color: #fff;">Experience RRDCH...</h2>
+    <p style="font-size: 16px; color: var(--gold); margin-bottom: 50px; letter-spacing: 2px; text-transform: uppercase;">With Wide Numbers</p>
+    
+    <div class="grid-4">
+      <div>
+        <h3 style="font-size: 50px; margin: 0; color: #fff; font-family: var(--font-heading);">32+</h3>
+        <p style="font-size: 14px; text-transform: uppercase; color: #ccc; margin-top: 10px; letter-spacing: 1px;">Years of Excellence</p>
+      </div>
+      <div>
+        <h3 style="font-size: 50px; margin: 0; color: #fff; font-family: var(--font-heading);">10+</h3>
+        <p style="font-size: 14px; text-transform: uppercase; color: #ccc; margin-top: 10px; letter-spacing: 1px;">Speciality Departments</p>
+      </div>
+      <div>
+        <h3 style="font-size: 50px; margin: 0; color: #fff; font-family: var(--font-heading);">100%</h3>
+        <p style="font-size: 14px; text-transform: uppercase; color: #ccc; margin-top: 10px; letter-spacing: 1px;">Placement Rate</p>
+      </div>
+      <div>
+        <h3 style="font-size: 50px; margin: 0; color: #fff; font-family: var(--font-heading);">450+</h3>
+        <p style="font-size: 14px; text-transform: uppercase; color: #ccc; margin-top: 10px; letter-spacing: 1px;">Daily Patients</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSITY ACHIEVEMENTS -->
+<section class="section" style="background: var(--bg);">
+  <div class="container">
+     <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">University Achievements</h2>
+    </div>
+    <div class="grid-3">
+       <div style="background: var(--surface); padding: 25px; border-top: 4px solid var(--gold); box-shadow: var(--shadow-sm);">
+         <div style="font-size: 30px; margin-bottom: 15px;">🏆</div>
+         <h4 style="color: var(--navy); margin-bottom: 10px;">NAAC 'A' Grade</h4>
+         <p style="font-size: 14px; color: var(--muted); line-height: 1.5;">Accredited with an 'A' grade by the National Assessment and Accreditation Council.</p>
+       </div>
+       <div style="background: var(--surface); padding: 25px; border-top: 4px solid #002147; box-shadow: var(--shadow-sm);">
+         <div style="font-size: 30px; margin-bottom: 15px;">🌟</div>
+         <h4 style="color: var(--navy); margin-bottom: 10px;">Limca Book of Records</h4>
+         <p style="font-size: 14px; color: var(--muted); line-height: 1.5;">Recognized for conducting the largest dental screening and treatment camp.</p>
+       </div>
+       <div style="background: var(--surface); padding: 25px; border-top: 4px solid #3498DB; box-shadow: var(--shadow-sm);">
+         <div style="font-size: 30px; margin-bottom: 15px;">🏅</div>
+         <h4 style="color: var(--navy); margin-bottom: 10px;">Top Ranking</h4>
+         <p style="font-size: 14px; color: var(--muted); line-height: 1.5;">Consistently ranked among the top dental colleges in India by major publications.</p>
+       </div>
+    </div>
+  </div>
+</section>
+
+<!-- END REACH SECTION -->
+
+<!-- END OF MAIN CONTENT -->
+
+<!-- VIGNETTE WINDOWS (FEATURES / BLOGS) -->
+<section class="section" style="background: var(--bg);">
+  <div class="container">
+    <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Vignette Windows</h2>
+    </div>
+    <div class="grid-4">
+      <div style="background:var(--surface); border-radius:4px; overflow:hidden; box-shadow:var(--shadow-sm);">
+        <img src="assets/images/campus/img1.png" alt="Tell a Tale" style="width:100%; height:180px; object-fit:cover;">
+        <div style="padding:15px;">
+          <h4 style="color:var(--navy); margin-bottom:10px;">Tell a Tale - Metamorphosis</h4>
+          <a href="#" style="color:var(--gold); font-size:14px; font-weight:600; text-decoration:none;">Read More <i class="fas fa-angle-right"></i></a>
+        </div>
+      </div>
+      <div style="background:var(--surface); border-radius:4px; overflow:hidden; box-shadow:var(--shadow-sm);">
+        <img src="assets/images/campus/12.jpg" alt="Tell a Tale" style="width:100%; height:180px; object-fit:cover;">
+        <div style="padding:15px;">
+          <h4 style="color:var(--navy); margin-bottom:10px;">Tell a Tale - Raconteur</h4>
+          <a href="#" style="color:var(--gold); font-size:14px; font-weight:600; text-decoration:none;">Read More <i class="fas fa-angle-right"></i></a>
+        </div>
+      </div>
+      <div style="background:var(--surface); border-radius:4px; overflow:hidden; box-shadow:var(--shadow-sm);">
+        <img src="assets/images/campus/9.jpg" alt="Tell a Tale" style="width:100%; height:180px; object-fit:cover;">
+        <div style="padding:15px;">
+          <h4 style="color:var(--navy); margin-bottom:10px;">Tell a Tale - Lore to Lure</h4>
+          <a href="#" style="color:var(--gold); font-size:14px; font-weight:600; text-decoration:none;">Read More <i class="fas fa-angle-right"></i></a>
+        </div>
+      </div>
+      <div style="background:var(--surface); border-radius:4px; overflow:hidden; box-shadow:var(--shadow-sm);">
+        <img src="assets/images/campus/1.jpg" alt="Tell a Tale" style="width:100%; height:180px; object-fit:cover;">
+        <div style="padding:15px;">
+          <h4 style="color:var(--navy); margin-bottom:10px;">Tell a Tale - Fame to Frame</h4>
+          <a href="#" style="color:var(--gold); font-size:14px; font-weight:600; text-decoration:none;">Read More <i class="fas fa-angle-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMINENT VISITORS -->
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Eminent Visitors</h2>
+    </div>
+    <div class="grid-2" style="align-items: center;">
+      <div>
+        <p style="font-size:16px; color:var(--muted); line-height:1.6; margin-bottom:20px;">RRDCH hosts distinguished guests from academia, industry, and healthcare, inspiring students and faculty through insightful interactions and discussions.</p>
+        <a href="#" style="display:inline-block; padding:10px 20px; background:var(--navy); color:white; text-decoration:none; border-radius:4px;">View All Visitors</a>
+      </div>
+      <div>
+        <div style="display:flex; gap:10px;">
+           <img src="assets/images/campus/img0.png" alt="Visitor" style="width:50%; height:auto; border-radius:4px; object-fit:cover;">
+           <img src="assets/images/campus/img1.png" alt="Visitor" style="width:50%; height:auto; border-radius:4px; object-fit:cover;">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH & LABS -->
+<section class="section" style="background:var(--bg);">
+  <div class="container">
+    <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Where Ideas Ignite : RRDCH Labs</h2>
+    </div>
+    <div class="grid-2" style="align-items: center;">
+      <div>
+         <img src="assets/images/campus/hospital.jpg" alt="Labs" style="width:100%; height:auto; border-radius:4px; object-fit:cover;">
+      </div>
+      <div style="padding-left:20px;">
+        <p style="font-size:16px; color:var(--muted); line-height:1.6; margin-bottom:20px;">There are multiple advanced labs affiliated to our Dental departments. From pre-clinical science labs to CBCT imaging and research incubation centers, our facilities fortify the research culture.</p>
+        <a href="about.html" style="display:inline-block; padding:10px 20px; border:2px solid var(--navy); color:var(--navy); text-decoration:none; border-radius:4px; font-weight:600;">Explore Facilities</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR PROUD ALUMNI -->
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+     <div class="section-header" style="text-align: center; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Our Proud Alumni</h2>
+      <div style="width:50px; height:3px; background:var(--gold); margin:10px auto;"></div>
+    </div>
+    <div class="grid-4">
+      <div style="text-align:center;">
+        <img src="assets/images/campus/management/chairman.jpg" alt="Alumni" style="width:120px; height:120px; border-radius:50%; margin:0 auto 15px; object-fit:cover; border:3px solid var(--gold);">
+        <h4 style="margin:0; color:var(--navy);">Dr. A. Sharma</h4>
+        <p style="font-size:13px; color:var(--muted); margin-top:5px;">MDS - 2018 Batch<br>Leading Implantologist, UK</p>
+      </div>
+       <div style="text-align:center;">
+        <img src="assets/images/campus/management/principal.png" alt="Alumni" style="width:120px; height:120px; border-radius:50%; margin:0 auto 15px; object-fit:cover; border:3px solid var(--gold);">
+        <h4 style="margin:0; color:var(--navy);">Dr. S. Patil</h4>
+        <p style="font-size:13px; color:var(--muted); margin-top:5px;">BDS - 2015 Batch<br>Maxillofacial Surgeon, AIIMS</p>
+      </div>
+       <div style="text-align:center;">
+        <img src="assets/images/campus/management/dean.png" alt="Alumni" style="width:120px; height:120px; border-radius:50%; margin:0 auto 15px; object-fit:cover; border:3px solid var(--gold);">
+        <h4 style="margin:0; color:var(--navy);">Dr. Priya K.</h4>
+        <p style="font-size:13px; color:var(--muted); margin-top:5px;">MDS - 2012 Batch<br>Research Head, NIH</p>
+      </div>
+       <div style="text-align:center;">
+        <div style="width:120px; height:120px; border-radius:50%; margin:0 auto 15px; background:var(--navy); color:white; display:flex; align-items:center; justify-content:center; font-size:30px;">🎓</div>
+        <h4 style="margin:0; color:var(--navy);">Join the Network</h4>
+        <a href="#" style="display:block; font-size:13px; color:var(--gold); margin-top:10px; text-decoration:none;">Alumni Portal &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOGNITIONS ACCREDITATIONS -->
+<section class="section" style="background:var(--navy); color:white;">
+  <div class="container text-center">
+    <h2 style="text-transform: uppercase; font-size: 28px; margin-bottom: 30px;">Recognitions & Accreditations</h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px; align-items:center;">
+       <img src="assets/images/badges/naac.png" alt="NAAC" style="height:80px; background:white; padding:5px; border-radius:4px;">
+       <img src="assets/images/badges/iso1.png" alt="ISO" style="height:80px; background:white; padding:5px; border-radius:4px;">
+       <img src="assets/images/badges/NABH.png" alt="NABH" style="height:80px; background:white; padding:5px; border-radius:4px;">
+       <img src="assets/images/badges/IAOFINAL.png" alt="IAO" style="height:80px; background:white; padding:5px; border-radius:4px;">
+       <img src="assets/images/badges/RCPSG3.png" alt="RCPSG" style="height:80px; background:white; padding:5px; border-radius:4px;">
+    </div>
+  </div>
+</section>
+
+<!-- PANORAMIC GALLERIA -->
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <div class="section-header" style="text-align: left; border-bottom: 2px solid #ddd; padding-bottom: 10px; margin-bottom: 2rem;">
+      <h2 style="color:var(--navy); text-transform: uppercase; font-size: 28px;">Panoramic Galleria</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+       <img src="assets/images/campus/college.jpg" style="width:100%; height:200px; object-fit:cover; grid-column: span 2;">
+       <img src="assets/images/campus/hospital.jpg" style="width:100%; height:200px; object-fit:cover;">
+       <img src="assets/images/campus/library.jpg" style="width:100%; height:200px; object-fit:cover;">
+       <img src="assets/images/campus/auditorium.jpg" style="width:100%; height:200px; object-fit:cover; grid-column: span 3;">
+       <div style="background:var(--navy); color:white; display:flex; align-items:center; justify-content:center; text-align:center; padding:20px;">
+         <a href="research.html" style="color:white; text-decoration:none; font-size:18px; font-weight:600;">View All<br>Photos &rarr;</a>
+       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<!-- ACHIEVEMENTS & CERTIFICATIONS GALLERY -->
+<section class="achievements-gallery" style="padding: 5rem 1rem; background: var(--bg); text-align: center;">
+  <div style="max-width: 1280px; margin: 0 auto;">
+    <h2 style="font-size: 2.5rem; color: var(--navy); font-family: var(--font-heading); margin-bottom: 2.5rem;">Awards & Accolades</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: center; justify-content: center;">
+      <div style="overflow: hidden; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><img src="assets/images/campus/img0.png" style="width: 100%; height: auto; transform: scale(1); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="RRDCH Achievement"></div>
+      <div style="overflow: hidden; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><img src="assets/images/campus/img1.png" style="width: 100%; height: auto; transform: scale(1); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="RRDCH Award"></div>
+      <div style="overflow: hidden; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><img src="assets/images/campus/image-2.jpg" style="width: 100%; height: auto; transform: scale(1); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="RRDCH Certification"></div>
+      <div style="overflow: hidden; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><img src="assets/images/campus/1.jpg" style="width: 100%; height: auto; transform: scale(1); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Event Moment"></div>
+      <div style="overflow: hidden; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><img src="assets/images/campus/12.jpg" style="width: 100%; height: auto; transform: scale(1); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Academic Event"></div>
+      <div style="overflow: hidden; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><img src="assets/images/campus/9.jpg" style="width: 100%; height: auto; transform: scale(1); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="RRDCH Moment"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+          <img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+          <h3 style="margin:0;">RRDCH</h3>
+        </div>
+        <p>Rajarajeswari Dental College and Hospital — a NAAC 'A' accredited institution of excellence under Moogambigai Charitable and Educational Trust. Established 1992.</p>
+        <div class="social-links" style="margin-top:1.25rem;">
+          <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="about.html">About RRDCH</a></li>
+          <li><a href="departments.html">Departments</a></li>
+          <li><a href="appointments.html">Book Appointment</a></li>
+          <li><a href="admissions.html">Admissions</a></li>
+          <li><a href="events.html">News & Events</a></li>
+          <li><a href="research.html">Research</a></li>
+          <li><a href="virtual-tour.html">Virtual Tour</a></li>
+          <li><a href="feedback.html">Feedback</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Portals</h4>
+        <ul>
+          <li><a href="login.html">Student Portal</a></li>
+          <li><a href="login.html">Patient Portal</a></li>
+          <li><a href="login.html">PG Doctor Portal</a></li>
+          <li><a href="login.html">Admin Dashboard</a></li>
+          <li><a href="appointments.html">Track Appointment</a></li>
+          <li><a href="login.html">Fee Payment</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <div class="footer-contact-item"><span>📞</span><span>080-28437150</span></div>
+        <div class="footer-contact-item"><span>🎓</span><span>+91-9743277777</span></div>
+        <div class="footer-contact-item"><span>✉️</span><span>info@rrdch.org</span></div>
+        <div class="footer-contact-item"><span>🕐</span><span>OPD: Mon–Sat 9AM–5PM</span></div>
+        <div class="footer-emergency">
+          <h5>🚨 Emergency</h5>
+          <div class="em-num">+91-9901559955</div>
+          <div style="font-size:0.72rem;color:rgba(255,255,255,0.5);margin-top:0.3rem;">24×7 Emergency Dental Care</div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Rajarajeswari Dental College & Hospital, Bengaluru. All Rights Reserved. | Moogambigai Charitable and Educational Trust</p>
+      <div style="display:flex;gap:1rem;">
+        <a href="#" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Privacy Policy</a>
+        <a href="#" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Terms of Use</a>
+        <a href="contact.html" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+@media (max-width: 900px) {
+  .news-grid { grid-template-columns: 1fr; }
+  section.hero > .hero-content > div { grid-template-columns: 1fr !important; }
+  section[style*='grid-template-columns:1fr 1fr'] { grid-template-columns: 1fr !important; }
+}
+</style>
+
+<script src="assets/js/main.js"></script>
+<script>
+// Load department cards from API
+fetch('/api/public/departments')
+  .then(r => r.json())
+  .then(res => {
+    if(!res.ok) return;
+    const depts = res.data;
+    const grid = document.getElementById('deptGrid');
+    if(!grid) return;
+    depts.slice(0, 8).forEach(d => {
+      const card = document.createElement('div');
+      card.className = 'dept-card animate-on-scroll';
+      card.innerHTML = `
+        <div class="dept-icon">${d.icon || '🦷'}</div>
+        <h3>${d.name}</h3>
+        <p>${(d.description || '').substring(0,90)}...</p>
+        <div class="dept-timing">🕐 ${d.opd_hours}</div>
+        <a href="appointments.html?dept=${d.id}" class="btn btn-teal btn-sm" style="width:100%;justify-content:center;">Book Appointment</a>
+      `;
+      card.addEventListener('click', (e) => {
+        if (!e.target.closest('.btn')) window.location.href = `departments.html#dept-${d.id}`;
+      });
+      grid.appendChild(card);
+      if(typeof observer !== 'undefined') observer.observe(card);
+      else if(typeof observer2 !== 'undefined') observer2.observe(card);
+    });
+  });
+
+// AI Symptom Checker
+const symptomMap = [
+  { keywords: ['tooth pain', 'toothache', 'pain', 'ache', 'throbbing', 'sensitive', 'sensitivity', 'hot', 'cold'], dept: 'Conservative Dentistry & Endodontics', icon: '🔬', reason: 'Tooth pain and sensitivity often indicate decay or nerve issues requiring root canal or restorative treatment.' },
+  { keywords: ['bleeding gum', 'gum', 'swollen gum', 'gum disease', 'periodontal', 'loose', 'bone'], dept: 'Periodontology', icon: '🌿', reason: 'Bleeding or swollen gums suggest gum disease, which needs periodontal treatment.' },
+  { keywords: ['crooked', 'braces', 'alignment', 'jaw', 'bite', 'gap', 'space', 'aligner', 'teeth spacing'], dept: 'Orthodontics & Dentofacial Orthopedics', icon: '😁', reason: 'Misaligned teeth or jaw issues are best treated with orthodontic care.' },
+  { keywords: ['crown', 'denture', 'missing teeth', 'bridge', 'implant', 'prostho', 'full mouth', 'replacement'], dept: 'Prosthodontics, Crown & Bridge', icon: '👑', reason: 'Missing or damaged teeth requiring replacements are managed in the Prosthodontics department.' },
+  { keywords: ['wisdom', 'extraction', 'surgery', 'fracture', 'jaw surgery', 'swelling', 'abscess', 'impacted'], dept: 'Oral & Maxillofacial Surgery', icon: '🦷', reason: 'Surgical procedures including extractions and jaw surgery are handled by our Oral Surgery specialists.' },
+  { keywords: ['lump', 'ulcer', 'sore', 'cancer', 'biopsy', 'white patch', 'lesion', 'discoloration'], dept: 'Oral Pathology & Microbiology', icon: '🧬', reason: 'Unusual lesions or suspected pathologies need examination and possibly biopsy by our Oral Pathology team.' },
+  { keywords: ['xray', 'x-ray', 'tmj', 'jaw pain', 'clicking', 'imaging', 'cbct', 'headache'], dept: 'Oral Medicine & Radiology', icon: '📡', reason: 'TMJ disorders and need for advanced dental imaging are managed by our Oral Medicine & Radiology team.' },
+  { keywords: ['child', 'children', 'kid', 'baby', 'milk tooth', 'pediatric', 'fluoride', 'sealant', 'school'], dept: 'Pediatric & Preventive Dentistry', icon: '🧒', reason: 'All children\'s dental needs are expertly managed by our Pediatric Dentistry specialists.' },
+  { keywords: ['camp', 'community', 'public', 'prevention', 'awareness', 'school program', 'tobacco', 'smoking'], dept: 'Public Health Dentistry', icon: '🏘️', reason: 'Community health and prevention needs are the focus of our Public Health Dentistry department.' },
+];
+
+function sendAIMessage() {
+  const input = document.getElementById('aiInput');
+  const chat = document.getElementById('aiChat');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const userDiv = document.createElement('div');
+  userDiv.className = 'ai-msg user';
+  userDiv.textContent = msg;
+  chat.appendChild(userDiv);
+  input.value = '';
+
+  setTimeout(() => {
+    const lower = msg.toLowerCase();
+    let matched = null;
+    for (const sym of symptomMap) {
+      if (sym.keywords.some(k => lower.includes(k))) { matched = sym; break; }
+    }
+    const botDiv = document.createElement('div');
+    botDiv.className = 'ai-msg bot';
+    if (matched) {
+      botDiv.innerHTML = `${matched.icon} Based on your symptoms, I recommend visiting our <strong>${matched.dept}</strong> department.<br><br>${matched.reason}<br><br>📅 <a href="appointments.html" style="color:var(--teal)">Click here to book an appointment →</a>`;
+    } else {
+      botDiv.innerHTML = `I'd recommend visiting our general check-up clinic for a thorough examination. Our expert dentists will assess your concern and guide you to the right specialist.<br><br>📅 <a href="appointments.html" style="color:var(--teal)">Book an appointment →</a>`;
+    }
+    chat.appendChild(botDiv);
+    chat.scrollTop = chat.scrollHeight;
+  }, 600);
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+document.getElementById('aiInput')?.addEventListener('keypress', e => {
+  if (e.key === 'Enter') sendAIMessage();
+});
+
+const observer2 = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) { entry.target.classList.add('visible'); observer2.unobserve(entry.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.animate-on-scroll').forEach(el => observer2.observe(el));
+
+const storySteps = Array.from(document.querySelectorAll('[data-story-step]'));
+const storySlides = Array.from(document.querySelectorAll('[data-story-slide]'));
+
+function activateStoryStep(idx) {
+  storySteps.forEach((step, i) => step.classList.toggle('active', i === idx));
+  storySlides.forEach((slide, i) => slide.classList.toggle('active', i === idx));
+}
+
+storySteps.forEach((step, idx) => {
+  step.addEventListener('click', () => activateStoryStep(idx));
+});
+
+if ('IntersectionObserver' in window && storySteps.length) {
+  const storyObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const idx = Number(entry.target.dataset.storyStep || 0);
+        activateStoryStep(idx);
+      }
+    });
+  }, { threshold: 0.65 });
+  storySteps.forEach((step) => storyObserver.observe(step));
+}
+</script>
+<script>
+// Backend Data Fetching replacing Mock Data
+async function loadDynamicContent() {
+  try {
+    // 1. Fetch Stats
+    const stRes = await fetch('/api/public/stats');
+    const stData = await stRes.json();
+    if(stData.ok) {
+      document.getElementById('dynamicStatsGrid').innerHTML = stData.data.map(s => 
+        `<div class="stat-item">
+          <div class="stat-number animate-on-scroll visible" data-target="${s.value}" data-suffix="${s.suffix}">${s.value}${s.suffix}</div>
+          <div class="stat-label">${s.label}</div>
+        </div>`
+      ).join('');
+    }
+
+    // 2. Fetch Achievements
+    const acRes = await fetch('/api/public/achievements');
+    const acData = await acRes.json();
+    if(acData.ok) {
+      const track = document.getElementById('dynamicAchievementsTrack');
+      const items = acData.data.map(a => `<div class="achievement-item"><span class="achievement-icon">${a.icon}</span> ${a.text}</div>`).join('');
+      // Duplicate for seamless infinite loop effect
+      track.innerHTML = items + items;
+    }
+
+    // 3. Fetch Circulars (News)
+    const newsRes = await fetch('/api/public/circulars');
+    const newsData = await newsRes.json();
+    if(newsData.ok) {
+      const newsContainer = document.getElementById('newsListContainer');
+      newsContainer.innerHTML = newsData.data.slice(0, 4).map(n => `
+        <div class="news-item">
+          <div class="news-img">${n.category === 'Achievement' ? '🏆' : (n.category === 'Academic' ? '🔬' : '📰')}</div>
+          <div>
+            <div class="news-meta">${new Date(n.date).toLocaleDateString(undefined, {month:'long', day:'numeric', year:'numeric'})} · ${n.category}</div>
+            <div class="news-title">${n.title}</div>
+            <p style="font-size:0.82rem;">Official announcement from RRDCH administration.</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 4. Fetch Events
+    const evRes = await fetch('/api/public/events');
+    const evData = await evRes.json();
+    if(evData.ok) {
+      const evContainer = document.getElementById('eventsListContainer');
+      evContainer.innerHTML = evData.data.slice(0, 5).map(e => {
+        const d = new Date(e.date);
+        const day = d.getDate();
+        const mon = d.toLocaleString('en-us', { month: 'short' }).toUpperCase();
+        return `
+          <div class="event-item">
+            <div class="event-date-block">
+              <div class="event-day">${day}</div>
+              <div class="event-mon">${mon}</div>
+            </div>
+            <div class="event-info">
+              <h4>${e.title}</h4>
+              <p>${e.venue || 'RRDCH Campus'}</p>
+              <span class="badge ${e.type === 'academic' ? 'badge-navy' : 'badge-info'}" style="margin-top:0.3rem;">${e.type.toUpperCase()}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  } catch(e) { console.error("Error loading backend content", e); }
+}
+
+// Additional Scroll & Parallax Logic (Dynamic UI)
+window.addEventListener('scroll', () => {
+  const scrolled = window.pageYOffset;
+  const heroBg = document.querySelector('.hero-bg');
+  if (heroBg) {
+    heroBg.style.transform = `translateY(${scrolled * 0.4}px)`; // subtle parallax
+  }
+});
+
+// Run
+loadDynamicContent();
+
+// Initialize Home Map
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    const coords = [12.9279, 77.4713];
+    window.idxMap = L.map('indexMap').setView(coords, 14);
+
+    fetch('/api/public/config')
+      .then(r => r.json())
+      .then(cfg => {
+        const key = cfg?.data?.maptilerApiKey || '';
+        if (key) {
+          L.tileLayer(`https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=${encodeURIComponent(key)}`, {
+            attribution: '&copy; MapTiler &copy; OpenStreetMap contributors'
+          }).addTo(window.idxMap);
+        } else {
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+          }).addTo(window.idxMap);
+        }
+      })
+      .catch(() => {
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(window.idxMap);
+      });
+
+    const hospitalIcon = L.icon({
+      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      shadowSize: [41, 41]
+    });
+
+    L.marker(coords, {icon: hospitalIcon}).addTo(window.idxMap)
+      .bindPopup("<b>RRDCH Campus</b><br>Mysore Road")
+      .openPopup();
+  } catch(e) { console.error("Leaflet init error", e); }
+});
+
+function requestRouteIndex() {
+  const btn = document.getElementById('indexRouteBtn');
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+  btn.disabled = true;
+
+  if (!navigator.geolocation) {
+    showToast("Geolocation is not supported by your browser", "error");
+    btn.innerHTML = '<i class="fas fa-location-arrow"></i> Get Route';
+    btn.disabled = false;
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const userCoords = [position.coords.latitude, position.coords.longitude];
+      showToast("Location found! Plotting shortest route...", "success");
+      
+      if (window.routeControlIdx) window.idxMap.removeControl(window.routeControlIdx);
+
+      window.routeControlIdx = L.Routing.control({
+        waypoints: [
+          L.latLng(userCoords[0], userCoords[1]),
+          L.latLng(12.9279, 77.4713)
+        ],
+        routeWhileDragging: false,
+        addWaypoints: false,
+        show: false, // Don't show step-by-step box on homepage
+        lineOptions: { styles: [{color: '#2E86AB', opacity: 0.8, weight: 6}] },
+        createMarker: function(i, wp) {
+          return L.marker(wp.latLng, { draggable: false }).bindPopup(i === 0 ? "<b>Your Location</b>" : "<b>RRDCH Campus</b>");
+        }
+      }).addTo(window.idxMap);
+
+      btn.style.display = 'none';
+    },
+    (error) => {
+      console.error(error);
+      showToast("Error locating you. Please allow location permissions.", "error");
+      btn.innerHTML = '<i class="fas fa-location-arrow"></i> Get Route';
+      btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+  );
+}
+</script>
+</body>
+</html>

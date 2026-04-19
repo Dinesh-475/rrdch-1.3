@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal — RRDCH</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    .attendance-bar-wrap { margin-bottom: 1.25rem; padding: 1rem; background: var(--bg); border-radius: var(--radius-md); border: 1px solid var(--border); }
+    .attendance-subject { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
+    .att-num { font-weight: 700; font-size: 0.9rem; }
+    .complaint-status { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .calendar-mini { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .cal-cell { width: 100%; aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; }
+    .cal-cell.present { background: rgba(39,174,96,0.15); color: var(--success); }
+    .cal-cell.absent { background: rgba(231,76,60,0.12); color: var(--danger); }
+    .cal-cell.holiday { background: rgba(52,152,219,0.1); color: var(--info); }
+    .cal-cell.empty { opacity: 0; }
+    .fee-row { display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+    .fee-row:last-child { border: none; }
+    .fee-hero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .fee-card {
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.35rem;
+      background: linear-gradient(145deg, rgba(27,58,107,0.07) 0%, rgba(46,134,171,0.05) 100%);
+      border: 1px solid rgba(27,58,107,0.12);
+      box-shadow: var(--shadow-card);
+      position: relative;
+      overflow: hidden;
+    }
+    .fee-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--teal));
+      opacity: 0.85;
+    }
+    .fee-card.is-paid::before { background: linear-gradient(90deg, var(--success), #1e8449); }
+    .fee-card.is-due::before { background: linear-gradient(90deg, var(--warning), #c0392b); }
+    .fee-card h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.35rem; }
+    .fee-card .amt { font-family: var(--font-heading); font-size: 1.65rem; font-weight: 700; color: var(--navy); }
+    .att-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .att-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.25rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .att-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+    .att-ring {
+      --pct: 0;
+      width: 86px; height: 86px; border-radius: 50%; flex-shrink: 0;
+      background: conic-gradient(var(--ring-color, var(--teal)) calc(var(--pct) * 1%), rgba(0,0,0,0.08) 0);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .att-ring-inner {
+      width: 62px; height: 62px; border-radius: 50%; background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.95rem; color: var(--navy);
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .att-meta { flex: 1; min-width: 0; }
+    .att-meta .sn { font-weight: 600; font-size: 0.88rem; color: var(--text); line-height: 1.3; }
+    .att-meta .sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" style="top:0;">
+  <div class="navbar-inner">
+    <a href="../index.html" class="navbar-brand">
+      <img src="../assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text">
+        <div class="navbar-brand-name">RRDCH Student Portal</div>
+        <div class="navbar-brand-sub">Rajarajeswari Dental College & Hospital</div>
+      </div>
+    </a>
+    <div class="navbar-actions">
+      <button class="dark-toggle" id="darkToggle">🌙</button>
+      <button class="btn btn-sm" style="background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.3);color:#c0392b;" onclick="logout()">🚪 Logout</button>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<div class="portal-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div style="width:44px;height:44px;background:rgba(200,169,81,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:0.75rem;">🎓</div>
+      <div class="sidebar-user-name" id="sidebarName">Loading...</div>
+      <div class="sidebar-user-role">BDS Student</div>
+      <div style="font-size:0.72rem;color:rgba(255,255,255,0.4);margin-top:0.2rem;" id="sidebarId"></div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Main</div>
+      <a class="sidebar-item active" onclick="showPanel('dashboard', this)"><i class="fas fa-home"></i> Dashboard</a>
+      <a class="sidebar-item" onclick="showPanel('attendance', this)"><i class="fas fa-calendar-check"></i> Attendance</a>
+      <a class="sidebar-item" onclick="showPanel('results', this)"><i class="fas fa-chart-bar"></i> Results & Marks</a>
+      <a class="sidebar-item" onclick="showPanel('fees', this)"><i class="fas fa-rupee-sign"></i> Fee Payment</a>
+      <div class="sidebar-section">Academic</div>
+      <a class="sidebar-item" onclick="showPanel('timetable', this)"><i class="fas fa-clock"></i> Timetable</a>
+      <a class="sidebar-item" onclick="showPanel('syllabus', this)"><i class="fas fa-book"></i> Syllabus</a>
+      <div class="sidebar-section">Campus</div>
+      <a class="sidebar-item" onclick="showPanel('hostel', this)"><i class="fas fa-building"></i> Hostel Complaints</a>
+      <a class="sidebar-item" onclick="showPanel('notifications', this)"><i class="fas fa-bell"></i> Notifications</a>
+      <div class="sidebar-section">Account</div>
+      <a class="sidebar-item" href="../index.html"><i class="fas fa-globe"></i> Main Website</a>
+      <a class="sidebar-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="portal-main">
+
+    <!-- DASHBOARD -->
+    <div id="panel-dashboard">
+      <div class="portal-header">
+        <h1>Good morning, <span id="studentFirstName">Student</span>! 👋</h1>
+        <p>Academic Year 2025–26 · BDS Year 3 · Section A</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon navy"><i class="fas fa-calendar-check" style="color:var(--navy);font-size:1.3rem;"></i></div>
+          <div>
+            <div class="kpi-num" id="kpiOverallAtt">—</div>
+            <div class="kpi-label">Overall Attendance</div>
+            <div class="kpi-change up" id="kpiAttHint">Live from MIS</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon gold"><i class="fas fa-star" style="color:var(--gold);font-size:1.3rem;"></i></div>
+          <div>
+            <div class="kpi-num" id="kpiCGPA">—</div>
+            <div class="kpi-label">Est. CGPA (Sem 4)</div>
+            <div class="kpi-change up" id="kpiCgpaHint">From results API</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon success"><i class="fas fa-check-circle" style="color:var(--success);font-size:1.3rem;"></i></div>
+          <div>
+            <div class="kpi-num" id="kpiFeePending">—</div>
+            <div class="kpi-label">Pending fee heads</div>
+            <div class="kpi-change up" id="kpiFeeHint">Fees module</div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon danger"><i class="fas fa-exclamation-triangle" style="color:var(--danger);font-size:1.3rem;"></i></div>
+          <div>
+            <div class="kpi-num" id="kpiLowSubj">—</div>
+            <div class="kpi-label">Subjects below 75%</div>
+            <div class="kpi-change down" id="kpiLowHint">Attendance rules</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="dashboardAttAlert" class="alert alert-info" style="margin-bottom:1.5rem;">
+        <span>📊</span>
+        <div id="dashboardAttAlertBody">Loading attendance summary…</div>
+      </div>
+
+      <div class="grid-2" style="gap:1.5rem;">
+        <div class="chart-card">
+          <div class="chart-header"><h3>Attendance Overview</h3></div>
+          <canvas id="attendanceChart" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><h3>Semester Performance</h3></div>
+          <canvas id="performanceChart" height="220"></canvas>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <h3 style="margin-bottom:1rem;color:var(--text);">📅 Today's Schedule</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Time</th><th>Subject</th><th>Type</th><th>Faculty</th><th>Room</th></tr></thead>
+            <tbody>
+              <tr><td>9:00–10:00 AM</td><td>Oral Medicine & Radiology</td><td><span class="badge badge-info">Lecture</span></td><td>Dr. Shobha Hebbale</td><td>LH-2</td></tr>
+              <tr><td>10:00–11:00 AM</td><td>Conservative Dentistry</td><td><span class="badge badge-info">Lecture</span></td><td>Dr. Meenakshi Rao</td><td>LH-1</td></tr>
+              <tr><td>11:00 AM–1:00 PM</td><td>Clinic Posting — Endodontics</td><td><span class="badge badge-success">Clinical</span></td><td>Dr. Meenakshi Rao</td><td>Clinic-2</td></tr>
+              <tr><td>2:00–4:00 PM</td><td>Oral Pathology Lab</td><td><span class="badge badge-warning">Practical</span></td><td>Dr. Venkataraman</td><td>Path Lab</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTENDANCE -->
+    <div id="panel-attendance" class="hidden">
+      <div class="portal-header">
+        <h1>Attendance</h1>
+        <p>Live subject-wise attendance from the MIS — same data as your eligibility checks.</p>
+      </div>
+
+      <div id="attendanceAlerts"></div>
+
+      <div class="card mb-3">
+        <h3 style="margin-bottom:1rem;color:var(--text);">At a glance</h3>
+        <div class="att-showcase" id="attShowcase"></div>
+      </div>
+
+      <div class="card mb-3">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:0.75rem;">
+          <h3 style="color:var(--text);margin:0;">Subject detail</h3>
+          <button type="button" class="btn btn-sm btn-navy" onclick="downloadAttendancePDF()">⬇ Download PDF</button>
+        </div>
+        <div id="attendanceBars"></div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:1rem;color:var(--text);">Monthly calendar</h3>
+        <div style="margin-bottom:0.75rem;">
+          <label class="form-label" style="display:inline-block;margin-right:0.5rem;">Month</label>
+          <input type="month" class="form-control" id="attCalMonth" style="max-width:200px;display:inline-block;vertical-align:middle;" onchange="window.studentReloadCalendar && window.studentReloadCalendar(this.value)">
+        </div>
+        <div id="attendanceCalendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:0.25rem;text-align:center;"></div>
+        <div style="display:flex;gap:1.5rem;margin-top:1rem;font-size:0.78rem;flex-wrap:wrap;">
+          <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:12px;height:12px;background:rgba(39,174,96,0.2);border-radius:3px;display:inline-block;"></span> Present</span>
+          <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:12px;height:12px;background:rgba(231,76,60,0.15);border-radius:3px;display:inline-block;"></span> Absent</span>
+          <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:12px;height:12px;background:rgba(52,152,219,0.15);border-radius:3px;display:inline-block;"></span> Holiday</span>
+          <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:12px;height:12px;background:rgba(230,126,34,0.15);border-radius:3px;display:inline-block;"></span> Medical Leave</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div id="panel-results" class="hidden">
+      <div class="portal-header">
+        <h1>📝 Results & Marks</h1>
+        <p>Semester-wise academic performance for BDS Year 3</p>
+      </div>
+      <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;">
+        <select class="form-control" style="max-width:200px;" onchange="loadSemester(this.value)">
+          <option value="5">Semester 5 (Current)</option>
+          <option value="4">Semester 4</option>
+          <option value="3">Semester 3</option>
+          <option value="2">Semester 2</option>
+          <option value="1">Semester 1</option>
+        </select>
+        <button class="btn btn-sm btn-navy" onclick="showToast('Downloading marksheet...','success')">⬇ Download Marksheet</button>
+      </div>
+      <div class="card mb-3">
+        <div class="table-wrap">
+          <table class="table" id="marksTable">
+            <thead><tr><th>Subject</th><th>Internal (40)</th><th>External (60)</th><th>Total (100)</th><th>Grade</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>Conservative Dentistry & Endodontics</td><td>34</td><td>52</td><td>86</td><td style="color:var(--success);font-weight:700;">A+</td><td><span class="badge badge-success">Pass</span></td></tr>
+              <tr><td>Oral Medicine & Radiology</td><td>36</td><td>55</td><td>91</td><td style="color:var(--success);font-weight:700;">O</td><td><span class="badge badge-success">Pass</span></td></tr>
+              <tr><td>Periodontology</td><td>32</td><td>48</td><td>80</td><td style="color:var(--success);font-weight:700;">A</td><td><span class="badge badge-success">Pass</span></td></tr>
+              <tr><td>Orthodontics</td><td>30</td><td>44</td><td>74</td><td style="color:var(--warning);font-weight:700;">B+</td><td><span class="badge badge-success">Pass</span></td></tr>
+              <tr><td>Public Health Dentistry</td><td>31</td><td>46</td><td>77</td><td style="color:var(--success);font-weight:700;">A</td><td><span class="badge badge-success">Pass</span></td></tr>
+              <tr><td>Oral Pathology & Microbiology</td><td>28</td><td>43</td><td>71</td><td style="color:var(--warning);font-weight:700;">B</td><td><span class="badge badge-success">Pass</span></td></tr>
+            </tbody>
+            <tfoot>
+              <tr style="background:rgba(27,58,107,0.05);">
+                <td style="font-weight:700;color:var(--text);">Total</td>
+                <td style="font-weight:700;">191/240</td>
+                <td style="font-weight:700;">288/360</td>
+                <td style="font-weight:700;">479/600</td>
+                <td style="font-weight:700;color:var(--success);">A (7.8 CGPA)</td>
+                <td><span class="badge badge-success">Passed</span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="grid-2" style="gap:1rem;">
+        <div class="card" style="text-align:center;">
+          <div style="font-family:var(--font-heading);font-size:3rem;color:var(--navy);font-weight:700;">7.8</div>
+          <div style="font-size:0.85rem;color:var(--muted);">Current CGPA</div>
+          <div style="font-size:0.78rem;color:var(--success);margin-top:0.3rem;">↑ 0.2 from last semester</div>
+        </div>
+        <div class="card" style="text-align:center;">
+          <div style="font-family:var(--font-heading);font-size:3rem;color:var(--teal);font-weight:700;">#12</div>
+          <div style="font-size:0.85rem;color:var(--muted);">Class Rank out of 100</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-top:0.3rem;">Section A · BDS Year 3</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEES -->
+    <div id="panel-fees" class="hidden">
+      <div class="portal-header">
+        <h1>Fee management</h1>
+        <p>Live fee heads from the finance module — pay pending items securely.</p>
+      </div>
+      <div id="feeAlertBox"></div>
+      <div class="fee-hero-grid" id="feeCards"></div>
+      <div class="card">
+        <h3 style="margin-bottom:1.25rem;color:var(--text);">Ledger &amp; receipts</h3>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Fee type</th><th>Sem</th><th>Amount</th><th>Due</th><th>Status</th><th>Receipt</th><th></th></tr></thead>
+            <tbody id="feeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIMETABLE -->
+    <div id="panel-timetable" class="hidden">
+      <div class="portal-header"><h1>📅 Weekly Timetable</h1><p>BDS Year 3 · Section A · 2025–26</p></div>
+      <div class="card">
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th></tr></thead>
+            <tbody>
+              <tr>
+                <td style="font-weight:600;white-space:nowrap;">9–10 AM</td>
+                <td>Oral Medicine (LH-1)</td><td>Periodontology (LH-2)</td><td>Oral Path (LH-1)</td><td>Conservative (LH-2)</td><td>PH Dentistry (LH-3)</td><td>Orthodontics (LH-1)</td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;white-space:nowrap;">10–11 AM</td>
+                <td>Conservative (LH-2)</td><td>Orthodontics (LH-1)</td><td>Periodontology (LH-3)</td><td>Oral Medicine (LH-1)</td><td>Conservative (LH-2)</td><td>Oral Path (LH-1)</td>
+              </tr>
+              <tr style="background:rgba(39,174,96,0.04);">
+                <td style="font-weight:600;white-space:nowrap;">11 AM–1 PM</td>
+                <td colspan="2" style="background:rgba(46,134,171,0.06);text-align:center;color:var(--teal);font-weight:500;">Clinic Posting — Endodontics (Clinic 2)</td>
+                <td colspan="2" style="background:rgba(46,134,171,0.06);text-align:center;color:var(--teal);font-weight:500;">Clinic Posting — Perio (Clinic 5)</td>
+                <td colspan="2" style="background:rgba(46,134,171,0.06);text-align:center;color:var(--teal);font-weight:500;">Oral Radiology Clinic (Clinic 7)</td>
+              </tr>
+              <tr style="background:rgba(230,126,34,0.03);">
+                <td style="font-weight:600;white-space:nowrap;">1–2 PM</td>
+                <td colspan="6" style="text-align:center;color:var(--muted);">— Lunch Break —</td>
+              </tr>
+              <tr>
+                <td style="font-weight:600;white-space:nowrap;">2–4 PM</td>
+                <td>Oral Path Lab (PL)</td><td>Conservative Lab (DL)</td><td>Orthodontics Seminars (LH-2)</td><td>PH Practicals (PL)</td><td>Perio Lab (Clinic 5)</td><td>Sports / Extra-Curricular</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYLLABUS -->
+    <div id="panel-syllabus" class="hidden">
+      <div class="portal-header"><h1>📚 Syllabus</h1><p>RGUHS Curriculum — BDS Programme</p></div>
+      <div class="grid-2" style="gap:1.5rem;" id="syllabusGrid"></div>
+    </div>
+
+    <!-- HOSTEL COMPLAINTS -->
+    <div id="panel-hostel" class="hidden">
+      <div class="portal-header"><h1>🏠 Hostel Complaints</h1><p>Submit and track hostel-related issues</p></div>
+      <div class="grid-2" style="gap:1.5rem;align-items:start;">
+        <div class="card">
+          <h3 style="color:var(--text);margin-bottom:1.5rem;">Submit New Complaint</h3>
+          <div class="form-group">
+            <label class="form-label">Room Number</label>
+            <input class="form-control" id="hostelRoom" placeholder="e.g. B-204 (Boys Hostel)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-control" id="hostelCategory">
+              <option>Plumbing / Water</option>
+              <option>Electrical</option>
+              <option>Food / Canteen</option>
+              <option>Security / Safety</option>
+              <option>WiFi / Internet</option>
+              <option>Cleanliness</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" id="hostelDescription" rows="4" placeholder="Describe the issue in detail..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Urgency</label>
+            <select class="form-control" id="hostelUrgency">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Attach Photo (optional)</label>
+            <input type="file" class="form-control" accept="image/*">
+          </div>
+          <button class="btn btn-navy w-full" onclick="submitHostelComplaint()">📤 Submit Complaint</button>
+        </div>
+        <div>
+          <div class="card mb-2">
+            <h3 style="color:var(--text);margin-bottom:1rem;">My Complaints History</h3>
+            <div id="studentComplaintHistory" style="display:flex;flex-direction:column;gap:0.85rem;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div id="panel-notifications" class="hidden">
+      <div class="portal-header"><h1>🔔 Notifications</h1><p>Important college announcements and alerts</p></div>
+      <div style="display:flex;flex-direction:column;gap:1rem;" id="notifFeed"></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../assets/js/auth.js"></script>
+<script src="../assets/js/main.js"></script>
+<script>
+const user = guardPage('student');
+if (user) {
+  document.getElementById('sidebarName').textContent = user.name;
+  document.getElementById('sidebarId').textContent = user.id;
+  document.getElementById('studentFirstName').textContent = user.name.split(' ')[0];
+}
+
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+
+function apiHeaders() {
+  const t = localStorage.getItem('rrdch_token');
+  return { Authorization: `Bearer ${t}`, 'Content-Type': 'application/json' };
+}
+
+function showPanel(name, el) {
+  document.querySelectorAll('[id^="panel-"]').forEach(p => p.classList.add('hidden'));
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.remove('hidden');
+  document.querySelectorAll('.sidebar-nav .sidebar-item').forEach(i => i.classList.remove('active'));
+  if (el && el.classList) el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+let studentAttRows = [];
+let attendanceChartInstance = null;
+let performanceChartInstance = null;
+
+function fmtInr(n) {
+  const x = Number(n);
+  if (Number.isNaN(x)) return '—';
+  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(x);
+}
+
+function classesNeeded(pct, attended, total) {
+  if (pct >= 75 || total <= 0) return 0;
+  return Math.max(0, Math.ceil(0.75 * total - attended));
+}
+
+function renderAttendanceAlerts(container, rows) {
+  const crit = rows.filter(r => Number(r.percentage) < 65);
+  const warn = rows.filter(r => {
+    const p = Number(r.percentage);
+    return p >= 65 && p < 75;
+  });
+  const parts = [];
+  crit.forEach(r => {
+    parts.push(`<div class="alert alert-danger"><span>🚨</span><div><strong>Critical:</strong> <strong>${r.name}</strong> is at ${r.percentage}% — below the 75% exam eligibility rule. Contact the HOD.</div></div>`);
+  });
+  warn.forEach(r => {
+    const need = classesNeeded(Number(r.percentage), Number(r.attended), Number(r.total));
+    parts.push(`<div class="alert alert-warning"><span>⚠️</span><div><strong>Warning:</strong> ${r.name} is ${r.percentage}% — about ${need} more class(es) to reach 75%.</div></div>`);
+  });
+  if (!parts.length) {
+    parts.push(`<div class="alert alert-success"><span>✅</span><div><strong>On track:</strong> No subject is in the critical or warning band on recorded classes.</div></div>`);
+  }
+  container.innerHTML = parts.join('');
+}
+
+function renderDashboardAlert(rows) {
+  const el = document.getElementById('dashboardAttAlert');
+  const body = document.getElementById('dashboardAttAlertBody');
+  if (!el || !body) return;
+  if (!rows.length) {
+    el.className = 'alert alert-info';
+    body.textContent = 'No attendance records for your cohort yet.';
+    return;
+  }
+  const worst = [...rows].sort((a, b) => Number(a.percentage) - Number(b.percentage))[0];
+  const p = Number(worst.percentage);
+  if (p < 65) {
+    el.className = 'alert alert-danger';
+    body.innerHTML = `<strong>Attendance alert:</strong> Lowest subject is <strong>${worst.name}</strong> at ${worst.percentage}% — action required for exam eligibility.`;
+  } else if (p < 75) {
+    const need = classesNeeded(p, Number(worst.attended), Number(worst.total));
+    el.className = 'alert alert-warning';
+    body.innerHTML = `<strong>Heads-up:</strong> <strong>${worst.name}</strong> is ${worst.percentage}%. Aim for ~${need} more class(es) to reach 75%.`;
+  } else {
+    el.className = 'alert alert-success';
+    body.innerHTML = `<strong>Looking good:</strong> All tracked subjects are at or above 75% on recorded classes.`;
+  }
+}
+
+function renderAttShowcase(rows) {
+  const el = document.getElementById('attShowcase');
+  if (!el) return;
+  if (!rows.length) {
+    el.innerHTML = '<p style="color:var(--muted);">No attendance rows yet.</p>';
+    return;
+  }
+  el.innerHTML = rows.map((r) => {
+    const pct = Math.min(100, Math.max(0, Number(r.percentage) || 0));
+    const col = pct >= 75 ? 'var(--success)' : pct >= 65 ? 'var(--warning)' : 'var(--danger)';
+    const code = r.code ? r.code + ' · ' : '';
+    return `<div class="att-card">
+      <div class="att-ring" style="--pct:${pct};--ring-color:${col};">
+        <div class="att-ring-inner">${pct}%</div>
+      </div>
+      <div class="att-meta">
+        <div class="sn">${r.name || 'Subject'}</div>
+        <div class="sub">${code}${Number(r.attended) || 0} / ${Number(r.total) || 0} classes · credits ${r.credits != null ? r.credits : '—'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAttendanceBars(rows) {
+  const el = document.getElementById('attendanceBars');
+  if (!el) return;
+  if (!rows.length) {
+    el.innerHTML = '<p style="color:var(--muted);">No rows to show.</p>';
+    return;
+  }
+  el.innerHTML = rows.map((s) => {
+    const pct = Math.min(100, Math.max(0, Number(s.percentage) || 0));
+    const att = Number(s.attended) || 0;
+    const held = Number(s.total) || 0;
+    const need = classesNeeded(pct, att, held);
+    const badge = pct >= 75 ? 'success' : pct >= 65 ? 'warning' : 'danger';
+    const lbl = pct >= 75 ? 'Safe' : pct >= 65 ? 'Watch' : 'At risk';
+    const nc = pct >= 75 ? 'var(--success)' : pct >= 65 ? 'var(--warning)' : 'var(--danger)';
+    return `
+  <div class="attendance-bar-wrap">
+    <div class="attendance-subject">
+      <span style="font-weight:500;font-size:0.9rem;color:var(--text);">${s.name}</span>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <span class="att-num" style="color:${nc}">${pct}%</span>
+        <span class="badge badge-${badge}">${lbl}</span>
+      </div>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem;">${att} / ${held} classes recorded</div>
+    <div class="progress"><div class="progress-bar progress-${badge}" style="width:${pct}%;"></div></div>
+    ${pct < 75 ? `<div style="font-size:0.75rem;color:var(--danger);margin-top:0.4rem;">~${need} more class(es) to reach 75% (estimate)</div>` : ''}
+  </div>`;
+  }).join('');
+}
+
+function renderAttendanceCalendar(monthStr, dayRows) {
+  const calEl = document.getElementById('attendanceCalendar');
+  if (!calEl) return;
+  const [y, m] = monthStr.split('-').map(Number);
+  const first = new Date(y, m - 1, 1);
+  const startPad = first.getDay();
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const map = {};
+  (dayRows || []).forEach(r => {
+    if (r.date) map[String(r.date).slice(0, 10)] = r.status;
+  });
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  let html = days.map(d => `<div style="font-size:0.68rem;font-weight:600;color:var(--muted);padding:0.3rem;">${d}</div>`).join('');
+  for (let i = 0; i < startPad; i++) html += '<div></div>';
+  for (let day = 1; day <= daysInMonth; day++) {
+    const iso = `${y}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const st = map[iso];
+    if (!st) {
+      html += `<div style="padding:0.35rem;font-size:0.72rem;color:var(--muted);opacity:0.55;border-radius:4px;">${day}</div>`;
+      continue;
+    }
+    let bg = 'rgba(39,174,96,0.12)';
+    let col = 'var(--success)';
+    let sym = String(day);
+    if (st === 'A') { bg = 'rgba(231,76,60,0.12)'; col = 'var(--danger)'; }
+    else if (st === 'H' || st === 'holiday') { bg = 'rgba(52,152,219,0.12)'; col = 'var(--info)'; sym = 'H'; }
+    html += `<div style="padding:0.35rem;font-size:0.72rem;background:${bg};color:${col};border-radius:4px;font-weight:600;">${sym}</div>`;
+  }
+  calEl.innerHTML = html;
+}
+
+function renderFeesUI(fees) {
+  const box = document.getElementById('feeAlertBox');
+  const cards = document.getElementById('feeCards');
+  const tbody = document.getElementById('feeTableBody');
+  if (!cards || !tbody) return;
+  const pending = fees.filter(f => String(f.status || '').toLowerCase() !== 'paid');
+  const paid = fees.filter(f => String(f.status || '').toLowerCase() === 'paid');
+  const pendSum = pending.reduce((s, f) => s + (Number(f.amount) || 0), 0);
+  const paidSum = paid.reduce((s, f) => s + (Number(f.amount) || 0), 0);
+  if (box) {
+    if (pending.length) {
+      box.innerHTML = `<div class="alert alert-warning"><span>💳</span><div><strong>${pending.length} fee head(s)</strong> pending (${fmtInr(pendSum)}). Pay before due dates.</div></div>`;
+    } else {
+      box.innerHTML = `<div class="alert alert-success"><span>✅</span><div><strong>All recorded fees are paid.</strong> Settled total: ${fmtInr(paidSum)}.</div></div>`;
+    }
+  }
+  const cardHtml = [
+    ...pending.map(f => `<div class="fee-card is-due"><h4>${f.fee_type || 'Fee'} · Sem ${f.semester != null ? f.semester : '—'}</h4><div class="amt">${fmtInr(f.amount)}</div><div style="font-size:0.8rem;color:var(--muted);margin-top:0.35rem;">Due ${f.due_date || '—'}</div>
+      <button type="button" class="btn btn-sm btn-teal" style="margin-top:0.75rem;" onclick="payStudentFee(${f.id})">Pay now</button></div>`),
+    ...paid.map(f => `<div class="fee-card is-paid"><h4>${f.fee_type || 'Fee'} · Sem ${f.semester != null ? f.semester : '—'}</h4><div class="amt">${fmtInr(f.amount)}</div><div style="font-size:0.8rem;color:var(--muted);margin-top:0.35rem;">Paid ${f.paid_date || '—'} · ${f.receipt_no || '—'}</div></div>`),
+  ].join('');
+  cards.innerHTML = cardHtml || '<p style="color:var(--muted);">No fee rows.</p>';
+  tbody.innerHTML = fees.length ? fees.map(f => {
+    const isPaid = String(f.status || '').toLowerCase() === 'paid';
+    return `<tr>
+      <td>${f.fee_type || '—'}</td>
+      <td>${f.semester != null ? f.semester : '—'}</td>
+      <td>${fmtInr(f.amount)}</td>
+      <td>${f.due_date || '—'}</td>
+      <td><span class="badge badge-${isPaid ? 'success' : 'warning'}">${String(f.status || '').toUpperCase() || '—'}</span></td>
+      <td>${f.receipt_no || '—'}</td>
+      <td>${isPaid ? '—' : `<button type="button" class="btn btn-sm btn-navy" onclick="payStudentFee(${f.id})">Pay</button>`}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="7" style="color:var(--muted);">No fees on file.</td></tr>';
+}
+
+window.payStudentFee = async function (feeId) {
+  try {
+    const res = await fetch(`${API_BASE}/student/fees/pay`, { method: 'POST', headers: apiHeaders(), body: JSON.stringify({ fee_id: feeId }) });
+    const j = await res.json();
+    if (!j.ok) throw new Error(j.msg || 'Payment failed');
+    showToast(j.msg || 'Paid', 'success');
+    await bootstrapStudentPortal();
+  } catch (e) {
+    showToast(e.message || 'Payment error', 'error');
+  }
+};
+
+window.studentReloadCalendar = async function (monthStr) {
+  const token = localStorage.getItem('rrdch_token');
+  if (!token) return;
+  try {
+    const res = await fetch(`${API_BASE}/student/attendance/calendar?month=${encodeURIComponent(monthStr)}`, { headers: apiHeaders() });
+    const j = await res.json();
+    renderAttendanceCalendar(monthStr, j.ok ? j.data : []);
+  } catch (_) {}
+};
+
+async function bootstrapStudentPortal() {
+  const token = localStorage.getItem('rrdch_token');
+  if (!token) return;
+  try {
+    const month = (document.getElementById('attCalMonth') && document.getElementById('attCalMonth').value) || new Date().toISOString().slice(0, 7);
+    const [attRes, feeRes, marksRes, calRes] = await Promise.all([
+      fetch(`${API_BASE}/student/attendance`, { headers: apiHeaders() }),
+      fetch(`${API_BASE}/student/fees`, { headers: apiHeaders() }),
+      fetch(`${API_BASE}/student/results?semester=4`, { headers: apiHeaders() }),
+      fetch(`${API_BASE}/student/attendance/calendar?month=${encodeURIComponent(month)}`, { headers: apiHeaders() }),
+    ]);
+    const attJ = await attRes.json();
+    const feeJ = await feeRes.json();
+    const marksJ = await marksRes.json();
+    const calJ = await calRes.json();
+
+    const rows = attJ.ok ? (attJ.data || []) : [];
+    studentAttRows = rows.map(r => ({
+      sub: r.name,
+      held: Number(r.total) || 0,
+      att: Number(r.attended) || 0,
+      pct: Number(r.percentage) || 0,
+    }));
+
+    let sumT = 0;
+    let sumA = 0;
+    rows.forEach(r => {
+      sumT += Number(r.total) || 0;
+      sumA += Number(r.attended) || 0;
+    });
+    const overallPct = sumT ? Math.round(1000 * sumA / sumT) / 10 : 0;
+    const lowCnt = rows.filter(r => Number(r.percentage) < 75).length;
+
+    const kpiAtt = document.getElementById('kpiOverallAtt');
+    const kpiHint = document.getElementById('kpiAttHint');
+    if (kpiAtt) kpiAtt.textContent = sumT ? `${overallPct}%` : '—';
+    if (kpiHint) kpiHint.textContent = sumT ? `${sumA} / ${sumT} slots` : 'No attendance rows';
+
+    const kpiLow = document.getElementById('kpiLowSubj');
+    const kpiLowH = document.getElementById('kpiLowHint');
+    if (kpiLow) kpiLow.textContent = String(lowCnt);
+    if (kpiLowH) kpiLowH.textContent = 'Subjects under 75%';
+
+    const marks = marksJ.ok ? (marksJ.data || []) : [];
+    let cgpa = null;
+    if (marks.length) {
+      const pts = marks.map(m => Number(m.total) / 10);
+      cgpa = pts.reduce((a, b) => a + b, 0) / pts.length;
+    }
+    const kpiCg = document.getElementById('kpiCGPA');
+    const kpiCgH = document.getElementById('kpiCgpaHint');
+    if (kpiCg) kpiCg.textContent = cgpa != null ? cgpa.toFixed(1) : '—';
+    if (kpiCgH) kpiCgH.textContent = marks.length ? 'Semester 4 (est.)' : 'No marks';
+
+    const fees = feeJ.ok ? (feeJ.data || []) : [];
+    const pending = fees.filter(f => String(f.status || '').toLowerCase() !== 'paid');
+    const kpiFee = document.getElementById('kpiFeePending');
+    const kpiFeeH = document.getElementById('kpiFeeHint');
+    const pendingAmt = pending.reduce((s, f) => s + (Number(f.amount) || 0), 0);
+    if (kpiFee) kpiFee.textContent = String(pending.length);
+    if (kpiFeeH) kpiFeeH.textContent = pending.length ? `${fmtInr(pendingAmt)} outstanding` : 'All paid';
+
+    renderFeesUI(fees);
+    renderDashboardAlert(rows);
+    const attAl = document.getElementById('attendanceAlerts');
+    if (attAl) renderAttendanceAlerts(attAl, rows);
+    renderAttShowcase(rows);
+    renderAttendanceBars(rows);
+
+    const calMonthEl = document.getElementById('attCalMonth');
+    if (calMonthEl && !calMonthEl.value) calMonthEl.value = month;
+    renderAttendanceCalendar(calMonthEl ? calMonthEl.value : month, calJ.ok ? calJ.data : []);
+
+    const labels = rows.map(r => (r.code || r.name || 'Sub').slice(0, 14));
+    const barData = rows.map(r => Math.min(100, Number(r.percentage) || 0));
+    const bg = barData.map(p => (p >= 75 ? 'rgba(39,174,96,0.72)' : p >= 65 ? 'rgba(230,126,34,0.78)' : 'rgba(231,76,60,0.78)'));
+    const attCtx = document.getElementById('attendanceChart');
+    if (attCtx && typeof Chart !== 'undefined') {
+      if (attendanceChartInstance) attendanceChartInstance.destroy();
+      attendanceChartInstance = new Chart(attCtx, {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Attendance %', data: barData, backgroundColor: bg, borderRadius: 6 }] },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { min: 0, max: 100, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => v + '%' } },
+            x: { grid: { display: false }, ticks: { maxRotation: 40, font: { size: 10 } } },
+          },
+        },
+      });
+    }
+
+    const semCgpa = await Promise.all([1, 2, 3, 4, 5].map(async (sem) => {
+      const r = await fetch(`${API_BASE}/student/results?semester=${sem}`, { headers: apiHeaders() });
+      const j = await r.json();
+      const m = j.ok ? (j.data || []) : [];
+      if (!m.length) return null;
+      const pts = m.map(x => Number(x.total) / 10);
+      return pts.reduce((a, b) => a + b, 0) / pts.length;
+    }));
+    const perfCtx = document.getElementById('performanceChart');
+    if (perfCtx && typeof Chart !== 'undefined') {
+      if (performanceChartInstance) performanceChartInstance.destroy();
+      const lineData = semCgpa.map(v => (v == null ? null : Number(v.toFixed(2))));
+      performanceChartInstance = new Chart(perfCtx, {
+        type: 'line',
+        data: {
+          labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5'],
+          datasets: [{
+            label: 'Est. CGPA',
+            data: lineData,
+            borderColor: '#1B3A6B',
+            backgroundColor: 'rgba(27,58,107,0.08)',
+            pointBackgroundColor: '#1B3A6B',
+            pointRadius: 5,
+            tension: 0.35,
+            fill: true,
+            spanGaps: true,
+          }],
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { min: 0, max: 10, ticks: { stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } },
+            x: { grid: { display: false } },
+          },
+        },
+      });
+    }
+  } catch (e) {
+    console.error(e);
+    const body = document.getElementById('dashboardAttAlertBody');
+    if (body) body.textContent = 'Could not load MIS data. Ensure the app server is running (e.g. localhost:3000).';
+  }
+}
+
+// Syllabus
+const syllDat=[['Year 1 — BDS',['Anatomy','Physiology','Biochemistry']],['Year 2 — BDS',['Microbiology','Pathology','Pharmacology','Dental Materials']],['Year 3 — BDS',['Conservative','Oral Surgery','Orthodontics','Perio','Prosthodontics']],['Year 4 — BDS (Internship)',['Oral Medicine','Public Health','Clinical Rotation','Dissertation']]];
+document.getElementById('syllabusGrid').innerHTML = syllDat.map(([yr,subs]) =>
+  `<div class="card"><h3 style="color:var(--text);margin-bottom:1rem;">${yr}</h3><p style="font-size:0.875rem;margin-bottom:1rem;">Complete RGUHS syllabus for all subjects.</p><div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1rem;">${subs.map(s=>`<span class="badge badge-navy">${s}</span>`).join('')}</div><button class="btn btn-teal btn-sm" onclick="showToast('Downloading ${yr} PDF...','success')">⬇ Download Syllabus PDF</button></div>`
+).join('');
+
+// Notifications
+const notifs=[
+  { type:'danger', icon:'🚨', title:'Attendance Alert', msg:'Your Oral Pathology attendance has dropped to 64%. Exam eligibility at risk. Report to HOD.', time:'Today' },
+  { type:'info', icon:'📅', title:'Internal Exam Schedule Released', msg:'BDS Year 3 internal exams scheduled for April 25–30, 2026.', time:'Yesterday' },
+  { type:'success', icon:'💰', title:'Fee Payment Confirmed', msg:'Your Semester 2 fee payment of ₹1,08,000 has been received.', time:'3 days ago' },
+  { type:'warning', icon:'📢', title:'CDE Program Registration', msg:'Register for Advances in Implantology CDE program on April 20. Limited seats!', time:'4 days ago' },
+  { type:'info', icon:'📚', title:'Library Book Due', msg:'Textbook on Oral Surgery due for return by April 18. Late fee ₹5/day.', time:'5 days ago' },
+];
+document.getElementById('notifFeed').innerHTML = notifs.map(n =>
+  `<div class="alert alert-${n.type}"><span>${n.icon}</span><div style="flex:1;"><div style="font-weight:600;margin-bottom:0.2rem;">${n.title}</div><div style="font-size:0.875rem;">${n.msg}</div></div><div style="font-size:0.75rem;white-space:nowrap;">${n.time}</div></div>`
+).join('');
+
+window.addEventListener('DOMContentLoaded', () => {
+  bootstrapStudentPortal();
+});
+
+// PDF Generation Logic
+window.downloadAttendancePDF = function() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const u = getUser();
+
+  doc.setFontSize(20);
+  doc.text('RRDCH Student Attendance Report', 14, 22);
+
+  doc.setFontSize(12);
+  doc.text(`Student ID: ${u ? u.id : 'N/A'}`, 14, 32);
+  doc.text(`Date Generated: ${new Date().toLocaleDateString()}`, 14, 40);
+
+  const tableData = studentAttRows.map(s => [
+    s.sub,
+    s.held,
+    s.att,
+    `${s.pct}%`,
+    s.pct >= 75 ? 'OK' : s.pct >= 65 ? 'Watch' : 'At risk',
+  ]);
+
+  doc.autoTable({
+    startY: 50,
+    head: [['Subject', 'Classes Held', 'Attended', 'Percentage', 'Status']],
+    body: tableData.length ? tableData : [['—', '—', '—', '—', 'Load portal first']],
+    theme: 'grid',
+    headStyles: { fillColor: [27, 58, 107] },
+  });
+
+  doc.save(`Attendance_Report_${u ? u.id : 'Student'}.pdf`);
+  showToast('PDF downloaded successfully!', 'success');
+};
+
+async function loadStudentComplaints() {
+  const token = localStorage.getItem('rrdch_token');
+  if (!token) return;
+  try {
+    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+    const res = await fetch(`${API_BASE}/student/complaints`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const data = await res.json();
+    const complaints = data.ok ? (data.data || []) : [];
+    const container = document.getElementById('studentComplaintHistory');
+    container.innerHTML = complaints.length ? complaints.map((c) => `
+      <div style="padding:1rem;background:var(--bg);border-radius:var(--radius-md);border:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+          <span style="font-weight:600;font-size:0.9rem;color:var(--text);">${c.category || 'Hostel Complaint'}</span>
+          <span class="badge badge-${c.status === 'resolved' ? 'success' : c.status === 'in_progress' ? 'warning' : 'info'}">${(c.status || 'pending').toUpperCase()}</span>
+        </div>
+        <div style="font-size:0.78rem;color:var(--muted);">ID: ${c.id} · Submitted: ${new Date(c.created_at).toLocaleDateString()}</div>
+        <div style="font-size:0.82rem;color:var(--text);margin-top:0.4rem;">Area: ${c.room_no || 'N/A'} · ${c.description || ''}</div>
+      </div>
+    `).join('') : '<p style="font-size:0.85rem;color:var(--muted);">No complaints submitted yet.</p>';
+  } catch {
+    const container = document.getElementById('studentComplaintHistory');
+    if (container) container.innerHTML = '<p style="font-size:0.85rem;color:var(--danger);">Unable to load complaint history.</p>';
+  }
+}
+
+async function submitHostelComplaint() {
+  const token = localStorage.getItem('rrdch_token');
+  if (!token) return showToast('Please login again to submit complaint.', 'error');
+  const room_no = document.getElementById('hostelRoom').value.trim();
+  const category = document.getElementById('hostelCategory').value;
+  const description = document.getElementById('hostelDescription').value.trim();
+  const urgency = document.getElementById('hostelUrgency').value;
+  if (!description) return showToast('Please enter complaint description.', 'error');
+  try {
+    const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+    const res = await fetch(`${API_BASE}/student/complaints`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ room_no, category, description, urgency })
+    });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.msg || 'Failed');
+    showToast(`Complaint submitted: ${data.data.id}`, 'success');
+    document.getElementById('hostelDescription').value = '';
+    loadStudentComplaints();
+  } catch (e) {
+    showToast(e.message || 'Failed to submit complaint', 'error');
+  }
+}
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  socket.on('db_changed', (data) => {
+    // Immediate real-time broadcast received
+    if (typeof showToast === 'function') {
+      showToast(`🔔 Live Admin Update: ${data.message}`, 'info');
+    }
+  });
+  loadStudentComplaints();
+</script>
+</body>
+</html>

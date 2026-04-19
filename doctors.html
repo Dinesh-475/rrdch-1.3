@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Portal | RRDCH</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/backend.js"></script>
+    <script src="js/site-context.js"></script>
+    <script src="js/ai.js"></script>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: #f1f5f9; color: #0f172a; }
+
+        /* ── Login Screen (matching Student ERP style) ── */
+        #loginScreen {
+            display: flex; flex-direction: column; height: 100vh; align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(26,54,93,0.96), rgba(42,111,151,0.96)),
+                        url('images/new_hero_bg.png') center/cover fixed;
+            position: fixed; inset: 0; z-index: 1000;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        #loginScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        .login-nav {
+            position: absolute; top: 0; width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex; justify-content: space-between; align-items: center;
+            box-sizing: border-box;
+        }
+        .login-nav img {
+            height: 50px; background: white; border-radius: 8px;
+            padding: 10px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); object-fit: contain;
+        }
+        .login-nav a {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 0.6rem 1.25rem; border-radius: 8px;
+            text-decoration: none; font-weight: 600; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 0.4rem; transition: 0.2s;
+        }
+        .login-nav a:hover { background: rgba(255,255,255,0.2); }
+
+        .login-card {
+            background: white; padding: 3rem; border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 100%; max-width: 420px; text-align: center;
+        }
+        .login-card h2 {
+            margin-bottom: 0.5rem; color: #1e293b; font-size: 1.5rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .login-card h2 svg { color: #2A6F97; }
+        .login-card p { color: #64748b; margin-bottom: 2rem; font-size: 0.9rem; }
+        .inp-label { font-size: 0.85rem; font-weight: 600; color: #64748b; margin-bottom: 0.5rem; display: block; text-align: left; }
+        .inp-wrap { text-align: left; margin-bottom: 1.2rem; }
+        input.inp {
+            width: 100%; padding: 0.8rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px;
+            font-family: monospace; font-size: 1.05rem; letter-spacing: 1px; text-transform: uppercase;
+            transition: border-color 0.2s; box-sizing: border-box;
+        }
+        input.inp:focus { outline: none; border-color: #2A6F97; box-shadow: 0 0 0 3px rgba(42,111,151,0.1); }
+        input.inp.pass { letter-spacing: 3px; font-size: 1.1rem; text-transform: none; }
+        .btn-login {
+            width: 100%; margin-top: 0.5rem; padding: 0.85rem;
+            border: none; border-radius: 8px;
+            background: #2A6F97; color: white; font-size: 1rem; font-weight: 700;
+            cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+        }
+        .btn-login:hover { background: #1A365D; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(42,111,151,0.25); }
+        #errMsg { color: #ef4444; font-size: 0.85rem; margin-top: 1rem; display: none; font-weight: 500; }
+        .hint-text { font-size: 0.78rem; color: #94a3b8; margin-top: 1.5rem; }
+
+        /* ── Portal Layout ── */
+        #portalScreen { display: none; min-height: 100vh; }
+
+        .top-bar {
+            background: #0f172a; color: white; padding: 0 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 60px; position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .top-brand { display: flex; align-items: center; gap: 1rem; }
+        .top-brand img { height: 36px; background: white; border-radius: 6px; padding: 4px 10px; object-fit: contain; }
+        .top-brand span { font-weight: 700; font-size: 1rem; color: #e2e8f0; }
+        .top-right { display: flex; align-items: center; gap: 1.5rem; }
+        .doc-badge { background: #1e3a5f; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+        .online-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; }
+        .alert-bell { position: relative; cursor: pointer; }
+        .bell-badge { position: absolute; top: -4px; right: -6px; background: #ef4444; color: white; font-size: 0.65rem; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .btn-logout { background: #ef4444; border: none; color: white; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+
+        /* Alert Banner */
+        #alertBanner {
+            background: #fef3c7; border-bottom: 1px solid #fde68a;
+            padding: 0.65rem 2rem; display: none;
+            align-items: center; gap: 0.75rem; font-size: 0.9rem; font-weight: 500; color: #92400e;
+        }
+
+        /* Main Grid */
+        .portal-body { display: grid; grid-template-columns: 320px 1fr; gap: 1.5rem; padding: 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
+        @media(max-width: 1024px) { .portal-body { grid-template-columns: 1fr; } }
+
+        /* Cards */
+        .card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 1.25rem; overflow: hidden; }
+        .card-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: flex; align-items: center; justify-content: space-between; }
+        .card-head h3 { font-size: 1rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; }
+        .card-body-p { padding: 1.25rem 1.5rem; }
+
+        /* Now Serving Widget */
+        .now-serving {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+            border-radius: 12px; padding: 1.5rem; margin-bottom: 1.25rem; color: white; text-align: center;
+        }
+        .now-serving h3 { font-size: 0.9rem; font-weight: 600; opacity: 0.8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .token-num { font-size: 3.5rem; font-weight: 900; color: #7dd3fc; line-height: 1; margin-bottom: 0.5rem; }
+        .patient-name-ns { font-size: 1.05rem; font-weight: 600; margin-bottom: 1.25rem; opacity: 0.9; }
+        .ns-actions { display: flex; gap: 0.75rem; justify-content: center; }
+        .btn-next { background: white; color: #1e3a5f; padding: 0.65rem 1.5rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
+        .btn-next:hover { background: #f0f9ff; }
+        .btn-complete { background: #22c55e; color: white; padding: 0.65rem 1.5rem; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: 0.2s; }
+        .btn-complete:hover { background: #16a34a; }
+
+        /* Badge */
+        .badge { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-yellow { background: #fef3c7; color: #92400e; }
+        .badge-gray { background: #f1f5f9; color: #475569; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+
+        /* Table */
+        table.data-table { width: 100%; border-collapse: collapse; }
+        table.data-table th { padding: 0.9rem 1rem; text-align: left; font-size: 0.78rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #f1f5f9; }
+        table.data-table td { padding: 1rem; font-size: 0.92rem; border-bottom: 1px solid #f8fafc; vertical-align: middle; }
+        table.data-table tr:hover td { background: #f8fafc; }
+        table.data-table tr:last-child td { border-bottom: none; }
+        .view-btn { background: none; border: 1px solid #cbd5e1; color: #2563eb; padding: 0.35rem 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.15s; }
+        .view-btn:hover { background: #eff6ff; border-color: #2563eb; }
+
+        /* Schedule */
+        .schedule-slot { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 0; border-bottom: 1px solid #f8fafc; }
+        .schedule-slot:last-child { border-bottom: none; }
+        .slot-time { font-size: 0.82rem; font-weight: 700; color: #475569; width: 75px; flex-shrink: 0; }
+        .slot-name { font-weight: 600; font-size: 0.92rem; }
+        .slot-reason { font-size: 0.8rem; color: #64748b; }
+
+        /* Patient Detail Panel */
+        #patientDetail { display: none; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid #f8fafc; font-size: 0.9rem; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-weight: 600; color: #64748b; }
+        .detail-val { color: #0f172a; }
+        textarea.notes-area { width: 100%; border: 1.5px solid #cbd5e1; border-radius: 8px; padding: 0.85rem; font-family: inherit; font-size: 0.9rem; resize: vertical; min-height: 100px; }
+        textarea.notes-area:focus { outline: none; border-color: #2563eb; }
+        .btn-save { background: #1e3a5f; color: white; border: none; padding: 0.6rem 1.25rem; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; margin-top: 0.75rem; }
+
+        /* Stats Row */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.25rem; }
+        @media(max-width: 900px) { .stats-row { grid-template-columns: repeat(2,1fr); } }
+        .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.25rem; text-align: center; }
+        .stat-num { font-size: 2rem; font-weight: 800; }
+        .stat-label { font-size: 0.78rem; color: #64748b; font-weight: 600; margin-top: 0.25rem; }
+        .col-blue { color: #2563eb; }
+        .col-green { color: #16a34a; }
+        .col-orange { color: #ea580c; }
+        .col-red { color: #dc2626; }
+        .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#22c55e; color:white; padding:0.6rem 1.2rem; border-radius:8px; font-weight:600; display:none; z-index:9999; box-shadow:0 10px 20px rgba(34,197,94,0.3); }
+    </style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="loginScreen">
+
+    <!-- Floating top nav (like student portal) -->
+    <div class="login-nav">
+        <img src="images/logo.png" alt="RRDCH Logo">
+        <a href="index.html">
+            <i data-lucide="arrow-left" width="16"></i> Back to Website
+        </a>
+    </div>
+
+    <!-- Centered login card -->
+    <div class="login-card">
+        <h2>
+            <i data-lucide="stethoscope" style="width:24px; height:24px; color:#2A6F97;"></i>
+            Doctor Portal
+        </h2>
+        <p>Access your clinical dashboard with your Doctor ID</p>
+
+        <div class="inp-wrap">
+            <span class="inp-label">Doctor ID</span>
+            <input class="inp" type="text" id="drId" placeholder="DR001 / DR002 / DR003">
+        </div>
+        <div class="inp-wrap">
+            <span class="inp-label">Password</span>
+            <input class="inp pass" type="password" id="drPass" placeholder="••••••••">
+        </div>
+
+        <div id="errMsg">
+            <i data-lucide="alert-circle" width="14" style="display:inline; vertical-align:-2px;"></i>
+            Invalid Doctor ID. Use DR001, DR002, or DR003.
+        </div>
+
+        <button class="btn-login" onclick="doLogin()">
+            <i data-lucide="log-in" width="18"></i> Authenticate &amp; Login
+        </button>
+
+        <p class="hint-text">Valid IDs: DR001 (Orthodontics) &nbsp;|&nbsp; DR002 (Oral Surgery) &nbsp;|&nbsp; DR003 (Pedodontics)</p>
+    </div>
+</div>
+
+
+<!-- ══════════════ PORTAL SCREEN ══════════════ -->
+<div id="portalScreen">
+
+    <!-- Alert Banner -->
+    <div id="alertBanner">
+        <i data-lucide="bell" width="18"></i>
+        <span id="alertMsg">New patient added to queue: Token #47 — Priya Nair (Crown Fitting)</span>
+        <button onclick="document.getElementById('alertBanner').style.display='none'" style="background:none;border:none;cursor:pointer;font-weight:700;color:#92400e;margin-left:auto;">Dismiss</button>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-brand">
+            <img src="images/logo.png" alt="RRDCH">
+            <span>Doctor Portal</span>
+        </div>
+        <div class="top-right">
+            <div class="alert-bell" onclick="toggleAlert()">
+                <i data-lucide="bell" width="20" style="color:#94a3b8;"></i>
+                <div class="bell-badge" id="bellBadge">1</div>
+            </div>
+            <div class="doc-badge">
+                <div class="online-dot"></div>
+                <span id="docNameBadge">Dr. Sharma</span>
+            </div>
+            <a href="index.html" style="color:#94a3b8; font-size:0.85rem; text-decoration:none;">Website</a>
+            <button class="btn-logout" onclick="doLogout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Portal Body -->
+    <div class="portal-body">
+
+        <!-- LEFT COLUMN -->
+        <div>
+            <!-- Now Serving -->
+            <div class="now-serving">
+                <h3>Now Serving</h3>
+                <div class="token-num" id="curToken">#42</div>
+                <div class="patient-name-ns" id="curPatient">Rakesh Kumar</div>
+                <div class="ns-actions">
+                    <button class="btn-next" onclick="nextPatient()"><i data-lucide="skip-forward" width="14"></i> Next Patient</button>
+                    <button class="btn-complete" onclick="completePatient()"><i data-lucide="check" width="14"></i> Complete</button>
+                </div>
+                <div style="margin-top:0.85rem; text-align:left;">
+                    <label for="avgTreatTimeInput" style="font-size:0.78rem; color:#64748b; font-weight:700; display:block; margin-bottom:0.4rem;">Avg. treatment time (min)</label>
+                    <input id="avgTreatTimeInput" type="number" min="3" max="60" step="1" value="8" style="width:100%; padding:0.45rem 0.6rem; border:1px solid #cbd5e1; border-radius:7px;" onchange="updateAvgTreatTime(this.value)">
+                </div>
+            </div>
+
+            <!-- Doctor Schedule -->
+            <div class="card">
+                <div class="card-head"><h3><i data-lucide="calendar"></i> Today's Schedule</h3><span class="badge badge-green" id="deptBadge">Orthodontics</span></div>
+                <div class="card-body-p" id="scheduleSlots">
+                    <!-- filled by JS -->
+                </div>
+            </div>
+
+            <!-- Patient Detail Panel -->
+            <div class="card" id="patientDetail">
+                <div class="card-head"><h3><i data-lucide="user"></i> Patient Details</h3><button onclick="closeDetail()" style="background:none;border:none;cursor:pointer;color:#64748b;"><i data-lucide="x" width="18"></i></button></div>
+                <div class="card-body-p">
+                    <div id="detailRows"></div>
+                    <div style="margin-top:1.25rem;">
+                        <label style="font-size:0.82rem; font-weight:700; color:#475569; display:block; margin-bottom:0.5rem;">Diagnosis / Clinical Notes</label>
+                        <div id="prevNoteBox" style="display:none; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; padding:0.65rem 0.9rem; font-size:0.82rem; color:#166534; margin-bottom:0.75rem; font-style:italic;"></div>
+                        <textarea class="notes-area" id="notesArea" placeholder="Enter clinical notes, diagnosis, or treatment plan..."></textarea>
+                        <button class="btn-save" onclick="saveNotes()"><i data-lucide="save" width="14"></i> Save Notes</button>
+                        <div id="saveMsg" style="display:none; color:#16a34a; font-size:0.85rem; font-weight:600; margin-top:0.5rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card"><div class="stat-num col-blue" id="statTotal">8</div><div class="stat-label">Total Today</div></div>
+                <div class="stat-card"><div class="stat-num col-orange" id="statWaiting">5</div><div class="stat-label">Waiting</div></div>
+                <div class="stat-card"><div class="stat-num col-green" id="statDone">2</div><div class="stat-label">Completed</div></div>
+                <div class="stat-card"><div class="stat-num col-red" id="statOngoing">1</div><div class="stat-label">Ongoing</div></div>
+            </div>
+
+            <!-- Live Queue Table -->
+            <div class="card">
+                <div class="card-head">
+                    <h3><i data-lucide="list-ordered"></i> Live Patient Queue</h3>
+                    <span class="badge badge-yellow" id="queueCount">5 Waiting</span>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="data-table">
+                        <thead><tr><th>Token</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="queueTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    function calcWaitTime(waitingCount) {
+        let avg = parseInt(localStorage.getItem("avgTreatTime")) || 8;
+        return waitingCount * avg;
+    }
+    function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg; t.style.display = "block";
+        setTimeout(() => t.style.display = "none", 2000);
+    }
+    const sb = window.sb || (window.RRDCH_CONFIG && window.RRDCH_CONFIG.SUPABASE_URL && !window.RRDCH_CONFIG.SUPABASE_URL.startsWith("YOUR_")
+        ? supabase.createClient(window.RRDCH_CONFIG.SUPABASE_URL, window.RRDCH_CONFIG.SUPABASE_ANON_KEY)
+        : null);
+
+    // ── Doctor Data ──
+    const doctors = {
+        'DR001': { name: 'Dr. Priya Sharma', dept: 'Orthodontics', speciality: 'MDS Orthodontics' },
+        'DR002': { name: 'Dr. Arvind Menon', dept: 'Oral Surgery', speciality: 'MDS Oral Surgery' },
+        'DR003': { name: 'Dr. Sunita Rao', dept: 'Pedodontics', speciality: 'MDS Pedodontics' }
+    };
+    const doctorCredentialMap = {
+        DR001: "pg.001@rrdch.org",
+        DR002: "pg.001@rrdch.org",
+        DR003: "pg.001@rrdch.org"
+    };
+    let backendSchedule = [];
+
+    // ── Queue Data ──
+    let queue = [
+        { token: 42, name: 'Rakesh Kumar', age: 34, phone: '9845012345', reason: 'Braces Checkup', status: 'ongoing' },
+        { token: 43, name: 'Anjali Singh', age: 28, phone: '9731234567', reason: 'Root Canal', status: 'waiting' },
+        { token: 44, name: 'Rahul Dravid', age: 22, phone: '9900112233', reason: 'Cavity Fill', status: 'waiting' },
+        { token: 45, name: 'Meena Kumari', age: 45, phone: '9988776655', reason: 'Gum Treatment', status: 'waiting' },
+        { token: 46, name: 'Arjun Patil', age: 19, phone: '8765432190', reason: 'Retainer Fitting', status: 'waiting' },
+        { token: 40, name: 'Savitha M', age: 52, phone: '7654321098', reason: 'Tooth Extraction', status: 'completed' },
+        { token: 41, name: 'Kiran Bhat', age: 30, phone: '9123456780', reason: 'X-Ray Review', status: 'completed' }
+    ];
+
+    const schedule = [
+        { time: '09:00 AM', name: 'Rakesh Kumar', reason: 'Braces Checkup' },
+        { time: '09:45 AM', name: 'Anjali Singh', reason: 'Root Canal' },
+        { time: '10:30 AM', name: 'Rahul Dravid', reason: 'Cavity Fill' },
+        { time: '11:15 AM', name: 'Meena Kumari', reason: 'Gum Treatment' },
+        { time: '12:00 PM', name: 'Arjun Patil', reason: 'Retainer Fitting' },
+    ];
+
+    let curDoc = null;
+
+    // Notes storage: persist notes per patient token in-memory
+    const patientNotes = {};
+
+    // New patient alerts feed
+    const liveAlerts = [
+        { token: 47, name: 'Priya Nair', reason: 'Crown Fitting' },
+        { token: 48, name: 'Mohammed Rafi', reason: 'Teeth Whitening' },
+        { token: 49, name: 'Divya Reddy', reason: 'Braces Tightening' },
+        { token: 50, name: 'Suresh Kumar', reason: 'Denture Repair' },
+    ];
+    let alertIdx = 0;
+    let alertCount = 0;
+
+    function showLiveAlert(patient) {
+        alertCount++;
+        document.getElementById('bellBadge').textContent = alertCount;
+        document.getElementById('bellBadge').style.display = 'flex';
+
+        // Add to queue
+        queue.push({ token: patient.token, name: patient.name, age: Math.floor(25 + Math.random()*30), phone: '98' + Math.floor(10000000 + Math.random()*89999999), reason: patient.reason, status: 'waiting' });
+        renderQueue();
+
+        // Show banner
+        const ab = document.getElementById('alertBanner');
+        document.getElementById('alertMsg').textContent = `New patient added: Token #${patient.token} — ${patient.name} (${patient.reason})`;
+        ab.style.display = 'flex';
+        lucide.createIcons();
+
+        // Auto hide after 5s
+        clearTimeout(ab._timer);
+        ab._timer = setTimeout(() => { ab.style.display = 'none'; }, 5000);
+    }
+
+    function startLiveAlerts() {
+        // Fire first alert after 6 seconds, then every 15 seconds
+        setTimeout(function fireNext() {
+            if (alertIdx < liveAlerts.length) {
+                showLiveAlert(liveAlerts[alertIdx++]);
+                setTimeout(fireNext, 15000);
+            }
+        }, 6000);
+    }
+
+    async function doLogin() {
+        const id = document.getElementById('drId').value.trim().toUpperCase();
+        const password = document.getElementById('drPass').value.trim();
+        const doc = doctors[id];
+        const err = document.getElementById('errMsg');
+        if (!doc) { err.style.display = 'block'; return; }
+        err.style.display = 'none';
+        curDoc = doc;
+        document.getElementById('docNameBadge').textContent = doc.name;
+        document.getElementById('deptBadge').textContent = doc.dept;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('portalScreen').style.display = 'block';
+
+        // Try secure doctor backend auth + queue hydration.
+        try {
+            await window.RRDCH_BACKEND.doctorLogin(id, password);
+            const q = await window.RRDCH_BACKEND.doctorRequest("queue", { method: "GET" });
+            backendSchedule = q.data?.visits || [];
+            if (backendSchedule.length) {
+                queue = backendSchedule.map((row) => ({
+                    visitId: row.id,
+                    token: parseInt(String(row.token || "").replace(/\D/g, ""), 10) || 0,
+                    name: row.patient_name || "Patient",
+                    age: row.age || 30,
+                    phone: row.phone || "NA",
+                    reason: row.reason || "Consultation",
+                    status: row.status || "waiting",
+                    notes: row.notes || ""
+                }));
+                const serving = queue.find(p => p.status === 'ongoing');
+                if (serving) {
+                    document.getElementById('curToken').textContent = '#' + serving.token;
+                    document.getElementById('curPatient').textContent = serving.name;
+                }
+            }
+        } catch (e) {
+            showToast("Secure doctor backend unavailable, using local demo queue.");
+        }
+        
+        if (!backendSchedule.length) {
+            try {
+                if (!sb) throw new Error("Supabase not configured");
+                const { data } = await sb.from("opd_queue").select("*").eq("department", doc.dept);
+                if (data && data[0]) {
+                    const dbq = data[0];
+                    queue = [];
+                    for(let i=0; i<=dbq.total_waiting; i++) {
+                        queue.push({
+                            token: dbq.current_token + i,
+                            name: i===0 ? "Patient "+(dbq.current_token) : "Waiting "+(dbq.current_token+i),
+                            age: 30, phone: "9900000000", reason: "Consultation",
+                            status: i===0 ? "ongoing" : "waiting"
+                        });
+                    }
+                    const ongoing = queue.find(p=>p.status==='ongoing');
+                    if(ongoing) {
+                        document.getElementById('curToken').textContent = '#' + ongoing.token;
+                        document.getElementById('curPatient').textContent = ongoing.name;
+                    }
+                }
+            } catch(e) {
+                showToast("Live sync unavailable. Configure Supabase in js/config.js");
+            }
+        }
+
+        renderQueue(); renderSchedule();
+        startLiveAlerts();
+        lucide.createIcons();
+    }
+
+    function doLogout() {
+        document.getElementById('portalScreen').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('drId').value = '';
+        document.getElementById('drPass').value = '';
+        document.getElementById('patientDetail').style.display = 'none';
+        alertIdx = 0; alertCount = 0;
+    }
+
+    function renderQueue() {
+        const tb = document.getElementById('queueTableBody');
+        const waiting = queue.filter(p => p.status === 'waiting').length;
+        document.getElementById('queueCount').textContent = waiting + ' Waiting';
+        document.getElementById('statWaiting').textContent = waiting;
+        document.getElementById('statDone').textContent = queue.filter(p => p.status === 'completed').length;
+        document.getElementById('statOngoing').textContent = queue.filter(p => p.status === 'ongoing').length;
+        document.getElementById('statTotal').textContent = queue.length;
+
+        tb.innerHTML = queue.map(p => {
+            let badge = '';
+            if (p.status === 'ongoing') badge = `<span class="badge badge-green">Ongoing</span>`;
+            else if (p.status === 'waiting') badge = `<span class="badge badge-yellow">Waiting</span>`;
+            else badge = `<span class="badge badge-gray">Completed</span>`;
+            const hasNote = patientNotes[p.token] ? ' style="color:#16a34a; font-weight:700;"' : '';
+            return `<tr>
+                <td><strong>#${p.token}</strong></td>
+                <td>${p.name}</td>
+                <td>${p.reason}</td>
+                <td>${badge}</td>
+                <td><button class="view-btn"${hasNote} onclick="viewPatient(${p.token})">View File${patientNotes[p.token] ? ' (Notes)' : ''}</button></td>
+            </tr>`;
+        }).join('');
+    }
+
+    function renderSchedule() {
+        document.getElementById('scheduleSlots').innerHTML = schedule.map(s => `
+            <div class="schedule-slot">
+                <div class="slot-time">${s.time}</div>
+                <div>
+                    <div class="slot-name">${s.name}</div>
+                    <div class="slot-reason">${s.reason}</div>
+                </div>
+            </div>`).join('');
+    }
+
+    let activeToken = null;
+
+    function viewPatient(token) {
+        const p = queue.find(x => x.token === token);
+        if (!p) return;
+        activeToken = token;
+
+        document.getElementById('detailRows').innerHTML = `
+            <div class="detail-row"><span class="detail-label">Token</span><span class="detail-val"><strong>#${p.token}</strong></span></div>
+            <div class="detail-row"><span class="detail-label">Name</span><span class="detail-val">${p.name}</span></div>
+            <div class="detail-row"><span class="detail-label">Age</span><span class="detail-val">${p.age} yrs</span></div>
+            <div class="detail-row"><span class="detail-label">Phone</span><span class="detail-val">${p.phone}</span></div>
+            <div class="detail-row"><span class="detail-label">Reason</span><span class="detail-val">${p.reason}</span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val">${p.status.charAt(0).toUpperCase() + p.status.slice(1)}</span></div>
+        `;
+
+        // Restore previously saved notes for this patient
+        const saved = patientNotes[token] || '';
+        document.getElementById('notesArea').value = saved;
+        document.getElementById('saveMsg').style.display = 'none';
+
+        // Show saved note preview if exists
+        const prev = document.getElementById('prevNoteBox');
+        if (saved) {
+            prev.textContent = 'Previous note: ' + saved.substring(0, 80) + (saved.length > 80 ? '...' : '');
+            prev.style.display = 'block';
+        } else {
+            prev.style.display = 'none';
+        }
+
+        document.getElementById('patientDetail').style.display = 'block';
+        lucide.createIcons();
+        document.getElementById('patientDetail').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function closeDetail() {
+        document.getElementById('patientDetail').style.display = 'none';
+        activeToken = null;
+    }
+
+    function saveNotes() {
+        if (activeToken === null) return;
+        const note = document.getElementById('notesArea').value.trim();
+        if (!note) { alert('Please enter a diagnosis or note before saving.'); return; }
+
+        patientNotes[activeToken] = note;
+
+        const msg = document.getElementById('saveMsg');
+        msg.textContent = 'Notes saved for Token #' + activeToken + '.';
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 3000);
+
+        // Refresh queue table to show (Notes) marker on this patient
+        renderQueue();
+
+        const current = queue.find(q => q.token === activeToken);
+        if (current?.visitId) {
+            window.RRDCH_BACKEND.doctorRequest("queue-action", {
+                method: "POST",
+                body: JSON.stringify({ action: "saveNotes", visitId: current.visitId, notes: note, avgTreatTime: parseInt(localStorage.getItem("avgTreatTime")) || 8 })
+            }).catch(() => {});
+        }
+    }
+
+    async function nextPatient() {
+        const ongoingIdx = queue.findIndex(p => p.status === 'ongoing');
+        if (ongoingIdx !== -1) queue[ongoingIdx].status = 'waiting';
+
+        // Search for the next waiting patient AFTER the current one first,
+        // then wrap around from the beginning (excluding the just-reset patient)
+        const next = queue.slice(ongoingIdx + 1).find(p => p.status === 'waiting')
+                  || queue.slice(0, ongoingIdx).find(p => p.status === 'waiting');
+
+        if (next) {
+            next.status = 'ongoing';
+            document.getElementById('curToken').textContent = '#' + next.token;
+            document.getElementById('curPatient').textContent = next.name;
+        } else {
+            document.getElementById('curToken').textContent = '--';
+            document.getElementById('curPatient').textContent = 'No more patients in queue';
+        }
+        renderQueue();
+
+        if(curDoc) {
+            try {
+                const live = await window.RRDCH_BACKEND.doctorRequest("queue-action", {
+                    method: "POST",
+                    body: JSON.stringify({ action: "next", avgTreatTime: parseInt(localStorage.getItem("avgTreatTime")) || 8 })
+                });
+                const rows = live.data?.visits || [];
+                if (rows.length) {
+                    queue = rows.map((row) => ({
+                        visitId: row.id,
+                        token: parseInt(String(row.token || "").replace(/\D/g, ""), 10) || 0,
+                        name: row.patient_name || "Patient",
+                        age: row.age || 30,
+                        phone: row.phone || "NA",
+                        reason: row.reason || "Consultation",
+                        status: row.status || "waiting",
+                        notes: row.notes || ""
+                    }));
+                    const serving = queue.find(p => p.status === "ongoing");
+                    document.getElementById('curToken').textContent = serving ? '#' + serving.token : '--';
+                    document.getElementById('curPatient').textContent = serving ? serving.name : 'No more patients in queue';
+                    renderQueue();
+                }
+            } catch (e) {}
+            showToast("Queue updated ✓");
+        }
+    }
+
+    async function completePatient() {
+        const ongoing = queue.find(p => p.status === 'ongoing');
+        if (!ongoing) return;
+        ongoing.status = 'completed';
+        const next = queue.find(p => p.status === 'waiting');
+        if (next) {
+            next.status = 'ongoing';
+            document.getElementById('curToken').textContent = '#' + next.token;
+            document.getElementById('curPatient').textContent = next.name;
+        }
+        renderQueue();
+
+        if(curDoc) {
+            try {
+                const live = await window.RRDCH_BACKEND.doctorRequest("queue-action", {
+                    method: "POST",
+                    body: JSON.stringify({ action: "complete", avgTreatTime: parseInt(localStorage.getItem("avgTreatTime")) || 8 })
+                });
+                const rows = live.data?.visits || [];
+                if (rows.length) {
+                    queue = rows.map((row) => ({
+                        visitId: row.id,
+                        token: parseInt(String(row.token || "").replace(/\D/g, ""), 10) || 0,
+                        name: row.patient_name || "Patient",
+                        age: row.age || 30,
+                        phone: row.phone || "NA",
+                        reason: row.reason || "Consultation",
+                        status: row.status || "waiting",
+                        notes: row.notes || ""
+                    }));
+                    const serving = queue.find(p => p.status === "ongoing");
+                    document.getElementById('curToken').textContent = serving ? '#' + serving.token : '--';
+                    document.getElementById('curPatient').textContent = serving ? serving.name : 'No more patients in queue';
+                    renderQueue();
+                }
+            } catch (e) {}
+            showToast("Queue updated ✓");
+        }
+    }
+
+    function toggleAlert() {
+        const ab = document.getElementById('alertBanner');
+        ab.style.display = ab.style.display === 'flex' ? 'none' : 'flex';
+        alertCount = 0;
+        document.getElementById('bellBadge').style.display = 'none';
+    }
+
+    function updateAvgTreatTime(value) {
+        const v = Math.max(3, Math.min(60, parseInt(value || "8", 10) || 8));
+        localStorage.setItem("avgTreatTime", String(v));
+        const input = document.getElementById("avgTreatTimeInput");
+        if (input) input.value = String(v);
+        window.RRDCH_BACKEND.doctorRequest("queue-action", {
+            method: "POST",
+            body: JSON.stringify({ action: "updateAvgTreatTime", avgTreatTime: v })
+        }).catch(() => {});
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+        const avg = parseInt(localStorage.getItem("avgTreatTime") || "8", 10);
+        const input = document.getElementById("avgTreatTimeInput");
+        if (input) input.value = String(avg);
+    });
+    </script>
+
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/script.js"></script>
+
+</body>
+</html>

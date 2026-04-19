@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment | RRDCH OPD — Rajarajeswari Dental College</title>
+  <meta name="description" content="Book a dental appointment at RRDCH's OPD. Choose from 10 departments including Orthodontics, OMFS, Periodontology, and more. Online booking available.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://rrdch.edu.in/appointments.html">
+  <meta property="og:title" content="Book OPD Appointment | RRDCH Bangalore">
+  <meta property="og:description" content="Book your dental appointment at RRDCH's 10-department OPD. Real-time queue tracking available.">
+  <meta property="og:url" content="https://rrdch.edu.in/appointments.html">
+
+  <meta name="description" content="Book your dental appointment at RRDCH — 10 speciality departments, slot picker, unique appointment ID and queue tracking.">
+  <title>Book Appointment — RRDCH</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .appt-hero { background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%); padding: 6rem 0 3rem; color: #fff; text-align: center; }
+    .step-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin: 2.5rem 0; }
+    .step { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+    .step-num { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: all var(--transition); }
+    .step.active .step-num { background: var(--navy); border-color: var(--navy); color: #fff; }
+    .step.done .step-num { background: var(--success); border-color: var(--success); color: #fff; }
+    .step-label { font-size: 0.72rem; color: var(--muted); font-weight: 500; white-space: nowrap; }
+    .step.active .step-label { color: var(--navy); font-weight: 600; }
+    .step-line { flex: 1; height: 2px; background: var(--border); max-width: 60px; }
+    .step-line.done { background: var(--success); }
+    .track-box { background: var(--surface); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-card); border: 1px solid var(--border); max-width: 500px; margin: 0 auto; }
+    .appt-status-item { display: flex; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); align-items: center; }
+    .appt-status-label { font-size: 0.82rem; color: var(--muted); width: 130px; flex-shrink: 0; }
+    .appt-status-val { font-size: 0.9rem; color: var(--text); font-weight: 500; }
+    .queue-visual { display: flex; align-items: center; gap: 0.4rem; margin-top: 1rem; }
+    .queue-person { width: 24px; height: 24px; border-radius: 50%; background: var(--border); font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
+    .queue-person.done { background: var(--success); }
+    .queue-person.current { background: var(--teal); box-shadow: 0 0 0 3px rgba(46,134,171,0.3); }
+    .queue-person.waiting { background: var(--border); }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" style="top:0;">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <img src="assets/images/badges/rrdch-logo.png" alt="RRDCH Logo" style="height:75px;width:auto;margin-right:12px;">
+      <div class="navbar-brand-text">
+        <div class="navbar-brand-name">RRDCH</div>
+        <div class="navbar-brand-sub">Rajarajeswari Dental College & Hospital</div>
+      </div>
+    </a>
+    <ul class="navbar-nav" id="navMenu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="departments.html">Departments</a></li>
+      <li><a href="appointments.html" class="active">Appointments</a></li>
+      <li><a href="admissions.html">Admissions</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html" style="color:var(--gold);">Portal Login</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button class="lang-toggle" id="langToggle">ಕನ್ನಡ</button>
+      <button class="dark-toggle" id="darkToggle">🌙</button>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+
+<section class="appt-hero" style="margin-top:72px;">
+  <div class="container">
+    <div class="label" style="display:inline-block;background:rgba(200,169,81,0.2);border:1px solid rgba(200,169,81,0.4);color:var(--gold-light);font-size:0.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:0.35rem 1rem;border-radius:var(--radius-pill);margin-bottom:1rem;">Book & Track</div>
+    <h1 style="color:#fff;margin-bottom:0.75rem;">Appointment Booking System</h1>
+    <p style="color:rgba(255,255,255,0.75);max-width:500px;margin:0 auto;">Book your appointment at any of our 10 specialty departments. Get a unique Appointment ID and track your queue status live.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div style="max-width:900px;margin:0 auto;">
+      
+      <!-- Tabs: Book vs Track -->
+      <div style="display:flex;border-bottom:2px solid var(--border);margin-bottom:2.5rem;" id="apptTabs">
+        <button class="tab-btn" id="tabBook" onclick="switchTab('book')" style="flex:0;background:none;border:none;padding:0.75rem 2rem;font-size:1rem;font-weight:600;color:var(--navy);border-bottom:3px solid var(--navy);margin-bottom:-2px;">📅 Book Appointment</button>
+        <button class="tab-btn" id="tabTrack" onclick="switchTab('track')" style="flex:0;background:none;border:none;padding:0.75rem 2rem;font-size:1rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;">🔍 Track Appointment</button>
+      </div>
+
+      <!-- BOOK FORM -->
+      <div id="panelBook">
+        <!-- Step Indicator -->
+        <div class="step-indicator">
+          <div class="step active" id="step1">
+            <div class="step-num">1</div>
+            <div class="step-label">Patient Info</div>
+          </div>
+          <div class="step-line" id="line1"></div>
+          <div class="step" id="step2">
+            <div class="step-num">2</div>
+            <div class="step-label">Department & Date</div>
+          </div>
+          <div class="step-line" id="line2"></div>
+          <div class="step" id="step3">
+            <div class="step-num">3</div>
+            <div class="step-label">Slot Selection</div>
+          </div>
+          <div class="step-line" id="line3"></div>
+          <div class="step" id="step4">
+            <div class="step-num">4</div>
+            <div class="step-label">Confirmation</div>
+          </div>
+        </div>
+
+        <!-- Step 1: Patient Info -->
+        <div class="card" id="formStep1">
+          <h3 style="color:var(--text);margin-bottom:1.5rem;">👤 Patient Information</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input class="form-control" id="fName" placeholder="Enter full name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Age *</label>
+              <input class="form-control" id="fAge" type="number" placeholder="Years" min="1" max="120" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Gender *</label>
+              <select class="form-control" id="fGender">
+                <option value="">Select gender</option>
+                <option>Male</option><option>Female</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input class="form-control" id="fPhone" type="tel" placeholder="+91 XXXXX XXXXX" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input class="form-control" id="fEmail" type="email" placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Visit Type</label>
+            <div style="display:flex;gap:1rem;">
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text);">
+                <input type="radio" name="visitType" value="New" checked id="visitNew"> New Patient
+              </label>
+              <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.9rem;color:var(--text);">
+                <input type="radio" name="visitType" value="Follow-up" id="visitFollow"> Follow-up
+              </label>
+            </div>
+          </div>
+          <div class="text-right">
+            <button class="btn btn-navy" onclick="nextStep(2)">Next: Department →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Department & Date -->
+        <div class="card hidden" id="formStep2">
+          <h3 style="color:var(--text);margin-bottom:1.5rem;">🏥 Department & Date</h3>
+          <div class="form-group">
+            <label class="form-label">Select Department *</label>
+            <select class="form-control" id="fDept">
+              <option value="">Choose a speciality...</option>
+              <option value="1">Oral & Maxillofacial Surgery</option>
+              <option value="2">Conservative Dentistry & Endodontics</option>
+              <option value="3">Orthodontics & Dentofacial Orthopedics</option>
+              <option value="4">Prosthodontics, Crown & Bridge</option>
+              <option value="5">Periodontology</option>
+              <option value="6">Oral Pathology & Microbiology</option>
+              <option value="7">Oral Medicine & Radiology</option>
+              <option value="8">Pediatric & Preventive Dentistry</option>
+              <option value="9">Public Health Dentistry</option>
+              <option value="10">Oral Implantology</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Preferred Date *</label>
+            <input class="form-control" id="fDate" type="date" min="">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Reason for Visit</label>
+            <textarea class="form-control" id="fReason" rows="3" placeholder="Briefly describe your dental concern..."></textarea>
+          </div>
+          <div style="display:flex;justify-content:space-between;">
+            <button class="btn btn-outline" style="color:var(--navy);border-color:var(--navy);" onclick="nextStep(1)">← Back</button>
+            <button class="btn btn-navy" onclick="nextStep(3)">Next: Select Slot →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Slot Selection -->
+        <div class="card hidden" id="formStep3">
+          <h3 style="color:var(--text);margin-bottom:0.5rem;">🕐 Select Time Slot</h3>
+          <p style="margin-bottom:1.5rem;font-size:0.875rem;">Choose your preferred appointment slot. Slots marked in grey are already booked.</p>
+          
+          <h4 style="margin-bottom:0.75rem;color:var(--text);">Morning Slots (9 AM – 1 PM)</h4>
+          <div class="slot-grid" id="morningSlots"></div>
+          
+          <h4 style="margin:1.25rem 0 0.75rem;color:var(--text);">Afternoon Slots (2 PM – 5 PM)</h4>
+          <div class="slot-grid" id="afternoonSlots"></div>
+          
+          <div style="display:flex;gap:1rem;margin-top:1.5rem;font-size:0.78rem;">
+            <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:14px;height:14px;border:1.5px solid var(--border);border-radius:3px;display:inline-block;"></span> Available</span>
+            <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:14px;height:14px;background:var(--teal);border-radius:3px;display:inline-block;"></span> Selected</span>
+            <span style="display:flex;align-items:center;gap:0.4rem;"><span style="width:14px;height:14px;background:var(--border);border-radius:3px;display:inline-block;"></span> Booked</span>
+          </div>
+          
+          <div style="display:flex;justify-content:space-between;margin-top:1.5rem;">
+            <button class="btn btn-outline" style="color:var(--navy);border-color:var(--navy);" onclick="nextStep(2)">← Back</button>
+            <button class="btn btn-navy" onclick="nextStep(4)">Next: Confirm →</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Confirmation -->
+        <div class="card hidden" id="formStep4">
+          <h3 style="color:var(--text);margin-bottom:1.5rem;">✅ Confirm Appointment</h3>
+          <div id="confirmDetails" style="margin-bottom:1.5rem;"></div>
+          
+          <div class="alert alert-info" style="margin-bottom:1.25rem;">
+            <span>ℹ️</span>
+            <span>A confirmation SMS and email will be sent to your phone and email address after booking.</span>
+          </div>
+          
+          <div style="display:flex;justify-content:space-between;">
+            <button class="btn btn-outline" style="color:var(--navy);border-color:var(--navy);" onclick="nextStep(3)">← Back</button>
+            <button class="btn btn-primary btn-lg" onclick="confirmBooking()">📅 Confirm & Book Appointment</button>
+          </div>
+        </div>
+
+        <!-- Success Screen -->
+        <div class="card hidden text-center" id="successScreen" style="padding:3rem;">
+          <div style="font-size:4rem;margin-bottom:1.5rem;">✅</div>
+          <h2 style="color:var(--success);margin-bottom:1rem;">Appointment Confirmed!</h2>
+          <p style="font-size:1rem;margin-bottom:2rem;">Your appointment has been successfully booked. Save your Appointment ID.</p>
+          <div style="background:rgba(39,174,96,0.08);border:2px solid var(--success);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;display:inline-block;">
+            <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem;">YOUR APPOINTMENT ID</div>
+            <div id="apptId" style="font-family:var(--font-heading);font-size:2rem;font-weight:700;color:var(--navy);letter-spacing:2px;"></div>
+          </div>
+          <div id="summaryDetails" style="text-align:left;max-width:400px;margin:0 auto 2rem;"></div>
+          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-navy" onclick="switchTab('track')">🔍 Track Appointment</button>
+            <button class="btn btn-teal" onclick="location.reload()">📅 Book Another</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACK PANEL -->
+      <div id="panelTrack" class="hidden">
+        <div class="track-box">
+          <h3 style="color:var(--text);margin-bottom:0.5rem;">🔍 Track Your Appointment</h3>
+          <p style="font-size:0.875rem;margin-bottom:1.5rem;">Enter your Appointment ID to check current status and queue position.</p>
+          <div class="form-group">
+            <label class="form-label">Appointment Token</label>
+            <div style="display:flex;gap:0.75rem;">
+              <input class="form-control" id="trackId" placeholder="e.g. A-041" style="flex:1;">
+              <button class="btn btn-navy" onclick="trackAppointment()">Track</button>
+            </div>
+            <div class="form-note">Demo tokens: A-041, A-042, A-015</div>
+          </div>
+          <div id="trackResult" class="hidden" style="margin-top:1.5rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 Rajarajeswari Dental College & Hospital, Bengaluru.</p>
+      <div style="display:flex;gap:1rem;"><a href="index.html" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Home</a><a href="departments.html" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Departments</a><a href="contact.html" style="font-size:0.78rem;color:rgba(255,255,255,0.4);">Contact</a></div>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+<script>
+
+let selectedSlot = '';
+let currentStep = 1;
+const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000/api' : '/api';
+let trackRefreshTimer = null;
+
+// Set min date on date input
+const dateInput = document.getElementById('fDate');
+if (dateInput) {
+  const today = new Date();
+  today.setDate(today.getDate() + 1);
+  dateInput.min = today.toISOString().split('T')[0];
+  
+  dateInput.addEventListener('change', () => {
+    const d = new Date(dateInput.value);
+    if (d.getDay() === 0) {
+      showToast('Sundays are closed. Please choose another date.', 'error');
+      dateInput.value = '';
+    }
+  });
+}
+
+function switchTab(tab) {
+  document.getElementById('panelBook').classList.toggle('hidden', tab !== 'book');
+  document.getElementById('panelTrack').classList.toggle('hidden', tab !== 'track');
+  document.getElementById('tabBook').style.cssText = tab === 'book'
+    ? 'flex:0;background:none;border:none;padding:0.75rem 2rem;font-size:1rem;font-weight:600;color:var(--navy);border-bottom:3px solid var(--navy);margin-bottom:-2px;'
+    : 'flex:0;background:none;border:none;padding:0.75rem 2rem;font-size:1rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;';
+  document.getElementById('tabTrack').style.cssText = tab === 'track'
+    ? 'flex:0;background:none;border:none;padding:0.75rem 2rem;font-size:1rem;font-weight:600;color:var(--navy);border-bottom:3px solid var(--navy);margin-bottom:-2px;'
+    : 'flex:0;background:none;border:none;padding:0.75rem 2rem;font-size:1rem;font-weight:600;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;';
+  if (tab === 'track' && window.location.hash === '#track') {
+    document.getElementById('trackId').focus();
+  }
+}
+
+// Check URL hash
+if (window.location.hash === '#track') switchTab('track');
+
+async function nextStep(step) {
+  if (step > currentStep) {
+    if (currentStep === 1) {
+      const phone = document.getElementById('fPhone').value;
+      if (!document.getElementById('fName').value || !document.getElementById('fAge').value || !document.getElementById('fGender').value || !phone) {
+        showToast('Please fill all required fields.', 'error');
+        return;
+      }
+      if (!/^\d{10}$/.test(phone)) {
+        showToast('Please enter a valid 10-digit phone number.', 'error');
+        return;
+      }
+    }
+    if (currentStep === 2) {
+      const selDate = document.getElementById('fDate').value;
+      if (!document.getElementById('fDept').value || !selDate) {
+        showToast('Please select a department and date.', 'error');
+        return;
+      }
+      
+      const today = new Date().toISOString().split('T')[0];
+      if (selDate < today) {
+        showToast('Appointments cannot be booked for past dates.', 'error');
+        return;
+      }
+
+      await generateSlots();
+    }
+    if (currentStep === 3) {
+      if (!selectedSlot) {
+        showToast('Please select a time slot.', 'error');
+        return;
+      }
+      buildConfirmDetails();
+    }
+  }
+
+  document.getElementById(`formStep${currentStep}`).classList.add('hidden');
+  document.getElementById(`step${currentStep}`).classList.remove('active');
+  document.getElementById(`step${currentStep}`).classList.add('done');
+  if (currentStep > 1) document.getElementById(`line${currentStep - 1}`).classList.add('done');
+
+  currentStep = step;
+  document.getElementById(`formStep${currentStep}`).classList.remove('hidden');
+  document.getElementById(`step${currentStep}`).classList.add('active');
+}
+
+async function generateSlots() {
+  const morningContainer = document.getElementById('morningSlots');
+  const afternoonContainer = document.getElementById('afternoonSlots');
+  morningContainer.innerHTML = 'Loading slots...';
+  afternoonContainer.innerHTML = 'Loading slots...';
+
+  const date = document.getElementById('fDate').value;
+  const dept_id = document.getElementById('fDept').value;
+
+  try {
+    const res = await fetch(`${API_BASE}/appointments/slots?date=${date}&dept_id=${dept_id}`);
+    const data = await res.json();
+    if(data.ok) {
+      morningContainer.innerHTML = '';
+      afternoonContainer.innerHTML = '';
+      
+      data.data.forEach(s => {
+        const isMorning = s.slot.includes('AM') || s.slot.includes('12:00 PM') || s.slot.includes('12:30 PM');
+        const btn = document.createElement('button');
+        btn.className = `slot-btn${!s.available ? ' booked' : ''}`;
+        btn.textContent = s.slot;
+        btn.disabled = !s.available;
+        if (s.available) {
+          btn.onclick = () => {
+            document.querySelectorAll('.slot-btn.selected').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedSlot = s.slot;
+          };
+        }
+        (isMorning ? morningContainer : afternoonContainer).appendChild(btn);
+      });
+    } else {
+      throw new Error(data.msg);
+    }
+  } catch (error) {
+    morningContainer.innerHTML = 'Error loading slots: ' + error.message;
+    afternoonContainer.innerHTML = '';
+  }
+}
+
+function buildConfirmDetails() {
+  const name = document.getElementById('fName').value;
+  const age = document.getElementById('fAge').value;
+  const gender = document.getElementById('fGender').value;
+  const phone = document.getElementById('fPhone').value;
+  const deptSel = document.getElementById('fDept');
+  const dept = deptSel.options[deptSel.selectedIndex].text;
+  const date = document.getElementById('fDate').value;
+  const visitType = document.querySelector('input[name="visitType"]:checked').value;
+
+  document.getElementById('confirmDetails').innerHTML = `
+    <div class="table-wrap">
+      <table class="table">
+        <tr><td style="color:var(--muted);font-size:0.82rem;">Name</td><td style="font-weight:600;">${name}</td></tr>
+        <tr><td style="color:var(--muted);font-size:0.82rem;">Phone</td><td style="font-weight:600;">${phone}</td></tr>
+        <tr><td style="color:var(--muted);font-size:0.82rem;">Department</td><td style="font-weight:600;">${dept}</td></tr>
+        <tr><td style="color:var(--muted);font-size:0.82rem;">Date</td><td style="font-weight:600;">${date}</td></tr>
+        <tr><td style="color:var(--muted);font-size:0.82rem;">Time Slot</td><td style="font-weight:600;">${selectedSlot}</td></tr>
+        <tr><td style="color:var(--muted);font-size:0.82rem;">Visit Type</td><td><span class="badge badge-${visitType==='New'?'info':'gold'}">${visitType}</span></td></tr>
+      </table>
+    </div>
+  `;
+}
+
+async function confirmBooking() {
+  const btn = event.target;
+  btn.disabled = true;
+  btn.textContent = '⏳ Booking...';
+
+  const payload = {
+    patient_name: document.getElementById('fName').value,
+    patient_phone: document.getElementById('fPhone').value,
+    dept_id: document.getElementById('fDept').value,
+    date: document.getElementById('fDate').value,
+    time_slot: selectedSlot,
+    chief_complaint: document.getElementById('fReason').value
+  };
+
+  try {
+    const res = await fetch(`${API_BASE}/appointments/book`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+
+    if(data.ok) {
+      document.getElementById('formStep4').classList.add('hidden');
+      document.getElementById('successScreen').classList.remove('hidden');
+      document.getElementById('apptId').textContent = data.data.token_no;
+      document.getElementById('summaryDetails').innerHTML = `
+        <div class="appt-status-item"><span class="appt-status-label">Date</span><span class="appt-status-val">${data.data.date}</span></div>
+        <div class="appt-status-item"><span class="appt-status-label">Time</span><span class="appt-status-val">${data.data.time_slot}</span></div>
+        <div class="appt-status-item"><span class="appt-status-label">Appointment ID / Token</span><span class="appt-status-val"><span class="badge badge-info">${data.data.token_no}</span></span></div>
+      `;
+      showToast('Appointment Confirmed!', 'success');
+    } else {
+      showToast('Error: ' + data.msg, 'error');
+      btn.disabled = false;
+      btn.textContent = '📅 Confirm & Book Appointment';
+    }
+  } catch(error) {
+    showToast('Network error while booking', 'error');
+    btn.disabled = false;
+    btn.textContent = '📅 Confirm & Book Appointment';
+  }
+}
+
+async function trackAppointment() {
+  const inputEl = document.getElementById('trackId');
+  const token = inputEl.value.trim().toUpperCase();
+  const result = document.getElementById('trackResult');
+
+  if (!token) { showToast('Please enter an Appointment ID / Token.', 'error'); return; }
+
+  result.innerHTML = '<div style="text-align:center;padding:2rem;"><span class="spinner"></span> ⏳ Fetching live status...</div>';
+  result.classList.remove('hidden');
+
+  try {
+    const res = await fetch(`${API_BASE}/appointments/track?token=${token}`);
+    const data = await res.json();
+
+    if (!data.ok || !data.data.length) {
+      result.innerHTML = `<div class="alert alert-danger"><span>❌</span><span>Appointment not found. Please check and try again.</span></div>`;
+      return;
+    }
+
+    const appt = data.data[0];
+    const statusColor = { booked: 'info', in_queue: 'warning', called: 'gold', done: 'success', cancelled: 'danger' }[appt.status] || 'navy';
+    const queuePersons = [];
+    for (let i = 0; i < 8; i++) {
+        queuePersons.push(`<div class="queue-person ${i < appt.queue_position - 1 ? 'done' : i === appt.queue_position - 1 ? 'current' : 'waiting'}">👤</div>`);
+    }
+
+    result.innerHTML = `
+      <div class="appt-status-item"><span class="appt-status-label">Token No</span><span class="appt-status-val" style="font-weight:700;color:var(--navy);">${appt.token_no}</span></div>
+      <div class="appt-status-item"><span class="appt-status-label">Patient</span><span class="appt-status-val">${appt.patient_name}</span></div>
+      <div class="appt-status-item"><span class="appt-status-label">Department</span><span class="appt-status-val">${appt.dept_name || 'General'}</span></div>
+      <div class="appt-status-item"><span class="appt-status-label">Date & Time</span><span class="appt-status-val">${appt.date} at ${appt.time_slot}</span></div>
+      <div class="appt-status-item"><span class="appt-status-label">Status</span><span class="appt-status-val"><span class="badge badge-${statusColor}">${appt.status.toUpperCase()}</span></span></div>
+      ${['booked','in_queue','called'].includes(appt.status) ? `
+      <div class="appt-status-item"><span class="appt-status-label">Queue Position</span><span class="appt-status-val">#${appt.queue_position}</span></div>
+      <div style="margin-top:0.75rem;">
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem;">Queue Visualization</div>
+        <div class="queue-visual">${queuePersons.join('')}</div>
+      </div>` : ''}
+    `;
+    
+    // Set up queue auto-refresh if status is active
+    if (trackRefreshTimer) {
+      clearTimeout(trackRefreshTimer);
+      trackRefreshTimer = null;
+    }
+    if(['booked','in_queue','called'].includes(appt.status)) {
+        trackRefreshTimer = setTimeout(trackAppointment, 10000); // Check every 10 seconds
+    }
+  } catch(error) {
+    result.innerHTML = `<div class="alert alert-danger"><span>❌</span><span>Network error checking status.</span></div>`;
+  }
+}
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  if (typeof io !== 'undefined') {
+    const socket = io();
+    socket.on('db_changed', (data) => {
+      // If the admin called a token and we have trackPanel open or viewing a queue
+      if (document.getElementById('panelTrack') && !document.getElementById('panelTrack').classList.contains('hidden')) {
+        const inputEl = document.getElementById('trackId');
+        if (inputEl.value) trackAppointment(); // Re-fetch on DB change
+      }
+    });
+  }
+</script>
+</body>
+</html>
