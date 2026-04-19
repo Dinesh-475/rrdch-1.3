@@ -6,117 +6,11 @@
     <meta name="description" content="Apply for Admission at Rajarajeshwari Dental College and Hospital for 2026–2027. BDS, MDS, PhD and Certificate Courses available.">
     <title>Admission Enquiry 2026–2027 | RRDCH</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cu-theme.css">
     <script>
       (function(){ try { const l = localStorage.getItem('rrdch_lang'); const lang = (l==='kn')?'kn':'en'; document.documentElement.setAttribute('data-lang', lang); document.documentElement.setAttribute('lang', lang);} catch(e) {} })();
     </script>
     <style>
-        /* Landing Page Specific Styles */
-        .landing-header {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #2A6F97 100%);
-            padding: 1.5rem 5%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .landing-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            flex-shrink: 0;
-        }
-
-        .landing-brand img {
-            height: 60px;
-            width: auto;
-            border-radius: 6px;
-        }
-
-        .landing-brand-text h1 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: white;
-            line-height: 1.3;
-        }
-
-        .landing-brand-text p {
-            font-size: 0.75rem;
-            color: #94a3b8;
-            margin-top: 2px;
-        }
-
-        /* Right side: logos on top, contact below */
-        .landing-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 0.75rem;
-        }
-
-        .landing-accreditations {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .landing-acc-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .landing-acc-item:hover {
-            background: rgba(255,255,255,0.28);
-            border-color: rgba(255,255,255,0.5);
-            transform: scale(1.1);
-        }
-
-        .landing-acc-item img {
-            max-height: 100%;
-            max-width: 100%;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .landing-contact {
-            display: flex;
-            flex-direction: column;
-            gap: 0.3rem;
-            align-items: flex-end;
-        }
-
-        .contact-pill {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #e2e8f0;
-            font-size: 0.8rem;
-        }
-
-        .contact-pill .icon {
-            color: var(--accent);
-            font-size: 1rem;
-        }
-
-        @media (max-width: 900px) {
-            .landing-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .landing-right { align-items: flex-start; }
-            .landing-accreditations { justify-content: flex-start; }
-            .landing-contact { align-items: flex-start; }
-        }
-
         /* Application Section */
         .application-section {
             padding: 3rem 5%;
@@ -264,14 +158,21 @@
         .success-popup .check-icon {
             width: 72px;
             height: 72px;
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent) 0%, #a08040 100%);
             border-radius: 50%;
             color: white;
-            font-size: 2.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
+            animation: checkBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(195, 156, 91, 0.4);
+        }
+
+        @keyframes checkBounce {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .success-popup h3 {
@@ -287,19 +188,42 @@
         }
 
         .success-popup .close-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, #1A365D 100%);
             color: white;
             border: none;
-            padding: 0.75rem 2rem;
-            border-radius: var(--radius-full);
-            font-weight: 600;
+            padding: 0.9rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 20px rgba(42,111,151,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-popup .close-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .success-popup .close-btn:hover::before {
+            left: 100%;
         }
 
         .success-popup .close-btn:hover {
-            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(42,111,151,0.4);
+        }
+
+        .success-popup .close-btn:active {
+            transform: translateY(0);
         }
 
         /* Experience Section */
@@ -353,9 +277,97 @@
         }
 
         .experience-point .ep-icon {
-            font-size: 1.75rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(42,111,151,0.1) 0%, rgba(195,156,91,0.1) 100%);
+            border: 2px solid rgba(42,111,151,0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
-            margin-top: 2px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 4px 12px rgba(42,111,151,0.15);
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 8px 24px rgba(42,111,151,0.25);
+            }
+        }
+
+        .experience-point:hover .ep-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, rgba(42,111,151,0.2) 0%, rgba(195,156,91,0.2) 100%);
+            border-color: rgba(42,111,151,0.4);
+            box-shadow: 0 12px 30px rgba(42,111,151,0.3);
+            animation: none;
+        }
+
+        .experience-point .ep-icon svg {
+            transition: all 0.3s ease;
+        }
+
+        .experience-point:hover .ep-icon svg {
+            transform: scale(1.15);
+            stroke: #1A365D;
+        }
+
+        /* Animated Button */
+        .btn-animate {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #1A365D 100%);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(42,111,151,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-animate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-animate:hover::before {
+            left: 100%;
+        }
+
+        .btn-animate:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(42,111,151,0.5);
+        }
+
+        .btn-animate svg {
+            transition: all 0.3s ease;
+        }
+
+        .btn-animate:hover svg {
+            transform: translateX(5px);
+        }
+
+        .btn-animate:active {
+            transform: translateY(-1px) scale(0.98);
         }
 
         .experience-point h4 {
@@ -387,39 +399,20 @@
         }
     </style>
 </head>
-<body data-public-page="true" data-page-id="admission-enquiry">
+<body>
 
-    <header class="landing-header">
-        <!-- Left: Logo + College Name -->
-        <div class="landing-brand">
-            <img src="images/logo.png" alt="RRDCH Logo">
-            <div class="landing-brand-text">
-                <h1>Rajarajeshwari Dental College<br>&amp; Hospital, Bangalore</h1>
-                <p>Affiliated to RGUHS &nbsp;|&nbsp; Recognized by DCI &nbsp;|&nbsp; Est. 1992</p>
+    <!-- Simple Header -->
+    <header style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); padding: 1rem 5%; display: flex; align-items: center; justify-content: space-between;">
+        <a href="index.html" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+            <img src="images/logo.png" alt="RRDCH" style="height: 45px; filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));">
+            <div style="color: white;">
+                <div style="font-size: 1rem; font-weight: 700;">RRDCH</div>
+                <div style="font-size: 0.7rem; opacity: 0.8;">Rajarajeshwari Dental College</div>
             </div>
-        </div>
-
-        <!-- Right: 6 Accreditation Logos + Contact below -->
-        <div class="landing-right">
-            <div class="landing-accreditations">
-                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/09/RRDCH-NABH-accredited.pdf" target="_blank" class="landing-acc-item" title="NABH"><img src="images/media__1776162900120.png" alt="NABH"></a>
-                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2013/08/Certificate-of-Accreditation.pdf" target="_blank" class="landing-acc-item" title="NAAC"><img src="images/media__1776162900148.png" alt="NAAC"></a>
-                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2026/02/ISO-certificate-of-registration-12.05.2027.pdf" target="_blank" class="landing-acc-item" title="ISO"><img src="images/media__1776162900187.png" alt="ISO"></a>
-                <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/07/SLMC.pdf" target="_blank" class="landing-acc-item" title="SLMC"><img src="images/media__1776163089873.png" alt="SLMC"></a>
-                <a href="#" class="landing-acc-item" title="Royal College of Physicians and Surgeons of Glasgow"><img src="images/media__1776163089935.png" alt="RCPSG"></a>
-                <a href="#" class="landing-acc-item" title="International Accreditation Organization"><img src="images/media__1776163089970.png" alt="IAO"></a>
-            </div>
-            <div class="landing-contact">
-                <div class="contact-pill">
-                    <span class="icon">✉️</span>
-                    <a href="mailto:admission@rrdch.org" style="color: #e2e8f0;">admission@rrdch.org</a>
-                </div>
-                <div class="contact-pill">
-                    <span class="icon">📞</span>
-                    <span>8028 437 150 &nbsp;/&nbsp; 9180 284 374 68 &nbsp;/&nbsp; 9901 559 955</span>
-                </div>
-            </div>
-        </div>
+        </a>
+        <a href="index.html" style="padding: 0.5rem 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; text-decoration: none; font-size: 0.85rem; font-weight: 600; transition: all 0.3s;">
+            ← Back to Home
+        </a>
     </header>
 
     <!-- Application Section -->
@@ -495,6 +488,20 @@
 
                     <button type="submit" class="deoxy-btn">Apply Now →</button>
                 </form>
+
+                <!-- Contact Info -->
+                <div style="margin-top: 1.5rem; padding: 1rem; background: linear-gradient(135deg, rgba(42,111,151,0.08), rgba(126,217,87,0.06)); border-radius: 12px; border-left: 3px solid var(--accent);">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A6F97" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            <a href="mailto:admission@rrdch.org" style="color: var(--primary); text-decoration: none;">admission@rrdch.org</a>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A6F97" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <span>+91 80 2843 7150 / +91 9180 284 374 68</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -502,44 +509,60 @@
     <!-- Experience Section -->
     <section class="experience-section">
         <div class="experience-inner">
-            <h2>Experience More Than Just Education at RRDCH</h2>
-            <p class="sub">A campus where excellence in dentistry meets vibrant student life</p>
+            <h2 class="animate-on-scroll">Experience More Than Just Education at RRDCH</h2>
+            <p class="sub animate-on-scroll" style="transition-delay:0.1s;">A campus where excellence in dentistry meets vibrant student life</p>
             <div class="experience-points">
-                <div class="experience-point animate-on-scroll">
-                    <div class="ep-icon">🏛️</div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.1s;">
+                    <div class="ep-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A6F97" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-9a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v9"/><circle cx="12" cy="11" r="2"/></svg>
+                    </div>
                     <div>
                         <h4>State-of-the-Art Infrastructure</h4>
                         <p>Modern facilities with advanced labs, digital libraries, and simulation clinics.</p>
                     </div>
                 </div>
-                <div class="experience-point animate-on-scroll" style="transition-delay:0.1s">
-                    <div class="ep-icon"><i data-lucide="projector" width="16" height="16"></i></div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.2s;">
+                    <div class="ep-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A6F97" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
                     <div>
                         <h4>Student Activities & Cultural Events</h4>
                         <p>Clubs, annual fests, sports meets, and vibrant campus life activities.</p>
                     </div>
                 </div>
-                <div class="experience-point animate-on-scroll" style="transition-delay:0.2s">
-                    <div class="ep-icon">👨‍<i data-lucide="book-open" width="16" height="16"></i></div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.3s;">
+                    <div class="ep-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A6F97" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
                     <div>
                         <h4>Supportive Faculty & Mentoring</h4>
                         <p>Experienced faculty with dedicated mentoring programs and student guidance cells.</p>
                     </div>
                 </div>
-                <div class="experience-point animate-on-scroll" style="transition-delay:0.3s">
-                    <div class="ep-icon">🤝</div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.4s;">
+                    <div class="ep-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A6F97" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
                     <div>
                         <h4>Industry Collaboration & Internships</h4>
                         <p>Partnerships with hospitals and dental organizations for practical clinical exposure.</p>
                     </div>
                 </div>
-                <div class="experience-point animate-on-scroll" style="transition-delay:0.4s">
-                    <div class="ep-icon">🚀</div>
+                <div class="experience-point animate-on-scroll" style="transition-delay:0.5s;">
+                    <div class="ep-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2A6F97" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
                     <div>
                         <h4>Placement Support</h4>
                         <p>Strong placement cell with connections to top dental clinics and healthcare recruiters.</p>
                     </div>
                 </div>
+            </div>
+            <div style="margin-top: 3rem; text-align: center;">
+                <a href="admissions.html" class="btn-animate">
+                    <span>Explore Admissions</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
             </div>
         </div>
     </section>
@@ -547,7 +570,9 @@
     <!-- Success Overlay -->
     <div class="success-overlay" id="successOverlay">
         <div class="success-popup">
-            <div class="check-icon">✓</div>
+            <div class="check-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
             <h3>Application Submitted!</h3>
             <p>Your application has been recorded successfully. Our admissions team will contact you within 24–48 hours.</p>
             <p style="font-size: 0.85rem; color: var(--text-muted);">Thank you for choosing RRDCH – Where Excellence Meets Education.</p>
@@ -556,7 +581,12 @@
     </div>
 
     <script>
-        // Admission Form Handler (now submits to /api/admission-enquiry)
+        // Backend API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:3000/api' 
+            : '/api';
+
+        // Admission Form Handler - submits to backend
         document.getElementById('admissionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             let isValid = true;
@@ -585,30 +615,52 @@
 
             if (!isValid) return;
 
+            // Build payload matching backend expectations
+            const courseValue = document.getElementById('adm-course').value;
+            const courseParts = courseValue.split('-');
+            
             const payload = {
-                name: document.getElementById('adm-name').value.trim(),
+                applicant_name: document.getElementById('adm-name').value.trim(),
                 phone: document.getElementById('adm-phone').value.trim(),
                 email: document.getElementById('adm-email').value.trim(),
-                course: document.getElementById('adm-course').value.trim(),
-                query: document.getElementById('adm-query').value.trim()
+                course: courseParts[0] || 'bds',
+                speciality: courseParts[1] || null,
+                dob: null,
+                category: 'general',
+                neet_score: null,
+                neet_rank: null,
+                state: 'Karnataka',
+                address: document.getElementById('adm-query').value.trim()
             };
 
             const btn = this.querySelector('button[type="submit"]');
             const prev = btn.textContent;
             btn.disabled = true;
             btn.textContent = 'Submitting...';
+            
             try {
-                const r = await fetch('/api/admission-enquiry', {
+                const r = await fetch(`${API_BASE}/admissions/apply`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
+                
                 const data = await r.json();
-                if (!r.ok || data.ok === false) throw new Error(data.msg || 'Submission failed');
+                
+                if (!r.ok || data.ok === false) {
+                    throw new Error(data.msg || 'Submission failed');
+                }
+                
+                // Show success with application ID
                 document.getElementById('successOverlay').classList.add('active');
+                if (data.id) {
+                    document.querySelector('.success-popup h3').textContent = `Application Submitted! (ID: ${data.id})`;
+                }
                 this.reset();
+                
             } catch (err) {
-                window.RRDCH_UTILS?.showToast(err.message || 'Could not submit application.', 'error');
+                console.error('Submission error:', err);
+                alert(err.message || 'Could not submit application. Please try again.');
             } finally {
                 btn.disabled = false;
                 btn.textContent = prev;
@@ -634,10 +686,7 @@
 
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/site-context.js"></script>
-    <script src="js/ai.js"></script>
-    <script src="js/public-shell.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/backend.js"></script>
 
 </body>
 </html>

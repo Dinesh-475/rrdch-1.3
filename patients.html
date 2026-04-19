@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Portal | RRDCH</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cu-theme.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -17,7 +18,7 @@
         /* Unified Top Nav */
         .portal-nav { background: white; padding: 1rem 3rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .nav-brand { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; }
-        .nav-brand img { height: 42px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .nav-brand img { height: 50px; object-fit: contain; }
         .lang-toggle { background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid #cbd5e1; cursor: pointer; display: flex; gap: 0.5rem; align-items: center; font-weight: 600; font-size: 0.85rem; color: #475569; }
         .lang-toggle span.active { color: #0284c7; font-weight: 700; }
 
@@ -88,33 +89,158 @@
     </style>
 </head>
 <body>
+    <!-- Unified Login Theme -->
+    <link rel="stylesheet" href="css/login-theme.css">
+
+    <!-- Back to Home Button - Top Left -->
+    <a href="index.html" style="position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.3s; z-index: 100; box-shadow: 4px 4px 0 rgba(0,0,0,0.2);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span>Back to Home</span>
+    </a>
+
     <!-- Secure Access Gateway -->
-    <div id="patientAuthOverlay" class="portal-login-overlay">
-        <a href="index.html" class="logo-box">
-            <img src="images/logo.png" alt="RRDCH">
-            <div style="display:flex; flex-direction:column;">
-                <strong style="color:#0f2d52; font-size:1rem; line-height:1.2;">RRDCH</strong>
-                <span style="font-size:0.7rem; color:#64748b;">Return to Website</span>
-            </div>
-        </a>
+    <div id="patientAuthOverlay" class="portal-login-overlay rrdch-login-root" style="display: flex;">
+        <!-- Centered Logo Brand -->
+        <div style="position: absolute; top: 80px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
+            <a href="index.html" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none;">
+                <img src="images/logo.png" alt="RRDCH" style="height: 70px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(195,156,91,0.7)); animation: logoGlow 3s ease-in-out infinite;">
+                <div style="color: white; text-align: center;">
+                    <div style="font-size: 1.2rem; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">RRDCH</div>
+                    <div style="font-size: 0.75rem; opacity: 0.9; letter-spacing: 1px;">Rajarajeshwari Dental College</div>
+                </div>
+            </a>
+        </div>
+
+        <style>
+            @keyframes logoGlow {
+                0%, 100% { filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(195,156,91,0.7)); }
+                50% { filter: drop-shadow(0 0 25px rgba(255,255,255,1)) drop-shadow(0 0 50px rgba(195,156,91,0.9)); }
+            }
+        </style>
         
-        <form class="form_main" id="patientLoginForm" onsubmit="event.preventDefault(); document.getElementById('patientAuthOverlay').classList.add('hidden'); setTimeout(()=>document.getElementById('patientAuthOverlay').style.display='none',400);">
-            <p class="heading">Patient Access</p>
-            
-            <div class="inputContainer">
-                <i data-lucide="user" class="inputIcon" width="16"></i>
-                <input type="text" class="inputField" placeholder="Patient ID or Phone No." required>
+        <div class="login-wrapper" style="perspective:1000px;">
+            <label class="switch">
+                <input type="checkbox" class="toggle" id="patToggle">
+                <span class="slider"></span>
+                <span class="card-side"></span>
+            </label>
+
+            <div class="flip-card__inner" id="patFlipInner">
+                <!-- FRONT: Log In -->
+                <div class="flip-card__front">
+                    <div class="flip-title">Patient Portal</div>
+                    <form class="flip-card__form" onsubmit="event.preventDefault(); validatePatientLogin();">
+                        <span class="flip-role-badge" style="color:var(--patient); border-color:var(--patient);">Patient Login</span>
+                        
+                        <input type="text" id="patUser" placeholder="patient@rrdch.in" class="flip-card__input" required>
+                        <input type="password" id="patPass" placeholder="Password" class="flip-card__input" required>
+                        
+                        <div id="patLoginErr" class="flip-error">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            Invalid credentials.
+                        </div>
+
+                        <button class="flip-card__btn" type="submit" id="patLoginBtn">Secure Login</button>
+                    </form>
+                    <div class="demo-credentials-badge">
+                        <div class="demo-title">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+                            Demo Credentials
+                        </div>
+                        <div class="demo-credentials-row">Patient ID: <code>patient@rrdch.in</code></div>
+                        <div class="demo-credentials-row">Password: <code>Patient@2024</code></div>
+                    </div>
+                    <a href="#" class="flip-card__link">Forgot Password?</a>
+                </div>
+
+                <!-- BACK: Sign Up -->
+                <div class="flip-card__back">
+                    <div class="flip-title">Register</div>
+                    <form class="flip-card__form" onsubmit="event.preventDefault(); alert('Registration sent to OPD desk. We will contact you.'); document.getElementById('patToggle').checked = false;">
+                        <span class="flip-role-badge" style="color:var(--patient); border-color:var(--patient);">New Patient</span>
+                        
+                        <input type="text" placeholder="Full Name" class="flip-card__input" required>
+                        <input type="email" placeholder="Email Address" class="flip-card__input" required>
+                        <input type="tel" placeholder="Mobile Number" class="flip-card__input" required>
+                        
+                        <button class="flip-card__btn" type="submit">Create Account</button>
+                    </form>
+                    <a href="#" class="flip-card__link" onclick="document.getElementById('patToggle').checked = false;">Back to Login</a>
+                </div>
             </div>
-            
-            <div class="inputContainer">
-                <i data-lucide="lock" class="inputIcon" width="16"></i>
-                <input type="password" class="inputField" placeholder="PIN / Password" required>
-            </div>
-            
-            <button id="button" type="submit">Verify & Login</button>
-            <a class="forgotLink" href="#">Forgot PIN?</a>
-        </form>
+        </div>
+
+        <div class="login-security">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            End-to-end encrypted connection
+        </div>
     </div>
+
+    <!-- Auth script -->
+    <script>
+        // If not yet authenticated, redirect to the unified portal login for 'patient'
+        if (sessionStorage.getItem('rrdch_role') !== 'patient') {
+            window.location.replace('portal.html#patient');
+        }
+        // Hide the old inline overlay if it still exists in DOM
+        const _ov = document.getElementById('patientAuthOverlay');
+        if (_ov) _ov.style.display = 'none';
+
+        // manual toggle flip logic in case the adjacent sibling selector CSS breaks
+        document.getElementById('patToggle')?.addEventListener('change', function() {
+            const inner = document.getElementById('patFlipInner');
+            if (this.checked) {
+                inner.style.transform = 'rotateY(180deg)';
+                inner.querySelector('.flip-card__front').style.boxShadow = 'none';
+            } else {
+                inner.style.transform = '';
+                // Wait for animation
+                setTimeout(() => {
+                  inner.querySelector('.flip-card__front').style.boxShadow = '';
+                }, 800);
+            }
+        });
+
+        async function validatePatientLogin() {
+            const user = document.getElementById('patUser').value.trim().toLowerCase();
+            const pass = document.getElementById('patPass').value;
+            const btn = document.getElementById('patLoginBtn');
+            const err = document.getElementById('patLoginErr');
+
+            err.classList.remove('visible');
+            btn.classList.add('loading');
+            btn.textContent = 'Verifying...';
+
+            await new Promise(r => setTimeout(r, 600)); // Simulate network
+            
+            let success = false;
+            try {
+                // Try backend integration
+                const data = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user, pass, role: 'patient' })
+                }).then(r => r.json());
+                if (data.ok) success = true;
+            } catch (e) {
+                // Fallback demo auth
+                success = (user === 'patient@rrdch.in' && pass === 'Patient@2024');
+            }
+
+            if (success) {
+                sessionStorage.setItem('rrdch_role', 'patient');
+                sessionStorage.setItem('rrdch_user', user);
+                document.getElementById('patientAuthOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('patientAuthOverlay').style.display = 'none';
+                }, 400);
+            } else {
+                err.classList.add('visible');
+                btn.classList.remove('loading');
+                btn.textContent = 'Secure Login';
+            }
+        }
+    </script>
 <!-- Unified Top Nav -->
     <nav class="portal-nav">
         <a href="index.html" class="nav-brand">
@@ -122,8 +248,11 @@
             <span style="background: #e0f2fe; color: #0284c7; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; border: 1px solid #bae6fd; letter-spacing: 0.5px;" class="tl" data-kn="ರೋಗಿಗಳ ಪೋರ್ಟಲ್">PATIENT PORTAL</span>
         </a>
         <div style="display:flex; gap:1rem; align-items:center;">
-            <button class="lang-toggle" onclick="toggleLang()"><i data-lucide="languages" width="16"></i> <span id="enBtn" class="active">EN</span> | <span id="knBtn">ಕನ್ನಡ</span></button>
-            <a href="index.html" class="btn btn-outline" style="border:1px solid #e2e8f0;"><i data-lucide="log-out" width="16"></i> Exit</a>
+            <button class="header-lang-btn" onclick="toggleLang()" style="border-radius: 8px; background: white;">
+                <i data-lucide="languages" width="16"></i> 
+                <span id="enBtn" class="active">EN</span> | <span id="knBtn" style="opacity:0.5;">KN</span>
+            </button>
+            <a href="index.html" class="btn btn-outline" style="border:1px solid #e2e8f0; background:white;"><i data-lucide="log-out" width="16"></i> Exit</a>
         </div>
     </nav>
 
@@ -574,8 +703,8 @@
             const val = this.value; const resEl = document.getElementById("costResult");
             if(!val || !COST_DATA[val]) { resEl.style.display = "none"; return; }
             const data = COST_DATA[val];
-            document.getElementById("costRange").textContent = \`₹\${data.min.toLocaleString("en-IN")} – ₹\${data.max.toLocaleString("en-IN")}\`;
-            document.getElementById("costSessions").textContent = \`\${data.sessions} Session\${data.sessions > 1 ? 's' : ''}\`;
+            document.getElementById("costRange").textContent = `₹${data.min.toLocaleString("en-IN")} – ₹${data.max.toLocaleString("en-IN")}`;
+            document.getElementById("costSessions").textContent = `${data.sessions} Session${data.sessions > 1 ? 's' : ''}`;
             document.getElementById("costInsurance").innerHTML = data.insurance ? "<span style='color:#16a34a;'>✓ May be covered</span>" : "<span style='color:#64748b;'>✗ Self-pay only</span>";
             document.getElementById("costPayment").textContent = data.emi ? "EMI available + Cash + Card" : "Cash + Card only";
             const deptSelect = document.querySelector('#bookingForm select[required]');
@@ -636,7 +765,7 @@
             document.getElementById("tcTime").textContent = time;
 
             const canvas = document.getElementById("tokenQR");
-            QRCode.toCanvas(canvas, \`RRDCH|Token:\${tokenNum}|\${dept}|\${name}|\${dateStr}|\${time}\`, { width: 150, margin: 1, color: { dark: "#1A365D", light: "#FFFFFF" } });
+            QRCode.toCanvas(canvas, `RRDCH|Token:${tokenNum}|${dept}|${name}|${dateStr}|${time}`, { width: 150, margin: 1, color: { dark: "#1A365D", light: "#FFFFFF" } });
 
             form.style.display = 'none';
             alertBox.style.display = 'flex';
@@ -700,8 +829,11 @@
         let curLang = 'en';
         function toggleLang() {
             curLang = curLang === 'en' ? 'kn' : 'en';
+            
             document.getElementById('enBtn').className = curLang === 'en' ? 'active' : '';
+            document.getElementById('enBtn').style.opacity = curLang === 'en' ? '1' : '0.5';
             document.getElementById('knBtn').className = curLang === 'kn' ? 'active' : '';
+            document.getElementById('knBtn').style.opacity = curLang === 'kn' ? '1' : '0.5';
             
             document.querySelectorAll('.tl').forEach(el => {
                 if(!el.dataset.en) el.dataset.en = el.textContent; // Store original

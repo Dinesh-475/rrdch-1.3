@@ -175,4 +175,71 @@ router.get('/student-stats', (req, res) => {
   });
 });
 
+// ─── COURSES ──────────────────────────────────────────────────────────────────
+
+/** GET /api/public/courses — list all academic programs */
+router.get('/courses', (req, res) => {
+  const courses = [
+    // PhD Programs
+    { id: 'phd-omfs', name: "Ph.D in Oral & Maxillofacial Surgery", type: "DOCTORAL", duration: "3 Years", dept: "OMFS", seats: 4, fees: "₹1,50,000/year", description: "Advanced research in surgical treatment of diseases of the head, neck, face, jaws." },
+    { id: 'phd-perio', name: "Ph.D in Periodontology", type: "DOCTORAL", duration: "3 Years", dept: "Periodontics", seats: 3, fees: "₹1,50,000/year", description: "Research in prevention and treatment of diseases of supporting tissues of teeth." },
+    { id: 'phd-pros', name: "Ph.D in Prosthodontics", type: "DOCTORAL", duration: "3 Years", dept: "Prosthodontics", seats: 3, fees: "₹1,50,000/year", description: "Advanced study in restoration and replacement of missing teeth." },
+    { id: 'phd-ortho', name: "Ph.D in Orthodontics", type: "DOCTORAL", duration: "3 Years", dept: "Orthodontics", seats: 3, fees: "₹1,50,000/year", description: "Research in correction of dental and facial irregularities." },
+    // MDS Programs
+    { id: 'mds-cons', name: "MDS - Conservative Dentistry & Endodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Conservative", seats: 6, fees: "₹6,25,000/year", description: "Specialized training in preservation of natural teeth." },
+    { id: 'mds-path', name: "MDS - Oral Pathology & Microbiology", type: "POSTGRADUATE", duration: "3 Years", dept: "Oral Pathology", seats: 4, fees: "₹5,75,000/year", description: "Study of diseases affecting oral and maxillofacial regions." },
+    { id: 'mds-pedo', name: "MDS - Paedodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Paedodontics", seats: 4, fees: "₹6,00,000/year", description: "Comprehensive care for children's dental health." },
+    { id: 'mds-phd', name: "MDS - Public Health Dentistry", type: "POSTGRADUATE", duration: "3 Years", dept: "Public Health", seats: 3, fees: "₹5,50,000/year", description: "Community-based dental care and preventive dentistry." },
+    { id: 'mds-omfs', name: "MDS - Oral & Maxillofacial Surgery", type: "POSTGRADUATE", duration: "3 Years", dept: "OMFS", seats: 6, fees: "₹7,00,000/year", description: "Surgical management of oral and maxillofacial conditions." },
+    { id: 'mds-ortho', name: "MDS - Orthodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Orthodontics", seats: 5, fees: "₹6,50,000/year", description: "Diagnosis and treatment of malocclusions." },
+    { id: 'mds-perio', name: "MDS - Periodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Periodontics", seats: 5, fees: "₹6,25,000/year", description: "Management of diseases of gingiva and supporting structures." },
+    { id: 'mds-pros', name: "MDS - Prosthodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Prosthodontics", seats: 5, fees: "₹6,25,000/year", description: "Restoration and replacement of teeth with crowns, bridges." },
+    // BDS
+    { id: 'bds', name: "Bachelor of Dental Surgery (BDS)", type: "UNDERGRADUATE", duration: "4 Years + 1 Yr Internship", dept: "All Departments", seats: 100, fees: "₹3,50,000/year", description: "Comprehensive undergraduate program covering all aspects of dental sciences." },
+    // Certificate
+    { id: 'cert-implant', name: "Certificate in Dental Implantology", type: "CERTIFICATE", duration: "1 Year", dept: "Implantology", seats: 10, fees: "₹1,00,000", description: "Intensive training in placement and restoration of dental implants." },
+    { id: 'cert-aesthetic', name: "Certificate in Aesthetic Dentistry", type: "CERTIFICATE", duration: "6 Months", dept: "Conservative", seats: 15, fees: "₹75,000", description: "Advanced techniques in smile design and cosmetic restorations." },
+    { id: 'cert-oral-surg', name: "Certificate in Minor Oral Surgery", type: "CERTIFICATE", duration: "6 Months", dept: "OMFS", seats: 12, fees: "₹60,000", description: "Training in extractions, biopsy procedures." },
+    { id: 'cert-endo', name: "Certificate in Advanced Endodontics", type: "CERTIFICATE", duration: "6 Months", dept: "Conservative", seats: 12, fees: "₹65,000", description: "Microscopic endodontics and retreatment procedures." }
+  ];
+
+  const { type } = req.query;
+  let result = courses;
+  if (type) {
+    result = courses.filter(c => c.type === type.toUpperCase());
+  }
+
+  res.json({ ok: true, data: result, count: result.length });
+});
+
+/** GET /api/public/course/:id — get specific course details */
+router.get('/course/:id', (req, res) => {
+  const courses = [
+    { id: 'phd-omfs', name: "Ph.D in Oral & Maxillofacial Surgery", type: "DOCTORAL", duration: "3 Years", dept: "OMFS", seats: 4, fees: "₹1,50,000/year", eligibility: "MDS in OMFS", description: "Advanced research in surgical treatment of diseases of the head, neck, face, jaws.", careers: ["Academic Professor", "Research Scientist", "Chief Surgeon"], research_areas: ["Trauma Surgery", "Reconstructive Surgery", "Orthognathic Surgery"] },
+    { id: 'phd-perio', name: "Ph.D in Periodontology", type: "DOCTORAL", duration: "3 Years", dept: "Periodontics", seats: 3, fees: "₹1,50,000/year", eligibility: "MDS in Periodontics", description: "Research in prevention and treatment of diseases of supporting tissues of teeth.", careers: ["Periodontal Researcher", "Clinical Specialist", "Academic"], research_areas: ["Regenerative Procedures", "Implantology", "Oral Medicine"] },
+    { id: 'phd-pros', name: "Ph.D in Prosthodontics", type: "DOCTORAL", duration: "3 Years", dept: "Prosthodontics", seats: 3, fees: "₹1,50,000/year", eligibility: "MDS in Prosthodontics", description: "Advanced study in restoration and replacement of missing teeth.", careers: ["Prosthodontic Specialist", "Maxillofacial Prosthodontist", "Academic"], research_areas: ["Implant Prosthodontics", "Digital Dentistry", "Maxillofacial Rehabilitation"] },
+    { id: 'phd-ortho', name: "Ph.D in Orthodontics", type: "DOCTORAL", duration: "3 Years", dept: "Orthodontics", seats: 3, fees: "₹1,50,000/year", eligibility: "MDS in Orthodontics", description: "Research in correction of dental and facial irregularities.", careers: ["Orthodontic Specialist", "Craniofacial Researcher", "Academic"], research_areas: ["Growth Modification", "Invisible Orthodontics", "Surgical Orthodontics"] },
+    { id: 'mds-cons', name: "MDS - Conservative Dentistry & Endodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Conservative", seats: 6, fees: "₹6,25,000/year", eligibility: "BDS with internship", description: "Specialized training in preservation of natural teeth through operative procedures.", careers: ["Endodontist", "Restorative Dentist", "Academic"], subjects: ["Operative Dentistry", "Endodontics", "Dental Materials", "Esthetic Dentistry"] },
+    { id: 'mds-path', name: "MDS - Oral Pathology & Microbiology", type: "POSTGRADUATE", duration: "3 Years", dept: "Oral Pathology", seats: 4, fees: "₹5,75,000/year", eligibility: "BDS with internship", description: "Study of diseases affecting oral and maxillofacial regions.", careers: ["Oral Pathologist", "Diagnostic Specialist", "Forensic Odontologist"], subjects: ["Oral Pathology", "Oral Microbiology", "Forensic Odontology", "Immunology"] },
+    { id: 'mds-pedo', name: "MDS - Paedodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Paedodontics", seats: 4, fees: "₹6,00,000/year", eligibility: "BDS with internship", description: "Comprehensive care for children's dental health.", careers: ["Pediatric Dentist", "Special Needs Dentist", "Academic"], subjects: ["Pediatric Dentistry", "Child Psychology", "Preventive Dentistry", "Sedation Techniques"] },
+    { id: 'mds-phd', name: "MDS - Public Health Dentistry", type: "POSTGRADUATE", duration: "3 Years", dept: "Public Health", seats: 3, fees: "₹5,50,000/year", eligibility: "BDS with internship", description: "Community-based dental care and preventive dentistry.", careers: ["Public Health Dentist", "Epidemiologist", "Health Administrator"], subjects: ["Dental Public Health", "Epidemiology", "Health Administration", "Biostatistics"] },
+    { id: 'mds-omfs', name: "MDS - Oral & Maxillofacial Surgery", type: "POSTGRADUATE", duration: "3 Years", dept: "OMFS", seats: 6, fees: "₹7,00,000/year", eligibility: "BDS with internship", description: "Surgical management of oral and maxillofacial conditions.", careers: ["Oral Surgeon", "Trauma Specialist", "Cosmetic Surgeon"], subjects: ["Oral Surgery", "Anesthesia", "Trauma Management", "Reconstructive Surgery"] },
+    { id: 'mds-ortho', name: "MDS - Orthodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Orthodontics", seats: 5, fees: "₹6,50,000/year", eligibility: "BDS with internship", description: "Diagnosis and treatment of malocclusions.", careers: ["Orthodontist", "Craniofacial Specialist", "Academic"], subjects: ["Orthodontic Theory", "Mechanotherapy", "Craniofacial Growth", "Surgical Orthodontics"] },
+    { id: 'mds-perio', name: "MDS - Periodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Periodontics", seats: 5, fees: "₹6,25,000/year", eligibility: "BDS with internship", description: "Management of diseases of gingiva and supporting structures.", careers: ["Periodontist", "Implantologist", "Clinical Researcher"], subjects: ["Periodontology", "Oral Medicine", "Implantology", "Microbiology"] },
+    { id: 'mds-pros', name: "MDS - Prosthodontics", type: "POSTGRADUATE", duration: "3 Years", dept: "Prosthodontics", seats: 5, fees: "₹6,25,000/year", eligibility: "BDS with internship", description: "Restoration and replacement of teeth.", careers: ["Prosthodontist", "Maxillofacial Prosthodontist", "Implantologist"], subjects: ["Complete Dentures", "Removable Partial Dentures", "Fixed Prosthodontics", "Maxillofacial Prosthetics"] },
+    { id: 'bds', name: "Bachelor of Dental Surgery (BDS)", type: "UNDERGRADUATE", duration: "4 Years + 1 Yr Internship", dept: "All Departments", seats: 100, fees: "₹3,50,000/year", eligibility: "10+2 with Physics, Chemistry, Biology", description: "Comprehensive undergraduate program covering all aspects of dental sciences.", careers: ["General Dentist", "Private Practitioner", "Government Dental Officer", "MDS Specialization"], subjects: ["Anatomy", "Physiology", "Dental Materials", "Oral Surgery", "Prosthodontics", "Orthodontics", "Periodontics", "Conservative Dentistry", "Oral Medicine", "Paedodontics"] },
+    { id: 'cert-implant', name: "Certificate in Dental Implantology", type: "CERTIFICATE", duration: "1 Year", dept: "Implantology", seats: 10, fees: "₹1,00,000", eligibility: "BDS or MDS", description: "Intensive training in placement and restoration of dental implants.", careers: ["Implantologist", "Oral Surgeon", "Prosthodontist"], modules: ["Implant Surgery", "Prosthetic Rehabilitation", "Bone Grafting", "Digital Implant Planning"] },
+    { id: 'cert-aesthetic', name: "Certificate in Aesthetic Dentistry", type: "CERTIFICATE", duration: "6 Months", dept: "Conservative", seats: 15, fees: "₹75,000", eligibility: "BDS", description: "Advanced techniques in smile design and cosmetic restorations.", careers: ["Cosmetic Dentist", "Smile Designer", "Private Practitioner"], modules: ["Smile Design", "Veneers", "Teeth Whitening", "Digital Smile Planning"] },
+    { id: 'cert-oral-surg', name: "Certificate in Minor Oral Surgery", type: "CERTIFICATE", duration: "6 Months", dept: "OMFS", seats: 12, fees: "₹60,000", eligibility: "BDS", description: "Training in extractions, biopsy procedures.", careers: ["Oral Surgeon", "General Dentist"], modules: ["Exodontia", "Biopsy Techniques", "Wound Management", "Local Anesthesia"] },
+    { id: 'cert-endo', name: "Certificate in Advanced Endodontics", type: "CERTIFICATE", duration: "6 Months", dept: "Conservative", seats: 12, fees: "₹65,000", eligibility: "BDS", description: "Microscopic endodontics and retreatment procedures.", careers: ["Endodontist", "Restorative Dentist"], modules: ["Microscopic Endodontics", "Retreatment", "Apical Surgery", "Regenerative Endodontics"] }
+  ];
+
+  const course = courses.find(c => c.id === req.params.id);
+  if (!course) {
+    return res.status(404).json({ ok: false, msg: 'Course not found' });
+  }
+
+  res.json({ ok: true, data: course });
+});
+
 module.exports = router;

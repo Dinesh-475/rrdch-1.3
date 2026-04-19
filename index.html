@@ -15,81 +15,6 @@
     </script>
 </head>
 <body data-public-page="true" data-page-id="home">
-    <!-- Newton's Cradle Loader -->
-    <style>
-      #global-skeleton {
-        position: fixed; inset: 0; z-index: 999999;
-        background: #ffffff; /* Black & White Theme */
-        display: flex; align-items: center; justify-content: center;
-        pointer-events: all;
-        transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), visibility 0.7s ease;
-      }
-      #global-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-      .newtons-cradle {
-        --uib-size: 80px;
-        --uib-speed: 1.2s;
-        --uib-color: #000000; /* Black & White Theme */
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: var(--uib-size);
-        height: var(--uib-size);
-      }
-      .newtons-cradle__dot {
-        position: relative;
-        display: flex;
-        align-items: center;
-        height: 100%;
-        width: 25%;
-        transform-origin: center top;
-      }
-      .newtons-cradle__dot::after {
-        content: '';
-        display: block;
-        width: 100%;
-        height: 25%;
-        border-radius: 50%;
-        background-color: var(--uib-color);
-      }
-      .newtons-cradle__dot:first-child {
-        animation: swing var(--uib-speed) linear infinite;
-      }
-      .newtons-cradle__dot:last-child {
-        animation: swing2 var(--uib-speed) linear infinite;
-      }
-      @keyframes swing {
-        0%  { transform: rotate(0deg);  animation-timing-function: ease-out; }
-        25% { transform: rotate(70deg); animation-timing-function: ease-in;  }
-        50% { transform: rotate(0deg);  animation-timing-function: linear;   }
-      }
-      @keyframes swing2 {
-        0%  { transform: rotate(0deg);   animation-timing-function: linear;   }
-        50% { transform: rotate(0deg);   animation-timing-function: ease-out; }
-        75% { transform: rotate(-70deg); animation-timing-function: ease-in;  }
-      }
-    </style>
-    <div id="global-skeleton">
-        <div class="newtons-cradle">
-            <div class="newtons-cradle__dot"></div>
-            <div class="newtons-cradle__dot"></div>
-            <div class="newtons-cradle__dot"></div>
-            <div class="newtons-cradle__dot"></div>
-        </div>
-    </div>
-    <script>
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const skel = document.getElementById('global-skeleton');
-                if (skel) skel.classList.add('hidden');
-            }, 500);
-        });
-        setTimeout(() => {
-            const skel = document.getElementById('global-skeleton');
-            if (skel) skel.classList.add('hidden');
-        }, 6000);
-    </script>
     <!-- Public shell injects header, drawer, footer via public-shell.js -->
 
 
@@ -122,18 +47,18 @@
         </div>
 
         <!-- WhatsApp Floating Icon -->
-        <a href="https://wa.me/1234567890" class="whatsapp-float" aria-label="Chat on WhatsApp">
+        <a href="https://wa.me/918028437150" class="whatsapp-float" aria-label="Chat on WhatsApp" target="_blank" rel="noopener noreferrer">
             <img src="images/watsapp%20logo.png" alt="WhatsApp">
         </a>
 
         <!-- Bottom Campuses/Facilities Bar -->
         <div class="hero-bottom-bar">
             <div class="bottom-bar-label">Our Facilities</div>
-            <a href="#">Main Hospital</a>
-            <a href="#">Super Speciality Center</a>
-            <a href="#">Dental OPD Clinics</a>
-            <a href="#">PG Research Labs</a>
-            <a href="#">Hostels &amp; Dining</a>
+            <a href="departments.html">Main Hospital</a>
+            <a href="departments.html">Super Speciality Center</a>
+            <a href="departments.html">Dental OPD Clinics</a>
+            <a href="research.html">PG Research Labs</a>
+            <a href="students.html">Hostels &amp; Dining</a>
         </div>
     </header>
 
@@ -164,10 +89,10 @@
                 </div>
                 <div class="animate-on-scroll" style="transition-delay:0.15s;">
                     <div class="degree-tabs">
-                        <div class="degree-tab">DOCTORAL (PhD)</div>
-                        <div class="degree-tab">POSTGRADUATE (MDS)</div>
-                        <div class="degree-tab active">UNDERGRADUATE (BDS)</div>
-                        <div class="degree-tab">CERTIFICATE COURSES</div>
+                        <div class="degree-tab" data-degree="phd" onclick="showDegree('phd')">DOCTORAL (PhD)</div>
+                        <div class="degree-tab" data-degree="mds" onclick="showDegree('mds')">POSTGRADUATE (MDS)</div>
+                        <div class="degree-tab active" data-degree="bds" onclick="showDegree('bds')">UNDERGRADUATE (BDS)</div>
+                        <div class="degree-tab" data-degree="cert" onclick="showDegree('cert')">CERTIFICATE COURSES</div>
                     </div>
                     <div class="course-search">
                         <input type="text" id="degreeSearch" placeholder="Search by: Keyword, course, department..." aria-label="Search courses">
@@ -176,7 +101,40 @@
                         </button>
                     </div>
                     <!-- Dynamic injection point for courses -->
-                    <div id="degreeContent" class="degree-content-area" style="margin-top: 1.5rem; min-height: 120px;"></div>
+                    <div id="degreeContent" class="degree-content-area" style="margin-top: 1.5rem; min-height: 120px;">
+                        <div id="bds-content" class="degree-content" style="display: block;">
+                            <h4 style="color: var(--cu-blue); margin-bottom: 0.5rem;">Bachelor of Dental Surgery (BDS)</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">5-year comprehensive program including 1-year internship. Annual intake: 100 students. Recognized by DCI and affiliated to RGUHS.</p>
+                            <div style="margin-top: 1rem;">
+                                <a href="admissions.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Apply Now</a>
+                                <a href="about.html" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem; margin-left: 0.5rem;">Learn More</a>
+                            </div>
+                        </div>
+                        <div id="mds-content" class="degree-content" style="display: none;">
+                            <h4 style="color: var(--cu-blue); margin-bottom: 0.5rem;">Master of Dental Surgery (MDS)</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">3-year postgraduate program in 9 specialities including Oral Surgery, Orthodontics, Endodontics, Periodontology, and more.</p>
+                            <div style="margin-top: 1rem;">
+                                <a href="admissions.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Apply Now</a>
+                                <a href="departments.html" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem; margin-left: 0.5rem;">View Departments</a>
+                            </div>
+                        </div>
+                        <div id="phd-content" class="degree-content" style="display: none;">
+                            <h4 style="color: var(--cu-blue); margin-bottom: 0.5rem;">Doctor of Philosophy (PhD)</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Research-focused doctoral program in dental sciences. Minimum 3-year duration with thesis submission in advanced dental research.</p>
+                            <div style="margin-top: 1rem;">
+                                <a href="admissions.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Apply Now</a>
+                                <a href="research.html" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem; margin-left: 0.5rem;">Research Areas</a>
+                            </div>
+                        </div>
+                        <div id="cert-content" class="degree-content" style="display: none;">
+                            <h4 style="color: var(--cu-blue); margin-bottom: 0.5rem;">Certificate Courses</h4>
+                            <p style="color: var(--text-muted); font-size: 0.9rem;">Short-term specialized courses in Dental Implants, Aesthetic Dentistry, Laser Dentistry, and Oral Radiology for practitioners.</p>
+                            <div style="margin-top: 1rem;">
+                                <a href="admissions.html" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">Apply Now</a>
+                                <a href="about.html" class="btn btn-outline" style="font-size: 0.85rem; padding: 0.5rem 1rem; margin-left: 0.5rem;">View Courses</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -185,7 +143,7 @@
     <!-- ══════════════════════════════════════════════
          ACCREDITATIONS
     ══════════════════════════════════════════════════ -->
-    <section class="container animate-on-scroll" style="padding-top:2rem;padding-bottom:3rem;">
+    <section id="certifications" class="container animate-on-scroll" style="padding-top:2rem;padding-bottom:3rem;">
         <p class="section-subtitle" style="font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.75rem;">Accreditations &amp; Institutional Recognition</p>
         <div class="accreditation-logos">
             <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/09/RRDCH-NABH-accredited.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="NABH Accreditation">
@@ -207,6 +165,89 @@
                 <img src="images/media__1776163089970.png" alt="IAO Accreditation">
             </a>
         </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         DYNAMIC PHOTO GALLERY
+    ══════════════════════════════════════════════════ -->
+    <section class="container" style="padding-top:3rem;padding-bottom:4rem;">
+        <div class="text-center animate-on-scroll" style="margin-bottom:2rem;">
+            <div class="section-tag">Campus Gallery</div>
+            <h2 class="section-title" style="margin-top:0.5rem;">Explore RRDCH</h2>
+            <p class="section-subtitle">Scroll through our world-class facilities</p>
+        </div>
+        
+        <!-- Scrolling Photo Gallery -->
+        <div class="photo-scroll-container animate-on-scroll" style="position:relative;overflow:hidden;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+            <div class="photo-scroll-track" id="photoTrack" style="display:flex;gap:1rem;padding:1rem;animation:scrollGallery 30s linear infinite;">
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_1.jpg" alt="RRDCH Campus" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_2.jpg" alt="Dental Clinic" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_3.jpg" alt="Laboratory" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_4.jpg" alt="Hospital Wing" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_5.jpg" alt="Student Activity" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_6.jpg" alt="Modern Equipment" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/im10.jpg" alt="Campus View" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                </div>
+                <!-- Duplicate for seamless loop -->
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_1.jpg" alt="RRDCH Campus" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_2.jpg" alt="Dental Clinic" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
+                    <img src="pictures/home page images/slider_3.jpg" alt="Laboratory" style="width:100%;height:100%;object-fit:cover;">
+                </div>
+            </div>
+            
+            <!-- Gradient Overlays -->
+            <div style="position:absolute;left:0;top:0;bottom:0;width:100px;background:linear-gradient(90deg,white,transparent);z-index:2;pointer-events:none;"></div>
+            <div style="position:absolute;right:0;top:0;bottom:0;width:100px;background:linear-gradient(-90deg,white,transparent);z-index:2;pointer-events:none;"></div>
+        </div>
+        
+        <!-- Gallery Controls -->
+        <div style="display:flex;justify-content:center;gap:1rem;margin-top:1.5rem;">
+            <button onclick="pauseGallery()" style="padding:0.5rem 1rem;background:var(--cu-blue);color:white;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                Pause
+            </button>
+            <button onclick="playGallery()" style="padding:0.5rem 1rem;background:var(--cu-gold);color:white;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+                Play
+            </button>
+        </div>
+        
+        <style>
+            @keyframes scrollGallery {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+            .photo-scroll-track.paused {
+                animation-play-state: paused !important;
+            }
+        </style>
+        
+        <script>
+            function pauseGallery() {
+                document.getElementById('photoTrack').classList.add('paused');
+            }
+            function playGallery() {
+                document.getElementById('photoTrack').classList.remove('paused');
+            }
+        </script>
     </section>
 
     <!-- ══════════════════════════════════════════════
@@ -761,51 +802,185 @@
             if (window.lucide) lucide.createIcons();
         });
 
-        // Degree tab mapping and interactivity
-        document.addEventListener('DOMContentLoaded', () => {
+        // Degree Section - Backend Connected with Scroll Hide/Show
+        (function initDegreeSection() {
+            const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:3000/api'
+                : '/api';
+
+            // Extended course data with backend mapping
             const courseData = {
                 'DOCTORAL (PhD)': [
-                    { name: "Ph.D in Oral & Maxillofacial Surgery", dur: "3 Years" },
-                    { name: "Ph.D in Periodontology", dur: "3 Years" },
-                    { name: "Ph.D in Prosthodontics", dur: "3 Years" },
-                    { name: "Ph.D in Orthodontics", dur: "3 Years" }
+                    { id: 'phd-omfs', name: "Ph.D in Oral & Maxillofacial Surgery", dur: "3 Years", dept: "OMFS", seats: 4, fees: "₹1,50,000/year", desc: "Advanced research in surgical treatment of diseases, injuries and defects of the head, neck, face, jaws and the hard and soft tissues of the oral and maxillofacial region." },
+                    { id: 'phd-perio', name: "Ph.D in Periodontology", dur: "3 Years", dept: "Periodontics", seats: 3, fees: "₹1,50,000/year", desc: "Research in prevention, diagnosis and treatment of diseases of the supporting and surrounding tissues of the teeth." },
+                    { id: 'phd-pros', name: "Ph.D in Prosthodontics", dur: "3 Years", dept: "Prosthodontics", seats: 3, fees: "₹1,50,000/year", desc: "Advanced study in restoration and replacement of missing teeth and oral structures." },
+                    { id: 'phd-ortho', name: "Ph.D in Orthodontics", dur: "3 Years", dept: "Orthodontics", seats: 3, fees: "₹1,50,000/year", desc: "Research in correction of dental and facial irregularities through braces and other appliances." }
                 ],
                 'POSTGRADUATE (MDS)': [
-                    { name: "MDS - Conservative Dentistry", dur: "3 Years" },
-                    { name: "MDS - Oral Pathology", dur: "3 Years" },
-                    { name: "MDS - Paedodontics", dur: "3 Years" },
-                    { name: "MDS - Public Health Dentistry", dur: "3 Years" }
+                    { id: 'mds-cons', name: "MDS - Conservative Dentistry & Endodontics", dur: "3 Years", dept: "Conservative", seats: 6, fees: "₹6,25,000/year", desc: "Specialized training in preservation of natural teeth through operative procedures and root canal treatment." },
+                    { id: 'mds-path', name: "MDS - Oral Pathology & Microbiology", dur: "3 Years", dept: "Oral Pathology", seats: 4, fees: "₹5,75,000/year", desc: "Study of diseases affecting the oral and maxillofacial regions, including histopathology and diagnostic sciences." },
+                    { id: 'mds-pedo', name: "MDS - Paedodontics", dur: "3 Years", dept: "Paedodontics", seats: 4, fees: "₹6,00,000/year", desc: "Comprehensive care for children's dental health including preventive and therapeutic approaches." },
+                    { id: 'mds-phd', name: "MDS - Public Health Dentistry", dur: "3 Years", dept: "Public Health", seats: 3, fees: "₹5,50,000/year", desc: "Community-based dental care and preventive dentistry at population level." },
+                    { id: 'mds-omfs', name: "MDS - Oral & Maxillofacial Surgery", dur: "3 Years", dept: "OMFS", seats: 6, fees: "₹7,00,000/year", desc: "Surgical management of conditions affecting the oral and maxillofacial region." },
+                    { id: 'mds-ortho', name: "MDS - Orthodontics", dur: "3 Years", dept: "Orthodontics", seats: 5, fees: "₹6,50,000/year", desc: "Diagnosis and treatment of malocclusions and dentofacial deformities." },
+                    { id: 'mds-perio', name: "MDS - Periodontics", dur: "3 Years", dept: "Periodontics", seats: 5, fees: "₹6,25,000/year", desc: "Management of diseases of the gingiva and supporting structures." },
+                    { id: 'mds-pros', name: "MDS - Prosthodontics", dur: "3 Years", dept: "Prosthodontics", seats: 5, fees: "₹6,25,000/year", desc: "Restoration and replacement of teeth with crowns, bridges, and dentures." }
                 ],
                 'UNDERGRADUATE (BDS)': [
-                    { name: "Bachelor of Dental Surgery (BDS)", dur: "4 Years + 1 Yr Internship" }
+                    { id: 'bds', name: "Bachelor of Dental Surgery (BDS)", dur: "4 Years + 1 Yr Internship", dept: "All Departments", seats: 100, fees: "₹3,50,000/year", desc: "Comprehensive undergraduate program covering all aspects of dental sciences with clinical training in all specialties." }
                 ],
                 'CERTIFICATE COURSES': [
-                    { name: "Certificate Course in Implantology", dur: "1 Year" },
-                    { name: "Aesthetic Dentistry Certification", dur: "6 Months" }
+                    { id: 'cert-implant', name: "Certificate in Dental Implantology", dur: "1 Year", dept: "Implantology", seats: 10, fees: "₹1,00,000", desc: "Intensive training in placement and restoration of dental implants including surgical and prosthetic aspects." },
+                    { id: 'cert-aesthetic', name: "Certificate in Aesthetic Dentistry", dur: "6 Months", dept: "Conservative", seats: 15, fees: "₹75,000", desc: "Advanced techniques in smile design, veneers, bleaching, and cosmetic restorations." },
+                    { id: 'cert-oral-surg', name: "Certificate in Minor Oral Surgery", dur: "6 Months", dept: "OMFS", seats: 12, fees: "₹60,000", desc: "Training in extractions, biopsy procedures, and minor surgical interventions." },
+                    { id: 'cert-endo', name: "Certificate in Advanced Endodontics", dur: "6 Months", dept: "Conservative", seats: 12, fees: "₹65,000", desc: "Microscopic endodontics, retreatment, and regenerative procedures." }
                 ]
             };
 
             const contentArea = document.getElementById('degreeContent');
             const searchInput = document.getElementById('degreeSearch');
+            const degreeSection = document.getElementById('degree-section');
+            let currentExpandedCourse = null;
+
+            // Fetch additional course details from backend
+            async function fetchCourseDetails(courseId) {
+                try {
+                    const res = await fetch(`${API_BASE}/public/course/${courseId}`);
+                    if (!res.ok) throw new Error('Failed to fetch');
+                    return await res.json();
+                } catch (e) {
+                    return null; // Fallback to local data
+                }
+            }
+
+            function renderCourseDetail(course, backendData) {
+                const data = backendData?.data || course;
+                return `
+                    <div class="course-detail-overlay" style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.6);
+                        backdrop-filter: blur(4px);
+                        z-index: 1000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        padding: 1rem;
+                        animation: fadeIn 0.3s ease;
+                    " onclick="if(event.target === this) closeCourseDetail()">
+                        <div style="
+                            background: white;
+                            border-radius: 16px;
+                            max-width: 600px;
+                            width: 100%;
+                            max-height: 90vh;
+                            overflow-y: auto;
+                            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+                            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                        ">
+                            <div style="padding: 2rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                                    <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--cu-gold); background: var(--cu-gold-muted); padding: 0.4rem 0.8rem; border-radius: 4px;">${course.dept}</span>
+                                    <button onclick="closeCourseDetail()" style="background: none; border: none; cursor: pointer; padding: 0.5rem; color: #64748b; hover: color: var(--cu-blue);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                                    </button>
+                                </div>
+                                <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--cu-blue); margin-bottom: 0.5rem;">${course.name}</h3>
+                                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                                    <span style="font-size: 0.875rem; color: #64748b; display: flex; align-items: center; gap: 0.3rem;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        ${course.dur}
+                                    </span>
+                                    <span style="font-size: 0.875rem; color: #64748b; display: flex; align-items: center; gap: 0.3rem;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+                                        ${course.seats} Seats
+                                    </span>
+                                    <span style="font-size: 0.875rem; color: var(--cu-blue); font-weight: 700; display: flex; align-items: center; gap: 0.3rem;">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                        ${course.fees}
+                                    </span>
+                                </div>
+                                <p style="color: #475569; line-height: 1.7; margin-bottom: 1.5rem;">${course.desc}</p>
+                                <div style="display: flex; gap: 1rem;">
+                                    <a href="admission_enquiry.html?course=${encodeURIComponent(course.id)}" style="flex: 1; background: var(--cu-blue); color: white; text-align: center; padding: 0.875rem; border-radius: 8px; font-weight: 700; text-decoration: none; transition: all 0.2s;">Apply Now</a>
+                                    <a href="departments.html?dept=${encodeURIComponent(course.dept)}" style="flex: 1; background: var(--cu-bg); color: var(--cu-blue); text-align: center; padding: 0.875rem; border-radius: 8px; font-weight: 700; text-decoration: none; border: 2px solid var(--cu-border); transition: all 0.2s;">View Department</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            window.closeCourseDetail = function() {
+                const overlay = document.querySelector('.course-detail-overlay');
+                if (overlay) {
+                    overlay.style.animation = 'fadeOut 0.2s ease forwards';
+                    setTimeout(() => overlay.remove(), 200);
+                }
+                currentExpandedCourse = null;
+            };
+
+            async function showCourseDetail(course) {
+                if (currentExpandedCourse === course.id) {
+                    closeCourseDetail();
+                    return;
+                }
+                currentExpandedCourse = course.id;
+                closeCourseDetail(); // Close any existing
+                const backendData = await fetchCourseDetails(course.id);
+                const detailHTML = renderCourseDetail(course, backendData);
+                document.body.insertAdjacentHTML('beforeend', detailHTML);
+            }
 
             function renderCourses(term, tabName) {
                 if(!contentArea) return;
                 const courses = tabName ? courseData[tabName] : Object.values(courseData).flat();
                 const filtered = courses.filter(c => c.name.toLowerCase().includes((term || '').toLowerCase()));
-                
+
                 if(filtered.length === 0) {
                     contentArea.innerHTML = '<div style="color:var(--cu-text-muted); padding:1rem 0;">No matching courses found.</div>';
                     return;
                 }
-                
-                contentArea.innerHTML = filtered.map(c => `
-                    <div style="background:white; border:1px solid var(--cu-border); padding:1rem 1.25rem; border-radius:8px; margin-bottom:0.75rem; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.03); animation: fadeUp 0.3s ease;">
-                        <span style="font-weight:700; color:var(--cu-blue); font-size:0.95rem;">${c.name}</span>
-                        <span style="font-size:0.8rem; color:#64748b; font-weight:600; background:var(--cu-bg); padding:0.3rem 0.8rem; border-radius:4px;">${c.dur}</span>
+
+                contentArea.innerHTML = filtered.map((c, i) => `
+                    <div class="course-card" data-course-id="${c.id}" style="
+                        background: white;
+                        border: 2px solid var(--cu-border);
+                        padding: 1.25rem;
+                        border-radius: 12px;
+                        margin-bottom: 0.75rem;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+                        cursor: pointer;
+                        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                        animation: fadeUp 0.4s ease backwards;
+                        animation-delay: ${i * 0.05}s;
+                    " onmouseenter="this.style.borderColor='var(--cu-gold)'; this.style.transform='translateY(-3px) scale(1.01)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.1)'" onmouseleave="this.style.borderColor='var(--cu-border)'; this.style.transform=''; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.04)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                            <div style="width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, var(--cu-blue), var(--cu-blue-light)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem;">
+                                ${c.id.split('-')[0].toUpperCase()}
+                            </div>
+                            <div>
+                                <div style="font-weight: 700; color: var(--cu-blue); font-size: 1rem; margin-bottom: 0.25rem;">${c.name}</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">${c.dept} • ${c.seats} seats</div>
+                            </div>
+                        </div>
+                        <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; background: var(--cu-bg); padding: 0.4rem 0.9rem; border-radius: 20px;">${c.dur}</span>
                     </div>
                 `).join('');
+
+                // Add click handlers
+                contentArea.querySelectorAll('.course-card').forEach((card, idx) => {
+                    card.addEventListener('click', () => showCourseDetail(filtered[idx]));
+                });
             }
 
+            // Tab click handlers
             document.querySelectorAll('.degree-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     document.querySelectorAll('.degree-tab').forEach(t => t.classList.remove('active'));
@@ -822,9 +997,66 @@
                 });
             }
 
+            // Search button click handler
+            const searchBtn = document.getElementById('degreeSearchBtn');
+            if (searchBtn) {
+                searchBtn.addEventListener('click', () => {
+                    const query = searchInput.value.trim();
+                    if (query) {
+                        document.querySelectorAll('.degree-tab').forEach(t => t.classList.remove('active'));
+                        renderCourses(query, null);
+                    }
+                });
+            }
+
+            // Scroll-based hide/show for degree section
+            if (degreeSection) {
+                let lastScrollY = 0;
+                let sectionTop = degreeSection.offsetTop;
+                let sectionHeight = degreeSection.offsetHeight;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            degreeSection.style.opacity = '1';
+                            degreeSection.style.transform = 'translateY(0)';
+                            degreeSection.style.pointerEvents = 'auto';
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                observer.observe(degreeSection);
+
+                // Hide when scrolled past
+                window.addEventListener('scroll', () => {
+                    const scrollY = window.scrollY;
+                    const sectionBottom = sectionTop + sectionHeight;
+
+                    // Hide when scrolled well past the section
+                    if (scrollY > sectionBottom + 100) {
+                        degreeSection.style.opacity = '0';
+                        degreeSection.style.transform = 'translateY(-20px)';
+                        degreeSection.style.pointerEvents = 'none';
+                        degreeSection.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    } else if (scrollY < sectionBottom) {
+                        degreeSection.style.opacity = '1';
+                        degreeSection.style.transform = 'translateY(0)';
+                        degreeSection.style.pointerEvents = 'auto';
+                    }
+
+                    lastScrollY = scrollY;
+                }, { passive: true });
+
+                // Update on resize
+                window.addEventListener('resize', () => {
+                    sectionTop = degreeSection.offsetTop;
+                    sectionHeight = degreeSection.offsetHeight;
+                });
+            }
+
             // Init default
             renderCourses('', 'UNDERGRADUATE (BDS)');
-        });
+        })();
 
         // Review rating
         let fbRating = 0;
@@ -848,6 +1080,23 @@
             fbRating = 0;
             document.querySelectorAll('.fstar').forEach(s => s.style.color = '#cbd5e1');
             setTimeout(() => document.getElementById('fbSuccess').style.display = 'none', 4000);
+        }
+
+        // Degree tab switching function
+        function showDegree(degree) {
+            // Hide all content
+            document.querySelectorAll('.degree-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            // Show selected content
+            document.getElementById(degree + '-content').style.display = 'block';
+            
+            // Update active tab
+            document.querySelectorAll('.degree-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector('[data-degree="' + degree + '"]').classList.add('active');
         }
     </script>
 </body>

@@ -21,7 +21,7 @@
         /* Portal Nav */
         .doc-nav { background: white; border-bottom: 1px solid var(--border); padding: 0 3%; display: flex; align-items: center; gap: 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04); height: 64px; }
         .doc-nav .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; margin-right: auto; }
-        .doc-nav .brand img { height: 40px; background: white; border-radius: 6px; padding: 4px 10px; border: 1px solid var(--border); object-fit: contain; }
+        .doc-nav .brand img { height: 50px; object-fit: contain; }
         .portal-badge { background: #dcfce7; color: var(--green); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 20px; }
         .doc-nav .nav-links { display: flex; align-items: center; gap: 0.5rem; margin-right: 1.5rem; }
         .doc-nav .nav-links a { color: var(--muted); font-size: 0.88rem; font-weight: 600; padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s; }
@@ -115,33 +115,110 @@
     </style>
 </head>
 <body>
+    <!-- Unified Login Theme -->
+    <link rel="stylesheet" href="css/login-theme.css">
+
     <!-- Secure Access Gateway -->
-    <div id="doctorAuthOverlay" class="portal-login-overlay">
-        <a href="index.html" class="logo-box">
+    <div id="doctorAuthOverlay" class="portal-login-overlay rrdch-login-root" style="display: flex;">
+        <a href="index.html" class="login-brand">
             <img src="images/logo.png" alt="RRDCH">
-            <div style="display:flex; flex-direction:column;">
-                <strong style="color:#0f2d52; font-size:1rem; line-height:1.2;">RRDCH</strong>
-                <span style="font-size:0.7rem; color:#64748b;">Return to Website</span>
+            <div class="login-brand-text">
+                <strong>RRDCH</strong>
+                <span>Return to Website</span>
             </div>
         </a>
         
-        <form class="form_main" id="adminLoginForm" onsubmit="event.preventDefault(); document.getElementById('doctorAuthOverlay').classList.add('hidden'); setTimeout(()=>document.getElementById('doctorAuthOverlay').style.display='none',400);">
-            <p class="heading">Admin Access</p>
-            
-            <div class="inputContainer">
-                <i data-lucide="user" class="inputIcon" width="16"></i>
-                <input type="text" class="inputField" placeholder="Admin ID or Auth Key" required>
+        <div class="login-wrapper">
+            <!-- No Sign Up for admins, hide toggle -->
+            <label class="switch" style="visibility:hidden; height:0; margin:0;">
+                <input type="checkbox" class="toggle">
+                <span class="slider"></span>
+                <span class="card-side"></span>
+            </label>
+
+            <div class="flip-card__inner">
+                <div class="flip-card__front">
+                    <div class="flip-title">Admin Access</div>
+                    <form class="flip-card__form" onsubmit="event.preventDefault(); validateAdminLogin();">
+                        <span class="flip-role-badge" style="color:var(--admin); border-color:var(--admin);">System Admin</span>
+                        
+                        <input type="email" id="admUser" placeholder="Admin Email (admin@rrdch.in)" class="flip-card__input" required>
+                        <input type="password" id="admPass" placeholder="Master Password" class="flip-card__input" required>
+                        
+                        <div id="admLoginErr" class="flip-error">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            Access denied. Invalid credentials.
+                        </div>
+
+                        <button class="flip-card__btn" type="submit" id="admLoginBtn" style="color:var(--font-color);">Unlock System</button>
+                    </form>
+                    <div class="demo-credentials-badge">
+                        <div class="demo-title">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+                            Demo Credentials
+                        </div>
+                        <div class="demo-credentials-row">Email: <code>admin@rrdch.in</code></div>
+                        <div class="demo-credentials-row">Password: <code>Admin@2024</code></div>
+                    </div>
+                    <a href="#" class="flip-card__link">Request Access Reset</a>
+                </div>
             </div>
-            
-            <div class="inputContainer">
-                <i data-lucide="lock" class="inputIcon" width="16"></i>
-                <input type="password" class="inputField" placeholder="Master Password" required>
-            </div>
-            
-            <button id="button" type="submit">Unlock System</button>
-            <a class="forgotLink" href="#">Request Access Reset</a>
-        </form>
+        </div>
+
+        <div class="login-security">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Root access authenticated securely
+        </div>
     </div>
+
+    <!-- Auth script -->
+    <script>
+        // Check session, hide overlay if already auth'd
+        if (sessionStorage.getItem('rrdch_role') === 'admin') {
+            document.getElementById('doctorAuthOverlay').style.display = 'none';
+        }
+
+        async function validateAdminLogin() {
+            const user = document.getElementById('admUser').value.trim().toLowerCase();
+            const pass = document.getElementById('admPass').value;
+            const btn = document.getElementById('admLoginBtn');
+            const err = document.getElementById('admLoginErr');
+
+            err.classList.remove('visible');
+            btn.classList.add('loading');
+            btn.textContent = 'Verifying...';
+
+            await new Promise(r => setTimeout(r, 600)); // Simulate network
+            
+            let success = false;
+            try {
+                // Try backend integration if API responds
+                const data = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user, pass, role: 'admin' })
+                }).then(r => r.json());
+                if (data.ok) success = true;
+            } catch (e) {
+                // Fallback demo auth
+                success = (user === 'admin@rrdch.in' && pass === 'admin123');
+            }
+
+            if (success) {
+                sessionStorage.setItem('rrdch_role', 'admin');
+                sessionStorage.setItem('rrdch_user', user);
+                document.getElementById('doctorAuthOverlay').style.opacity = '0';
+                
+                setTimeout(() => {
+                    document.getElementById('doctorAuthOverlay').style.display = 'none';
+                }, 400);
+            } else {
+                err.classList.add('visible');
+                btn.classList.remove('loading');
+                btn.textContent = 'Unlock System';
+            }
+        }
+    </script>
 
     <!-- Dr Portal Nav -->
     <nav class="doc-nav">

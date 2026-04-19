@@ -35,76 +35,6 @@
     document.body.classList.add("public-page", "public-shell-mounted");
     if (pageId) document.body.classList.add(`page-${pageId.replace(/[^a-z0-9]/gi, "-").toLowerCase()}`);
 
-    // ─────────────────────────────────────────────
-    //  NEWTON'S CRADLE LOADER — inject on all shell pages (skip if index.html already has one)
-    // ─────────────────────────────────────────────
-    if (!document.getElementById("global-skeleton")) {
-      const spinnerStyle = document.createElement("style");
-      spinnerStyle.textContent = `
-        #global-skeleton {
-          position: fixed; inset: 0; z-index: 999999;
-          background: #ffffff; /* Black & White Theme */
-          display: flex; align-items: center; justify-content: center;
-          pointer-events: all;
-          transition: opacity 0.7s cubic-bezier(0.4,0,0.2,1), visibility 0.7s ease;
-        }
-        #global-skeleton.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .rrdch-newtons-cradle {
-          --uib-size: 80px; --uib-speed: 1.2s; --uib-color: #000000; /* Black & White Theme */
-          position: relative; display: flex;
-          align-items: center; justify-content: center;
-          width: var(--uib-size); height: var(--uib-size);
-        }
-        .rrdch-newtons-cradle__dot {
-          position: relative; display: flex; align-items: center;
-          height: 100%; width: 25%; transform-origin: center top;
-        }
-        .rrdch-newtons-cradle__dot::after {
-          content: ''; display: block; width: 100%; height: 25%;
-          border-radius: 50%; background-color: var(--uib-color);
-        }
-        .rrdch-newtons-cradle__dot:first-child { animation: rrdch-swing var(--uib-speed) linear infinite; }
-        .rrdch-newtons-cradle__dot:last-child  { animation: rrdch-swing2 var(--uib-speed) linear infinite; }
-        @keyframes rrdch-swing {
-          0%  { transform: rotate(0deg);  animation-timing-function: ease-out; }
-          25% { transform: rotate(70deg); animation-timing-function: ease-in;  }
-          50% { transform: rotate(0deg);  animation-timing-function: linear;   }
-        }
-        @keyframes rrdch-swing2 {
-          0%  { transform: rotate(0deg);   animation-timing-function: linear;   }
-          50% { transform: rotate(0deg);   animation-timing-function: ease-out; }
-          75% { transform: rotate(-70deg); animation-timing-function: ease-in;  }
-        }
-      `;
-      document.head.appendChild(spinnerStyle);
-
-      const spinnerEl = document.createElement("div");
-      spinnerEl.id = "global-skeleton";
-      spinnerEl.innerHTML = `
-        <div class="rrdch-newtons-cradle">
-          <div class="rrdch-newtons-cradle__dot"></div>
-          <div class="rrdch-newtons-cradle__dot"></div>
-          <div class="rrdch-newtons-cradle__dot"></div>
-          <div class="rrdch-newtons-cradle__dot"></div>
-        </div>
-      `;
-      document.body.insertBefore(spinnerEl, document.body.firstChild);
-
-      const hideSkeleton = () => setTimeout(() => {
-        const skel = document.getElementById("global-skeleton");
-        if (skel) skel.classList.add("hidden");
-      }, 450);
-
-      if (document.readyState === "complete") {
-        hideSkeleton();
-      } else {
-        window.addEventListener("load", hideSkeleton);
-      }
-      setTimeout(() => {
-        const skel = document.getElementById("global-skeleton");
-        if (skel) skel.classList.add("hidden");
-      }, 6000);
-    }
 
     // Remove any previous shells
     removeIfExists("#rrdch-public-shell");
@@ -112,31 +42,33 @@
 
 
     // ─────────────────────────────────────────────
+    //  GLOBAL LANGUAGE FUNCTIONS (must be before shell creation)
+    // ─────────────────────────────────────────────
+    window.RRDCH_LANG = {
+      get: function() {
+        return localStorage.getItem('rrdch_lang') || 'en';
+      },
+      set: function(lang) {
+        localStorage.setItem('rrdch_lang', lang);
+        document.documentElement.setAttribute('data-lang', lang);
+        document.documentElement.setAttribute('lang', lang);
+        // Dispatch custom event for other components
+        window.dispatchEvent(new CustomEvent('rrdch:langchange', { detail: { lang } }));
+      },
+      toggle: function() {
+        const current = this.get();
+        const next = current === 'en' ? 'kn' : 'en';
+        this.set(next);
+        return next;
+      }
+    };
+
+    // ─────────────────────────────────────────────
     //  SHELL HTML — Announcement ticker + Header + Drawer
     // ─────────────────────────────────────────────
     const shell = document.createElement("div");
     shell.id = "rrdch-public-shell";
     shell.innerHTML = `
-
-
-      <!-- Top Micro-bar -->
-      <div class="cu-micro-bar">
-        <span>Rajarajeshwari Dental College & Hospital | Bengaluru Campus</span>
-        <div class="micro-links">
-          <a href="contact.html">Contact</a> | <a href="admission_enquiry.html">Admissions</a> | <a href="portal.html" class="login-btn-micro">LOGIN</a>
-        </div>
-      </div>
-
-      <!-- Social Media Floating Strip -->
-      <div class="social-media-strip">
-        <a href="#" aria-label="Facebook"><i data-lucide="facebook" width="18" height="18"></i></a>
-        <a href="#" aria-label="X (Twitter)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
-        </a>
-        <a href="#" aria-label="YouTube"><i data-lucide="youtube" width="18" height="18"></i></a>
-        <a href="#" aria-label="Instagram"><i data-lucide="instagram" width="18" height="18"></i></a>
-        <a href="#" aria-label="LinkedIn"><i data-lucide="linkedin" width="18" height="18"></i></a>
-      </div>
 
       <!-- Floating Header (Slanted Logo + Floating Buttons) -->
       <header class="header-floating" id="siteHeader">
@@ -156,10 +88,18 @@
             </svg>
             MENU
           </button>
-          <a href="portal.html" class="header-login-btn">LOGIN</a>
+          <button class="header-lang-btn" id="langToggle" title="Translate to Kannada">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span id="lang-en" class="active">EN</span> | <span id="lang-kn">KN</span>
+          </button>
+          <a href="unified-login.html" class="header-login-btn">LOGIN</a>
         </div>
-        <a href="index.html" class="header-brand-slanted right-slanted">
-          <img src="images/logo.png" alt="RRDCH Logo" class="animated-logo">
+        <a href="index.html#certifications" class="header-brand-slanted" title="View Our Certifications">
+          <img src="images/logo.png" alt="RRDCH" class="animated-logo">
         </a>
       </header>
 
@@ -426,6 +366,59 @@
       else openDrawer();
     });
 
+    // ─────────────────────────────────────────────
+    //  LANGUAGE TOGGLE WIRING (shell-level)
+    // ─────────────────────────────────────────────
+    const langBtn = shell.querySelector("#langToggle");
+    if (langBtn) {
+      // Helper to update UI
+      function updateLangUI(lang) {
+        const spanEn = langBtn.querySelector("#lang-en");
+        const spanKn = langBtn.querySelector("#lang-kn");
+        if (spanEn) { 
+          spanEn.classList.toggle("active", lang === "en"); 
+          spanEn.style.opacity = lang === "en" ? "1" : "0.5"; 
+        }
+        if (spanKn) { 
+          spanKn.classList.toggle("active", lang === "kn"); 
+          spanKn.style.opacity = lang === "kn" ? "1" : "0.5"; 
+        }
+        // Also sync any other elements with these IDs
+        document.querySelectorAll("#lang-en").forEach(el => {
+          el.classList.toggle("active", lang === "en");
+        });
+        document.querySelectorAll("#lang-kn").forEach(el => {
+          el.classList.toggle("active", lang === "kn");
+        });
+        // Trigger translation
+        if (window.RRDCH_I18N && typeof window.RRDCH_I18N.apply === 'function') {
+          window.RRDCH_I18N.apply();
+        }
+      }
+
+      // Sync initial state
+      const _curLang = window.RRDCH_LANG ? window.RRDCH_LANG.get() : (localStorage.getItem('rrdch_lang') || 'en');
+      updateLangUI(_curLang);
+
+      // Handle click
+      langBtn.addEventListener("click", () => {
+        const next = window.RRDCH_LANG ? window.RRDCH_LANG.toggle() : (() => {
+          const current = localStorage.getItem('rrdch_lang') || 'en';
+          const next = current === 'en' ? 'kn' : 'en';
+          localStorage.setItem('rrdch_lang', next);
+          document.documentElement.setAttribute('data-lang', next);
+          document.documentElement.setAttribute('lang', next);
+          return next;
+        })();
+        updateLangUI(next);
+      });
+
+      // Listen for language change events from other components
+      window.addEventListener('rrdch:langchange', (e) => {
+        updateLangUI(e.detail.lang);
+      });
+    }
+
     closeBtn?.addEventListener("click", closeDrawer);
     backdrop?.addEventListener("click", closeDrawer);
 
@@ -442,7 +435,7 @@
     });
 
     // ─────────────────────────────────────────────
-    //  SCROLL FX — deepen header shadow on scroll
+    //  SCROLL FX — add scrolled class for glass effect
     // ─────────────────────────────────────────────
     const header = shell.querySelector("#siteHeader");
     let scrollTicking = false;
@@ -452,9 +445,11 @@
       requestAnimationFrame(() => {
         const y = window.scrollY || 0;
         if (header) {
-          header.style.boxShadow = y > 20
-            ? "0 4px 28px rgba(0,0,0,0.14)"
-            : "0 2px 12px rgba(0,0,0,0.06)";
+          if (y > 50) {
+            header.classList.add("scrolled");
+          } else {
+            header.classList.remove("scrolled");
+          }
         }
         scrollTicking = false;
       });
@@ -476,6 +471,19 @@
     window.RRDCH_PUBLIC_SHELL.pageId      = pageId || "";
     window.RRDCH_PUBLIC_SHELL.openDrawer  = openDrawer;
     window.RRDCH_PUBLIC_SHELL.closeDrawer = closeDrawer;
+    
+    // Backend connectivity check
+    window.RRDCH_PUBLIC_SHELL.checkBackend = async function() {
+      const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:3000/api' 
+        : '/api';
+      try {
+        const response = await fetch(`${API_BASE}/health`, { method: 'GET', cache: 'no-cache' });
+        return response.ok;
+      } catch (e) {
+        return false;
+      }
+    };
   }
 
   // ─── Public API ───
@@ -483,6 +491,29 @@
   window.RRDCH_PUBLIC_SHELL.render  = renderShell;
   window.RRDCH_PUBLIC_SHELL.getLang = getLang;
   window.RRDCH_PUBLIC_SHELL.setLang = setLang;
+  
+  // Global backend status
+  window.RRDCH_API = {
+    base: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? 'http://localhost:3000/api' 
+      : '/api',
+    status: 'unknown',
+    check: async function() {
+      try {
+        const res = await fetch(`${this.base}/health`, { cache: 'no-cache' });
+        this.status = res.ok ? 'online' : 'offline';
+        return res.ok;
+      } catch (e) {
+        this.status = 'offline';
+        return false;
+      }
+    }
+  };
+  
+  // Auto-check backend on load
+  setTimeout(() => {
+    window.RRDCH_API.check();
+  }, 2000);
 
   // Apply lang early
   const _lang = getLang();

@@ -21,7 +21,7 @@
         /* Portal Nav */
         .doc-nav { background: white; border-bottom: 1px solid var(--border); padding: 0 3%; display: flex; align-items: center; gap: 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04); height: 64px; }
         .doc-nav .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; margin-right: auto; }
-        .doc-nav .brand img { height: 40px; background: white; border-radius: 6px; padding: 4px 10px; border: 1px solid var(--border); object-fit: contain; }
+        .doc-nav .brand img { height: 50px; object-fit: contain; }
         .portal-badge { background: #dcfce7; color: var(--green); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 20px; }
         .doc-nav .nav-links { display: flex; align-items: center; gap: 0.5rem; margin-right: 1.5rem; }
         .doc-nav .nav-links a { color: var(--muted); font-size: 0.88rem; font-weight: 600; padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s; }
@@ -115,33 +115,111 @@
     </style>
 </head>
 <body>
+    <!-- Unified Login Theme -->
+    <link rel="stylesheet" href="css/login-theme.css">
+
     <!-- Secure Access Gateway -->
-    <div id="doctorAuthOverlay" class="portal-login-overlay">
-        <a href="index.html" class="logo-box">
+    <div id="doctorAuthOverlay" class="portal-login-overlay rrdch-login-root">
+        <a href="index.html" class="login-brand">
             <img src="images/logo.png" alt="RRDCH">
-            <div style="display:flex; flex-direction:column;">
-                <strong style="color:#0f2d52; font-size:1rem; line-height:1.2;">RRDCH</strong>
-                <span style="font-size:0.7rem; color:#64748b;">Return to Website</span>
+            <div class="login-brand-text">
+                <strong>RRDCH</strong>
+                <span>Return to Website</span>
             </div>
         </a>
         
-        <form class="form_main" id="doctorLoginForm" onsubmit="event.preventDefault(); document.getElementById('doctorAuthOverlay').classList.add('hidden'); setTimeout(()=>document.getElementById('doctorAuthOverlay').style.display='none',400);">
-            <p class="heading">Doctor Login</p>
-            
-            <div class="inputContainer">
-                <i data-lucide="user" class="inputIcon" width="16"></i>
-                <input type="text" class="inputField" placeholder="Staff ID or Email" required>
+        <div class="login-wrapper">
+            <!-- For Doctor Portal, we don't have Sign Up, so we hide the switch but keep the structure -->
+            <label class="switch" style="visibility:hidden; height:0; margin:0;">
+                <input type="checkbox" class="toggle">
+                <span class="slider"></span>
+                <span class="card-side"></span>
+            </label>
+
+            <div class="flip-card__inner">
+                <div class="flip-card__front">
+                    <div class="flip-title">Doctor Dashboard</div>
+                    <form class="flip-card__form" onsubmit="event.preventDefault(); validateDoctorLogin();">
+                        <span class="flip-role-badge" style="color:var(--doctor); border-color:var(--doctor);">Staff Login</span>
+                        
+                        <input type="email" id="docUser" placeholder="Staff Email (doctor@rrdch.in)" class="flip-card__input" required>
+                        <input type="password" id="docPass" placeholder="Password" class="flip-card__input" required>
+                        
+                        <div id="docLoginErr" class="flip-error">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            Invalid credentials.
+                        </div>
+
+                        <button class="flip-card__btn" type="submit" id="docLoginBtn">Secure Login</button>
+                    </form>
+                    <div class="demo-credentials-badge">
+                        <div class="demo-title">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
+                            Demo Credentials
+                        </div>
+                        <div class="demo-credentials-row">Email: <code>doctor@rrdch.in</code></div>
+                        <div class="demo-credentials-row">Password: <code>doctor123</code></div>
+                    </div>
+                    <a href="#" class="flip-card__link">IT Support / Helpdesk</a>
+                </div>
             </div>
-            
-            <div class="inputContainer">
-                <i data-lucide="lock" class="inputIcon" width="16"></i>
-                <input type="password" class="inputField" placeholder="Password" required>
-            </div>
-            
-            <button id="button" type="submit">Secure Login</button>
-            <a class="forgotLink" href="#">IT Support</a>
-        </form>
+        </div>
+
+        <div class="login-security">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            End-to-end encrypted connection
+        </div>
     </div>
+
+    <!-- Auth script -->
+    <script>
+        // If not authenticated as doctor, redirect to unified portal login
+        if (sessionStorage.getItem('rrdch_role') !== 'doctor') {
+            window.location.replace('portal.html#doctor');
+        }
+        // Hide legacy overlay
+        const _dov = document.getElementById('doctorAuthOverlay');
+        if (_dov) { _dov.style.display = 'none'; document.body.classList.remove('no-scroll'); }
+
+        async function validateDoctorLogin() {
+            const user = document.getElementById('docUser').value.trim().toLowerCase();
+            const pass = document.getElementById('docPass').value;
+            const btn = document.getElementById('docLoginBtn');
+            const err = document.getElementById('docLoginErr');
+
+            err.classList.remove('visible');
+            btn.classList.add('loading');
+            btn.textContent = 'Verifying...';
+
+            await new Promise(r => setTimeout(r, 600)); // Simulating network
+            
+            // Supabase auth or fallback demo
+            let success = false;
+            if (window.supabase) {
+                try {
+                    const { data, error } = await window.supabase.auth.signInWithPassword({ email: user, password: pass });
+                    if (!error && data.user) success = true;
+                } catch(e) {}
+            }
+            if (!success && user === 'doctor@rrdch.in' && pass === 'doctor123') {
+                success = true;
+            }
+
+            if (success) {
+                sessionStorage.setItem('rrdch_role', 'doctor');
+                sessionStorage.setItem('rrdch_user', user);
+                document.getElementById('doctorAuthOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('doctorAuthOverlay').style.display = 'none';
+                    document.body.classList.remove('no-scroll');
+                }, 400);
+            } else {
+                err.classList.add('visible');
+                btn.classList.remove('loading');
+                btn.textContent = 'Secure Login';
+            }
+        }
+    </script>
 
     <!-- Dr Portal Nav -->
     <nav class="doc-nav">
@@ -339,45 +417,308 @@
     </div>
 
     <script>
+        // Backend API Configuration
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:3000/api' 
+            : '/api';
+        
+        const SUPABASE_URL = 'https://your-project.supabase.co';
+        const SUPABASE_KEY = 'your-anon-key';
+        
+        let currentDoctor = { name: 'Dr. Roshan M.', dept: 'Oral Surgery', id: 'doc_001' };
+        let currentPatient = null;
+        
+        // Initialize
         lucide.createIcons();
-
-        function markDone(btn) {
-            const row = btn.closest('tr');
-            const statusCell = row.querySelector('.status-tag');
-            statusCell.className = 'status-tag done';
-            statusCell.textContent = 'Done';
-            btn.closest('.action-btns').innerHTML = '—';
-            const statDone = document.getElementById('statDone');
-            const statWaiting = document.getElementById('statWaiting');
-            statDone.textContent = parseInt(statDone.textContent) + 1;
-            statWaiting.textContent = Math.max(0, parseInt(statWaiting.textContent) - 1);
+        loadQueueData();
+        startRealtimeUpdates();
+        
+        // Fetch patient queue from backend
+        async function loadQueueData() {
+            try {
+                // Fetch today's appointments from API
+                const today = new Date().toISOString().split('T')[0];
+                const deptId = 'omfs'; // Oral Surgery department
+                
+                const response = await fetch(`${API_BASE}/appointments/queue/${deptId}?date=${today}`);
+                if (!response.ok) throw new Error('Failed to fetch queue');
+                
+                const result = await response.json();
+                if (result.ok && result.data) {
+                    renderQueue(result.data.queue || []);
+                    updateStats(result.data);
+                }
+            } catch (error) {
+                console.error('Queue load error:', error);
+                // Fallback to localStorage for demo
+                loadLocalQueue();
+            }
         }
 
-        function callNext(btn) {
+        // Load from localStorage as fallback
+        function loadLocalQueue() {
+            const saved = localStorage.getItem('rrdch_doctor_queue');
+            if (saved) {
+                renderQueue(JSON.parse(saved));
+            }
+        }
+        
+        // Save to localStorage
+        function saveLocalQueue(queue) {
+            localStorage.setItem('rrdch_doctor_queue', JSON.stringify(queue));
+        }
+        
+        // Render queue table
+        function renderQueue(queue) {
+            const tbody = document.getElementById('queueBody');
+            if (!queue || queue.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);">No patients in queue</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = queue.map((patient, index) => {
+                const statusClass = patient.status === 'done' ? 'done' : 
+                                   patient.status === 'ongoing' ? 'ongoing' :
+                                   patient.status === 'called' ? 'called' : 'waiting';
+                const statusText = patient.status === 'done' ? 'Done' :
+                                  patient.status === 'ongoing' ? 'Ongoing' :
+                                  patient.status === 'called' ? 'Called' : 'Waiting';
+                
+                let actionBtn = '';
+                if (patient.status === 'waiting') {
+                    actionBtn = `<div class="action-btns"><button class="btn-sm btn-call" onclick="callPatient('${patient.token_no}', this)">Call</button></div>`;
+                } else if (patient.status === 'called') {
+                    actionBtn = `<div class="action-btns"><button class="btn-sm btn-call" onclick="startConsultation('${patient.token_no}', this)">Start</button></div>`;
+                } else if (patient.status === 'ongoing') {
+                    actionBtn = `<div class="action-btns"><button class="btn-sm btn-done" onclick="markDone('${patient.token_no}', this)">Mark Done</button></div>`;
+                } else {
+                    actionBtn = '—';
+                }
+                
+                return `
+                    <tr data-token="${patient.token_no}">
+                        <td><span class="token-badge">${patient.token_no}</span></td>
+                        <td><strong>${patient.patient_name}</strong><br><span style="font-size:0.78rem;color:var(--muted);">${patient.patient_phone || 'N/A'}</span></td>
+                        <td>${patient.chief_complaint || 'General Consultation'}</td>
+                        <td>${patient.time_slot || 'Walk-in'}</td>
+                        <td><span class="status-tag ${statusClass}">${statusText}</span></td>
+                        <td>${actionBtn}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+        
+        // Update statistics
+        function updateStats(data) {
+            const queue = data.queue || [];
+            const total = queue.length;
+            const done = queue.filter(p => p.status === 'done').length;
+            const waiting = queue.filter(p => p.status === 'waiting' || p.status === 'called').length;
+            const ongoing = queue.filter(p => p.status === 'ongoing').length;
+            
+            document.getElementById('statTotal').textContent = total;
+            document.getElementById('statDone').textContent = done;
+            document.getElementById('statWaiting').textContent = waiting;
+        }
+
+        // Call patient
+        async function callPatient(token, btn) {
+            try {
+                const response = await fetch(`${API_BASE}/appointments/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token_no: token, status: 'called' })
+                });
+                
+                if (!response.ok) throw new Error('Failed to update status');
+                
+                // Update UI
+                const row = btn.closest('tr');
+                const statusCell = row.querySelector('.status-tag');
+                statusCell.className = 'status-tag called';
+                statusCell.textContent = 'Called';
+                btn.textContent = 'Start';
+                btn.onclick = function() { startConsultation(token, this); };
+                
+                // Emit real-time update
+                emitQueueUpdate();
+                
+            } catch (error) {
+                console.error('Call patient error:', error);
+                // Fallback - update locally
+                updateLocalStatus(token, 'called');
+            }
+        }
+        
+        // Start consultation
+        function startConsultation(token, btn) {
             const row = btn.closest('tr');
             const statusCell = row.querySelector('.status-tag');
             statusCell.className = 'status-tag ongoing';
             statusCell.textContent = 'Ongoing';
             btn.textContent = 'Mark Done';
             btn.className = 'btn-sm btn-done';
-            btn.onclick = function() { markDone(this); };
+            btn.onclick = function() { markDone(token, this); };
+            
+            // Update current patient for notes
+            currentPatient = {
+                token: token,
+                name: row.querySelector('strong').textContent,
+                phone: row.querySelector('td:nth-child(2) span').textContent
+            };
+            
+            // Auto-fill notes form
+            document.querySelector('.notes-form input').value = `${token} — ${currentPatient.name}`;
+            
+            updateLocalStatus(token, 'ongoing');
+            emitQueueUpdate();
         }
 
-        function saveNote(btn) {
-            btn.textContent = 'Saved!';
+        // Mark patient as done
+        async function markDone(token, btn) {
+            try {
+                const response = await fetch(`${API_BASE}/appointments/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token_no: token, status: 'done' })
+                });
+                
+                if (!response.ok) throw new Error('Failed to update status');
+                
+                // Update UI
+                const row = btn.closest('tr');
+                const statusCell = row.querySelector('.status-tag');
+                statusCell.className = 'status-tag done';
+                statusCell.textContent = 'Done';
+                btn.closest('.action-btns').innerHTML = '—';
+                
+                // Update stats
+                const statDone = document.getElementById('statDone');
+                const statWaiting = document.getElementById('statWaiting');
+                statDone.textContent = parseInt(statDone.textContent) + 1;
+                statWaiting.textContent = Math.max(0, parseInt(statWaiting.textContent) - 1);
+                
+                emitQueueUpdate();
+                
+            } catch (error) {
+                console.error('Mark done error:', error);
+                updateLocalStatus(token, 'done');
+            }
+        }
+        
+        // Update status in localStorage
+        function updateLocalStatus(token, newStatus) {
+            const saved = localStorage.getItem('rrdch_doctor_queue');
+            if (saved) {
+                const queue = JSON.parse(saved);
+                const patient = queue.find(p => p.token_no === token);
+                if (patient) {
+                    patient.status = newStatus;
+                    saveLocalQueue(queue);
+                    renderQueue(queue);
+                }
+            }
+        }
+        
+        // Save case note
+        async function saveNote(btn) {
+            const form = btn.closest('.notes-form');
+            const patientInput = form.querySelector('input');
+            const diagnosisInput = form.querySelectorAll('input')[1];
+            const notesText = form.querySelector('textarea');
+            
+            const noteData = {
+                token_no: currentPatient?.token || patientInput.value.split('—')[0].trim(),
+                patient_name: currentPatient?.name || patientInput.value.split('—')[1]?.trim() || 'Unknown',
+                doctor_id: currentDoctor.id,
+                doctor_name: currentDoctor.name,
+                department: currentDoctor.dept,
+                diagnosis: diagnosisInput.value,
+                notes: notesText.value,
+                created_at: new Date().toISOString()
+            };
+            
+            try {
+                // Try to save to backend
+                const response = await fetch(`${API_BASE}/doctor/notes`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(noteData)
+                });
+                
+                if (!response.ok) throw new Error('Failed to save note');
+                
+                showSaveSuccess(btn);
+                
+            } catch (error) {
+                console.error('Save note error:', error);
+                // Save to localStorage as fallback
+                const savedNotes = JSON.parse(localStorage.getItem('rrdch_doctor_notes') || '[]');
+                savedNotes.push(noteData);
+                localStorage.setItem('rrdch_doctor_notes', JSON.stringify(savedNotes));
+                showSaveSuccess(btn);
+            }
+        }
+        
+        function showSaveSuccess(btn) {
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="check" width="16"></i> Saved!';
             btn.style.background = 'var(--green)';
+            lucide.createIcons();
+            
             setTimeout(() => {
-                btn.innerHTML = '<i data-lucide="save" width="16"></i> Save Case Note';
+                btn.innerHTML = originalHTML;
                 btn.style.background = '';
                 lucide.createIcons();
             }, 2000);
         }
-
-        // Live time
-        setInterval(() => {
-            const el = document.getElementById('queueTime');
-            if (el) el.textContent = 'Live — ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-        }, 30000);
+        
+        // Real-time updates via polling (fallback for WebSocket)
+        function startRealtimeUpdates() {
+            // Poll every 30 seconds
+            setInterval(() => {
+                loadQueueData();
+            }, 30000);
+            
+            // Update time display
+            setInterval(() => {
+                const el = document.getElementById('queueTime');
+                if (el) el.textContent = 'Live — ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+            }, 30000);
+        }
+        
+        // Emit queue update (for real-time sync)
+        function emitQueueUpdate() {
+            // In production, this would use WebSocket
+            window.dispatchEvent(new CustomEvent('queue-updated', { detail: { doctor: currentDoctor.id } }));
+        }
+        
+        // Listen for queue updates from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'rrdch_doctor_queue') {
+                renderQueue(JSON.parse(e.newValue));
+            }
+        });
+        
+        // Legacy support for old onclick handlers
+        window.markDone = function(token, btn) {
+            if (typeof token === 'object') {
+                // Old handler with button element
+                const row = token.closest('tr');
+                token = row.dataset.token;
+            }
+            markDone(token, btn);
+        };
+        
+        window.callNext = function(token, btn) {
+            if (typeof token === 'object') {
+                const row = token.closest('tr');
+                token = row.dataset.token;
+            }
+            callPatient(token, btn);
+        };
     </script>
 </body>
 </html>
