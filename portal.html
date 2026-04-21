@@ -11,387 +11,310 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --input-focus: #2d8cf0;
-            --font-color: #323232;
-            --font-color-sub: #666;
-            --bg-color: #fff;
-            --bg-color-alt: #666;
-            --main-color: #323232;
             --patient: #0284c7; --doctor: #16a34a; --student: #d97706; --admin: #7c3aed;
             --blue: #1c4578; --blue-dark: #0f2d52; --gold: #c39c5b;
+            --font: 'Inter', sans-serif;
+            --main-color: #323232; --bg-color: #fff; --font-color: #323232; --font-color-sub: #666; --input-focus: #2d8cf0;
         }
-
         body {
-            font-family: 'Inter', sans-serif;
-            background: transparent;
+            font-family: var(--font);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
             position: relative;
+            background: #0f2d52;
         }
 
-        body::before {
+        /* Enhanced frosted background with homepage images */
+        .bg-layer {
+            position: fixed; inset: 0; z-index: 0; overflow: hidden;
+        }
+        .bg-slideshow {
+            position: absolute; inset: 0;
+            animation: bgFade 24s ease-in-out infinite;
+        }
+        .bg-slideshow:nth-child(1) { 
+            background: url('images/media/new_hero_bg.png') center/cover no-repeat;
+            animation-delay: 0s;
+        }
+        .bg-slideshow:nth-child(2) { 
+            background: url('images/pictures/home page images/slider_1.jpg') center/cover no-repeat;
+            animation-delay: 8s;
+            opacity: 0;
+        }
+        .bg-slideshow:nth-child(3) { 
+            background: url('images/pictures/home page images/slider_2.jpg') center/cover no-repeat;
+            animation-delay: 16s;
+            opacity: 0;
+        }
+        @keyframes bgFade {
+            0%, 100% { opacity: 1; transform: scale(1.05); }
+            33% { opacity: 1; transform: scale(1.05); }
+            38% { opacity: 0; transform: scale(1.1); }
+            95% { opacity: 0; transform: scale(1.05); }
+        }
+        .bg-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(15,45,82,0.75) 0%, rgba(28,69,120,0.65) 50%, rgba(42,111,151,0.55) 100%);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+        }
+        .bg-overlay::after {
             content: '';
-            position: fixed;
-            inset: -20px;
-            background: url('images/new_hero_bg.png') center/cover no-repeat;
-            filter: blur(12px);
-            z-index: -2;
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.2) 100%);
         }
+        @keyframes bgMove { 0%,100%{transform:scale(1.1) translate(0,0);} 50%{transform:scale(1.15) translate(-8px,-8px);} }
 
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: rgba(235, 240, 246, 0.75);
-            z-index: -1;
-        }
+        /* Particles */
+        .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+        .p { position: absolute; width: 3px; height: 3px; background: rgba(195,156,91,0.5); border-radius: 50%; animation: float linear infinite; }
+        @keyframes float { from{transform:translateY(110vh) rotate(0);opacity:0;} 10%{opacity:1;} 90%{opacity:0.8;} to{transform:translateY(-10vh) rotate(720deg);opacity:0;} }
 
-        /* ── Top Nav ─────────────────────────────── */
+        /* Nav - Enhanced frosted glass */
         .top-nav {
-            position: relative; z-index: 10;
-            background: var(--blue-dark);
-            padding: 0.85rem 5%;
+            position: relative; z-index: 100;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            padding: 0.8rem 5%;
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.25);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
         }
-        .top-nav .brand {
-            display: flex; align-items: center; gap: 0.9rem;
-            text-decoration: none;
-        }
-        .top-nav .brand img {
-            height: 70px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(195,156,91,0.7));
-        }
-        .brand-text strong { display: block; font-size: 0.95rem; font-weight: 800; color: white; }
-        .brand-text span   { font-size: 0.7rem; color: var(--gold); letter-spacing: 0.5px; }
+        .top-nav .brand { display: flex; align-items: center; text-decoration: none; }
+        .top-nav .brand img { height: 52px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); transition: transform 0.3s; }
+        .top-nav .brand:hover img { transform: scale(1.05); }
         .back-link {
-            color: rgba(255,255,255,0.65); font-size: 0.85rem;
+            color: rgba(255,255,255,0.6); font-size: 0.82rem;
             text-decoration: none; display: flex; align-items: center; gap: 0.4rem;
-            transition: color 0.2s;
+            transition: color 0.2s; font-weight: 500;
         }
         .back-link:hover { color: var(--gold); }
 
-        /* ── Main Wrapper ────────────────────────── */
+        /* Main wrap */
         .portal-wrap {
-            position: relative; z-index: 1;
+            position: relative; z-index: 10;
             flex: 1; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             padding: 3rem 5% 4rem;
+            gap: 1.5rem;
         }
 
-        /* WRAPPER */
-        .wrapper {
-            --input-focus: #2d8cf0;
-            --font-color: #323232;
-            --font-color-sub: #666;
-            --bg-color: #fff;
-            --bg-color-alt: #666;
-            --main-color: #323232;
-        }
-
-        /* SWITCH CARD */
-        .switch {
-            transform: translateY(-200px);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            width: 50px;
-            height: 20px;
-        }
-
-        .card-side::before {
-            position: absolute;
-            content: 'Log in';
-            left: -70px;
-            top: 0;
-            width: 100px;
-            text-decoration: underline;
-            color: var(--font-color);
-            font-weight: 600;
-        }
-
-        .card-side::after {
-            position: absolute;
-            content: 'Sign up';
-            left: 70px;
-            top: 0;
-            width: 100px;
-            text-decoration: none;
-            color: var(--font-color);
-            font-weight: 600;
-        }
-
-        .toggle {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            box-sizing: border-box;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            box-shadow: 4px 4px var(--main-color);
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-color);
-            transition: 0.3s;
-        }
-
-        .slider:before {
-            box-sizing: border-box;
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            border: 2px solid var(--main-color);
-            border-radius: 5px;
-            left: -2px;
-            bottom: 2px;
-            background-color: var(--bg-color);
-            box-shadow: 0 3px 0 var(--main-color);
-            transition: 0.3s;
-        }
-
-        .toggle:checked + .slider {
-            background-color: var(--input-focus);
-        }
-
-        .toggle:checked + .slider:before {
-            transform: translateX(30px);
-        }
-
-        .toggle:checked ~ .card-side:before {
-            text-decoration: none;
-        }
-
-        .toggle:checked ~ .card-side:after {
-            text-decoration: underline;
-        }
-
-        /* CARD */
-        .flip-card__inner {
-            width: 350px;
-            height: 480px;
-            position: relative;
-            background-color: transparent;
-            perspective: 1000px;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        .toggle:checked ~ .flip-card__inner {
-            transform: rotateY(180deg);
-        }
-
-        .toggle:checked ~ .flip-card__front {
-            box-shadow: none;
-        }
-
-        .flip-card__front, .flip-card__back {
-            padding: 25px;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            background: var(--bg-color);
-            gap: 15px;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            box-shadow: 6px 6px 0 var(--main-color);
-        }
-
-        .flip-card__back {
-            width: 100%;
-            transform: rotateY(180deg);
-        }
-
-        /* ROLE TABS */
+        /* Role Tabs - Premium frosted */
         .role-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            justify-content: center;
+            display: flex; gap: 8px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            padding: 8px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
         }
         .role-tab {
-            padding: 8px 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
+            padding: 9px 20px;
+            border: 2px solid transparent;
+            background: transparent;
+            color: rgba(255,255,255,0.75);
+            font-family: var(--font);
+            font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            cursor: pointer; border-radius: 8px;
+            transition: all 0.25s ease;
         }
-        .role-tab:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.5);
-        }
-        .role-tab.active {
-            background: var(--bg-color);
-            border-color: var(--main-color);
-            box-shadow: 4px 4px 0 var(--main-color);
-            color: var(--main-color);
-        }
-        .role-tab.active[data-role="patient"] { color: var(--patient); border-color: var(--patient); box-shadow: 4px 4px 0 var(--patient); }
-        .role-tab.active[data-role="doctor"] { color: var(--doctor); border-color: var(--doctor); box-shadow: 4px 4px 0 var(--doctor); }
-        .role-tab.active[data-role="student"] { color: var(--student); border-color: var(--student); box-shadow: 4px 4px 0 var(--student); }
-        .role-tab.active[data-role="admin"] { color: var(--admin); border-color: var(--admin); box-shadow: 4px 4px 0 var(--admin); }
+        .role-tab:hover { background: rgba(255,255,255,0.12); color: white; }
+        .role-tab.active { background: white; color: var(--main-color); border-color: var(--main-color); box-shadow: 3px 3px 0 var(--main-color); }
+        .role-tab.active[data-role="patient"] { color: var(--patient); border-color: var(--patient); box-shadow: 3px 3px 0 var(--patient); }
+        .role-tab.active[data-role="doctor"]  { color: var(--doctor);  border-color: var(--doctor);  box-shadow: 3px 3px 0 var(--doctor); }
+        .role-tab.active[data-role="student"] { color: var(--student); border-color: var(--student); box-shadow: 3px 3px 0 var(--student); }
+        .role-tab.active[data-role="admin"]   { color: var(--admin);   border-color: var(--admin);   box-shadow: 3px 3px 0 var(--admin); }
 
-        /* TITLE */
-        .title {
-            margin: 20px 0 20px 0;
-            font-size: 25px;
-            font-weight: 900;
-            text-align: center;
-            color: var(--main-color);
+        /* Card - Frosted Glass Premium */
+        .card-wrap { position: relative; }
+        .login-card {
+            width: 380px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.25),
+                0 0 0 1px rgba(255,255,255,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.6);
+            padding: 2.5rem 2rem 2rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: cardFloat 6s ease-in-out infinite;
         }
-
-        /* FORM */
-        .flip-card__form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+        .login-card:hover { 
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 35px 60px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(255,255,255,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.8);
         }
-
-        .flip-card__input {
-            width: 250px;
-            height: 40px;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            background-color: var(--bg-color);
-            box-shadow: 4px 4px var(--main-color);
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--font-color);
-            padding: 5px 10px;
-            outline: none;
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
-        .flip-card__input::placeholder {
-            color: var(--font-color-sub);
-            opacity: 0.8;
+        /* Sign-up card (back) - Frosted */
+        .signup-card {
+            width: 380px;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 
+                0 25px 50px rgba(0,0,0,0.25),
+                0 0 0 1px rgba(255,255,255,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.6);
+            padding: 2.5rem 2rem 2rem;
+            display: none;
+            animation: cardFloat 6s ease-in-out infinite;
         }
+        .signup-card.visible { display: block; }
 
-        .flip-card__input:focus {
-            border: 2px solid var(--input-focus);
-        }
-
-        /* BUTTON */
-        .flip-card__btn {
-            margin: 20px 0 20px 0;
-            width: 250px;
-            height: 40px;
-            border-radius: 5px;
-            border: 2px solid var(--main-color);
-            background-color: var(--bg-color);
-            box-shadow: 4px 4px var(--main-color);
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--font-color);
-            cursor: pointer;
-        }
-
-        .flip-card__btn:active {
-            box-shadow: 0px 0px var(--main-color);
-            transform: translate(3px, 3px);
-        }
-
-        /* ROLE BADGE */
         .role-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border: 2px solid;
-            border-radius: 5px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            background: var(--bg-color);
+            display: inline-block; padding: 4px 12px;
+            border: 2px solid; border-radius: 5px;
+            font-size: 0.68rem; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 10px; background: white;
             box-shadow: 2px 2px 0;
         }
         .role-badge.patient { color: var(--patient); border-color: var(--patient); box-shadow: 2px 2px 0 var(--patient); }
-        .role-badge.doctor { color: var(--doctor); border-color: var(--doctor); box-shadow: 2px 2px 0 var(--doctor); }
+        .role-badge.doctor  { color: var(--doctor);  border-color: var(--doctor);  box-shadow: 2px 2px 0 var(--doctor); }
         .role-badge.student { color: var(--student); border-color: var(--student); box-shadow: 2px 2px 0 var(--student); }
-        .role-badge.admin { color: var(--admin); border-color: var(--admin); box-shadow: 2px 2px 0 var(--admin); }
+        .role-badge.admin   { color: var(--admin);   border-color: var(--admin);   box-shadow: 2px 2px 0 var(--admin); }
 
-        /* DEMO CREDS */
-        .demo-creds {
-            margin-top: 5px;
-            padding: 12px;
-            background: rgba(2, 132, 199, 0.08);
-            border: 2px dashed rgba(2, 132, 199, 0.3);
-            border-radius: 5px;
-            text-align: left;
-            width: 250px;
-            font-size: 0.8rem;
+        .card-title { font-size: 1.45rem; font-weight: 900; color: var(--font-color); margin-bottom: 0.2rem; }
+        .card-sub   { font-size: 0.78rem; color: var(--font-color-sub); margin-bottom: 1.25rem; }
+
+        /* Demo creds box */
+        .demo-box {
+            padding: 10px 12px;
+            background: rgba(2,132,199,0.07);
+            border: 2px dashed rgba(2,132,199,0.25);
+            border-radius: 6px; margin-bottom: 1rem;
+            font-size: 0.78rem; color: var(--font-color-sub);
         }
-        .demo-creds code {
-            background: rgba(2, 132, 199, 0.15);
-            color: var(--patient);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: monospace;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .demo-box code {
+            background: rgba(2,132,199,0.12); color: var(--patient);
+            padding: 1px 6px; border-radius: 3px;
+            font-family: 'Courier New', monospace; font-size: 0.73rem; font-weight: 700;
         }
+        .demo-box.doc  { border-color: rgba(22,163,74,0.25);   background: rgba(22,163,74,0.06); }
+        .demo-box.doc code { background: rgba(22,163,74,0.12); color: var(--doctor); }
+        .demo-box.stu  { border-color: rgba(217,119,6,0.25);   background: rgba(217,119,6,0.06); }
+        .demo-box.stu code { background: rgba(217,119,6,0.12); color: var(--student); }
+        .demo-box.adm  { border-color: rgba(124,58,237,0.25);  background: rgba(124,58,237,0.06); }
+        .demo-box.adm code { background: rgba(124,58,237,0.12); color: var(--admin); }
 
-        /* ERROR */
-        .flip-error {
-            display: none;
-            align-items: center;
-            gap: 6px;
-            background: #fff0f0;
-            border: 2px solid #cc0000;
-            box-shadow: 3px 3px 0 #cc0000;
-            border-radius: 5px;
-            padding: 8px 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #cc0000;
-            width: 250px;
-            text-align: left;
+        /* Form inputs */
+        .form-group { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.5rem; }
+        .flip-card__input {
+            width: 100%; height: 44px;
+            border-radius: 5px; border: 2px solid var(--main-color);
+            background: white; box-shadow: 3px 3px 0 var(--main-color);
+            font-size: 14px; font-weight: 600; font-family: var(--font);
+            color: var(--font-color); padding: 5px 12px; outline: none;
+            transition: all 0.2s;
         }
-        .flip-error.visible { display: flex; }
+        .flip-card__input::placeholder { color: var(--font-color-sub); opacity: 0.7; }
+        .flip-card__input:focus { border-color: var(--input-focus); box-shadow: 3px 3px 0 var(--input-focus); transform: translate(-1px,-1px); }
 
-        /* ROLE PANELS */
-        .role-panel { display: none; }
-        .role-panel.active { display: block; }
+        /* Button */
+        .login-btn {
+            width: 100%; height: 46px; margin-top: 1rem;
+            border-radius: 5px; border: 2px solid var(--main-color);
+            background: white; box-shadow: 4px 4px 0 var(--main-color);
+            font-size: 15px; font-weight: 700; font-family: var(--font);
+            color: var(--font-color); cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .login-btn:hover { background: var(--main-color); color: white; transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.3); }
+        .login-btn:active { transform: translate(3px,3px); box-shadow: 1px 1px 0 var(--main-color); }
+        .login-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
-        /* SWITCH CONTAINER */
-        .switch-container {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        /* Error box */
+        .error-box {
+            display: none; align-items: center; gap: 6px;
+            background: #fff0f0; border: 2px solid #dc2626;
+            box-shadow: 3px 3px 0 #dc2626; border-radius: 5px;
+            padding: 8px 10px; font-size: 0.75rem; font-weight: 700;
+            color: #dc2626; margin-top: 0.5rem;
+        }
+        .error-box.show { display: flex; }
+
+        /* Links */
+        .card-links { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+        .card-link { font-size: 0.78rem; color: var(--font-color-sub); text-decoration: none; border-bottom: 1px dashed var(--font-color-sub); transition: color 0.2s; cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; font-family: var(--font); font-weight: 600; padding: 0; }
+        .card-link:hover { color: var(--input-focus); border-color: var(--input-focus); }
+
+        /* Success toast */
+        .toast {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: #1c4578; color: white; padding: 1rem 2rem;
+            border-radius: 10px; font-weight: 700; font-size: 0.9rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            z-index: 9999; display: none; align-items: center; gap: 0.75rem;
+            animation: slideUp 0.3s ease;
+        }
+        .toast.show { display: flex; }
+        @keyframes slideUp { from{opacity:0;transform:translateX(-50%) translateY(20px);} to{opacity:1;transform:translateX(-50%) translateY(0);} }
+
+        /* Loading spinner overlay */
+        .spinner-overlay {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(10,30,60,0.7); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center; flex-direction: column; gap: 1.5rem;
+        }
+        .spinner-overlay.show { display: flex; }
+        .spinner { width: 48px; height: 48px; border: 4px solid rgba(255,255,255,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to{transform:rotate(360deg);} }
+        .spinner-text { color: white; font-weight: 700; font-size: 0.95rem; }
+
+        /* Role switching animation */
+        .login-card { animation: cardIn 0.3s ease; }
+        @keyframes cardIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+
+        /* Divider */
+        .divider { display: flex; align-items: center; gap: 0.75rem; margin: 0.75rem 0; color: var(--font-color-sub); font-size: 0.72rem; font-weight: 600; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+        @media (max-width: 480px) {
+            .login-card, .signup-card { width: 94vw; }
+            .role-tabs { flex-wrap: wrap; justify-content: center; }
+            .role-tab { font-size: 0.7rem; padding: 7px 12px; }
         }
     </style>
 </head>
 <body>
-    <!-- Top Nav -->
+    <div class="bg-layer">
+        <div class="bg-slideshow"></div>
+        <div class="bg-slideshow"></div>
+        <div class="bg-slideshow"></div>
+        <div class="bg-overlay"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Loading overlay -->
+    <div class="spinner-overlay" id="spinnerOverlay">
+        <div class="spinner"></div>
+        <div class="spinner-text" id="spinnerText">Signing you in…</div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Nav -->
     <nav class="top-nav">
         <a href="index.html" class="brand">
-            <img src="images/logo.png" alt="RRDCH Logo">
+            <img src="images/logos/logo.png" alt="RRDCH Logo">
         </a>
         <a href="index.html" class="back-link">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
@@ -401,199 +324,343 @@
 
     <div class="portal-wrap">
         <!-- Role Tabs -->
-        <div class="role-tabs">
-            <button class="role-tab active" data-role="patient" onclick="switchRole('patient')">Patient</button>
-            <button class="role-tab" data-role="doctor" onclick="switchRole('doctor')">Doctor</button>
-            <button class="role-tab" data-role="student" onclick="switchRole('student')">Student</button>
-            <button class="role-tab" data-role="admin" onclick="switchRole('admin')">Admin</button>
+        <div class="role-tabs" role="tablist" aria-label="Select portal role">
+            <button class="role-tab active" data-role="patient" id="tab-patient" role="tab" onclick="switchRole('patient')">🦷 Patient</button>
+            <button class="role-tab" data-role="doctor" id="tab-doctor" role="tab" onclick="switchRole('doctor')">⚕️ Doctor</button>
+            <button class="role-tab" data-role="student" id="tab-student" role="tab" onclick="switchRole('student')">🎓 Student</button>
+            <button class="role-tab" data-role="admin" id="tab-admin" role="tab" onclick="switchRole('admin')">🛡️ Admin</button>
         </div>
 
-        <!-- Flip Card Container -->
-        <div class="switch-container">
-            <label class="switch">
-                <input type="checkbox" class="toggle" id="formToggle" onchange="toggleFlip()">
-                <span class="slider"></span>
-                <span class="card-side"></span>
-            </label>
+        <!-- Login Card -->
+        <div class="card-wrap" id="loginCardWrap">
+            <div class="login-card" id="loginCard">
+                <!-- Dynamic content injected by JS -->
+            </div>
+        </div>
 
-            <div class="flip-card__inner" id="flipInner">
-                <!-- FRONT: Login -->
-                <div class="flip-card__front">
-                    
-                    <!-- PATIENT PANEL -->
-                    <div class="role-panel active" id="panel-patient">
-                        <div class="role-badge patient">Patient Portal</div>
-                        <h2 class="title">Patient Login</h2>
-                        <div class="demo-creds">
-                            <strong>Demo:</strong> ID <code>PAT001</code> / Pass <code>patient123</code>
-                        </div>
-                        <div class="flip-error" id="patientError">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
-                            Invalid credentials.
-                        </div>
-                        <form class="flip-card__form" onsubmit="handleLogin(event, 'patient')">
-                            <input type="text" id="patientId" class="flip-card__input" placeholder="Patient ID / Phone" required>
-                            <input type="password" id="patientPw" class="flip-card__input" placeholder="Password" required>
-                            <button type="submit" class="flip-card__btn">Login</button>
-                        </form>
-                        <a href="#" style="font-size:0.75rem;color:var(--font-color-sub);">Forgot Password?</a>
-                    </div>
-
-                    <!-- DOCTOR PANEL -->
-                    <div class="role-panel" id="panel-doctor">
-                        <div class="role-badge doctor">Doctor Dashboard</div>
-                        <h2 class="title">Doctor Login</h2>
-                        <div class="demo-creds" style="border-color:rgba(22,163,74,0.3);background:rgba(22,163,74,0.05);">
-                            <strong>Demo:</strong> <code>doctor@rrdch.in</code> / <code>doctor123</code>
-                        </div>
-                        <div class="flip-error" id="doctorError">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
-                            Invalid credentials.
-                        </div>
-                        <form class="flip-card__form" onsubmit="handleLogin(event, 'doctor')">
-                            <input type="email" id="doctorEmail" class="flip-card__input" placeholder="doctor@rrdch.in" required>
-                            <input type="password" id="doctorPw" class="flip-card__input" placeholder="Password" required>
-                            <button type="submit" class="flip-card__btn">Login</button>
-                        </form>
-                        <a href="#" style="font-size:0.75rem;color:var(--font-color-sub);">IT Support</a>
-                    </div>
-
-                    <!-- STUDENT PANEL -->
-                    <div class="role-panel" id="panel-student">
-                        <div class="role-badge student">Student Portal</div>
-                        <h2 class="title">Student Login</h2>
-                        <div class="demo-creds" style="border-color:rgba(217,119,6,0.3);background:rgba(217,119,6,0.05);">
-                            <strong>Demo:</strong> <code>stu2024001</code> / <code>Student@2024</code>
-                        </div>
-                        <div class="flip-error" id="studentError">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
-                            Invalid credentials.
-                        </div>
-                        <form class="flip-card__form" onsubmit="handleLogin(event, 'student')">
-                            <input type="text" id="studentId" class="flip-card__input" placeholder="Student ID" required>
-                            <input type="password" id="studentPw" class="flip-card__input" placeholder="Password" required>
-                            <button type="submit" class="flip-card__btn">Login</button>
-                        </form>
-                        <a href="#" style="font-size:0.75rem;color:var(--font-color-sub);">Forgot Password?</a>
-                    </div>
-
-                    <!-- ADMIN PANEL -->
-                    <div class="role-panel" id="panel-admin">
-                        <div class="role-badge admin">Admin Portal</div>
-                        <h2 class="title">Admin Login</h2>
-                        <div class="demo-creds" style="border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.05);">
-                            <strong>Demo:</strong> <code>admin@rrdch.in</code> / <code>admin123</code>
-                        </div>
-                        <div class="flip-error" id="adminError">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
-                            Invalid credentials.
-                        </div>
-                        <form class="flip-card__form" onsubmit="handleLogin(event, 'admin')">
-                            <input type="email" id="adminEmail" class="flip-card__input" placeholder="admin@rrdch.in" required>
-                            <input type="password" id="adminPw" class="flip-card__input" placeholder="Password" required>
-                            <button type="submit" class="flip-card__btn">Login</button>
-                        </form>
-                        <a href="#" style="font-size:0.75rem;color:var(--font-color-sub);">Helpdesk</a>
-                    </div>
-
+        <!-- Sign-up Card (patient only) -->
+        <div class="card-wrap" id="signupCardWrap" style="display:none;">
+            <div class="signup-card visible" id="signupCard">
+                <div class="role-badge patient">New Patient</div>
+                <div class="card-title">Create Account</div>
+                <div class="card-sub">Register as a new patient at RRDCH</div>
+                <div class="form-group">
+                    <input type="text"  id="regName"  class="flip-card__input" placeholder="Full Name" required>
+                    <input type="email" id="regEmail" class="flip-card__input" placeholder="Email Address" required>
+                    <input type="tel"   id="regPhone" class="flip-card__input" placeholder="Phone Number" required>
+                    <input type="password" id="regPw" class="flip-card__input" placeholder="Create Password (min 6 chars)" required>
                 </div>
-
-                <!-- BACK: Sign Up (Patient Only) -->
-                <div class="flip-card__back">
-                    <div class="role-badge patient">New Patient</div>
-                    <h2 class="title">Register</h2>
-                    <form class="flip-card__form" onsubmit="handleRegister(event)">
-                        <input type="text" id="regName" class="flip-card__input" placeholder="Full Name" required>
-                        <input type="email" id="regEmail" class="flip-card__input" placeholder="Email" required>
-                        <input type="tel" id="regPhone" class="flip-card__input" placeholder="Phone Number" required>
-                        <input type="password" id="regPw" class="flip-card__input" placeholder="Create Password" required>
-                        <button type="submit" class="flip-card__btn">Register</button>
-                    </form>
-                    <a href="#" onclick="toggleFlip()" style="font-size:0.75rem;color:var(--font-color-sub);">Already have an account? Login</a>
+                <div class="error-box" id="regError">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                    <span id="regErrorMsg">Registration failed.</span>
+                </div>
+                <button class="login-btn" id="regBtn" onclick="handleRegister()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                    Register
+                </button>
+                <div class="card-links">
+                    <button class="card-link" onclick="showLogin()">← Back to Login</button>
+                    <span style="font-size:0.72rem;color:#94a3b8;">RRDCH © 2025</span>
                 </div>
             </div>
         </div>
     </div>
+
     <script>
-        // Role Switching
-        function switchRole(role) {
-            // Update tabs
-            document.querySelectorAll('.role-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.dataset.role === role) tab.classList.add('active');
-            });
-            
-            // Update panels
-            document.querySelectorAll('.role-panel').forEach(panel => {
-                panel.classList.remove('active');
-            });
-            document.getElementById('panel-' + role).classList.add('active');
-            
-            // Reset flip to front
-            document.getElementById('formToggle').checked = false;
+    // ======================
+    // CONFIG & SUPABASE INIT
+    // ======================
+    const SUPABASE_URL = 'https://hbalflsjvtovtmmypdvv.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiYWxmbHNqdnRvdnRtbXlwZHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1MDc1OTcsImV4cCI6MjA5MjA4MzU5N30.iq60dhhWA8oqwNHQr6R4hvnCDKNBZ-sP-1A2PXxkkRU';
+
+    let sb = null;
+    try {
+        sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, storageKey: 'rrdch_sb_session' } });
+    } catch(e) { console.warn('Supabase init error:', e); }
+
+    // Demo credentials (fallback)
+    const DEMO = {
+        patient: { credential: 'PAT001', password: 'patient123', email: 'patient@rrdch.in', redirect: 'patients.html' },
+        doctor:  { email: 'doctor@rrdch.in',  password: 'doctor123',  redirect: 'doctor-portal.html' },
+        student: { credential: 'stu2024001',   password: 'Student@2024', email: 'student@rrdch.in', redirect: 'students.html' },
+        admin:   { email: 'admin@rrdch.in',    password: 'admin123',  redirect: 'admin-portal.html' }
+    };
+
+    // Role configs
+    const ROLES = {
+        patient: {
+            badge: 'patient', badgeText: 'Patient Portal', title: 'Patient Login',
+            sub: 'Book appointments, track your treatment',
+            demoHtml: `<div class="demo-box">Demo: ID <code>PAT001</code> / Pass <code>patient123</code></div>`,
+            fields: [
+                { id: 'patId', type: 'text',     placeholder: 'Patient ID (e.g. PAT001) or Phone' },
+                { id: 'patPw', type: 'password', placeholder: 'Password' }
+            ],
+            showSignup: true,
+            errorId: 'patErr'
+        },
+        doctor: {
+            badge: 'doctor', badgeText: 'Doctor Portal', title: 'Doctor Login',
+            sub: 'Access your patient queue and case notes',
+            demoHtml: `<div class="demo-box doc">Demo: <code>doctor@rrdch.in</code> / <code>doctor123</code></div>`,
+            fields: [
+                { id: 'docEmail', type: 'email',    placeholder: 'Staff Email (doctor@rrdch.in)' },
+                { id: 'docPw',    type: 'password', placeholder: 'Password' }
+            ],
+            showSignup: false,
+            errorId: 'docErr'
+        },
+        student: {
+            badge: 'student', badgeText: 'Student Portal', title: 'Student Login',
+            sub: 'Course resources, attendance & assignments',
+            demoHtml: `<div class="demo-box stu">Demo: ID <code>stu2024001</code> / Pass <code>Student@2024</code></div>`,
+            fields: [
+                { id: 'stuId', type: 'text',     placeholder: 'Student ID (e.g. stu2024001)' },
+                { id: 'stuPw', type: 'password', placeholder: 'Password' }
+            ],
+            showSignup: false,
+            errorId: 'stuErr'
+        },
+        admin: {
+            badge: 'admin', badgeText: 'Admin Portal', title: 'Admin Access',
+            sub: 'Hospital management & system controls',
+            demoHtml: `<div class="demo-box adm">Demo: <code>admin@rrdch.in</code> / <code>admin123</code></div>`,
+            fields: [
+                { id: 'admEmail', type: 'email',    placeholder: 'Admin Email (admin@rrdch.in)' },
+                { id: 'admPw',    type: 'password', placeholder: 'Master Password' }
+            ],
+            showSignup: false,
+            errorId: 'admErr'
         }
-        
-        // Flip Card Toggle
-        function toggleFlip() {
-            const isChecked = document.getElementById('formToggle').checked;
-            // Only allow flip for patient role
-            const activePanel = document.querySelector('.role-panel.active');
-            if (activePanel.id !== 'panel-patient' && isChecked) {
-                alert('Registration is only available for Patient portal');
-                document.getElementById('formToggle').checked = false;
-            }
+    };
+
+    let currentRole = 'patient';
+
+    // ======================
+    // PARTICLES
+    // ======================
+    (function spawnParticles() {
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 18; i++) {
+            const p = document.createElement('div');
+            p.className = 'p';
+            p.style.cssText = `left:${Math.random()*100}%;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px;animation-duration:${10+Math.random()*15}s;animation-delay:${Math.random()*10}s;opacity:${0.3+Math.random()*0.5};`;
+            container.appendChild(p);
         }
-        
-        // Login Handler
-        async function handleLogin(e, role) {
-            e.preventDefault();
-            
-            const errorDiv = document.getElementById(role + 'Error');
-            errorDiv.classList.remove('visible');
-            
-            // Get credentials
-            let user, pass;
-            if (role === 'patient') {
-                user = document.getElementById('patientId').value;
-                pass = document.getElementById('patientPw').value;
-                // Demo validation
-                if (user === 'PAT001' && pass === 'patient123') {
-                    window.location.href = 'patients.html';
-                    return;
-                }
-            } else if (role === 'doctor') {
-                user = document.getElementById('doctorEmail').value;
-                pass = document.getElementById('doctorPw').value;
-                if (user === 'doctor@rrdch.in' && pass === 'doctor123') {
-                    window.location.href = 'doctor-portal.html';
-                    return;
-                }
-            } else if (role === 'student') {
-                user = document.getElementById('studentId').value;
-                pass = document.getElementById('studentPw').value;
-                if (user === 'stu2024001' && pass === 'Student@2024') {
-                    window.location.href = 'students.html';
-                    return;
-                }
-            } else if (role === 'admin') {
-                user = document.getElementById('adminEmail').value;
-                pass = document.getElementById('adminPw').value;
-                if (user === 'admin@rrdch.in' && pass === 'admin123') {
-                    window.location.href = 'admin.html';
-                    return;
-                }
-            }
-            
-            // Show error
-            errorDiv.classList.add('visible');
+    })();
+
+    // ======================
+    // ROLE SWITCHING
+    // ======================
+    function switchRole(role) {
+        currentRole = role;
+        // Update tabs
+        document.querySelectorAll('.role-tab').forEach(t => {
+            t.classList.toggle('active', t.dataset.role === role);
+        });
+        renderLoginCard(role);
+        showLogin();
+    }
+
+    function renderLoginCard(role) {
+        const cfg = ROLES[role];
+        const fieldsHtml = cfg.fields.map(f =>
+            `<input type="${f.type}" id="${f.id}" class="flip-card__input" placeholder="${f.placeholder}" required>`
+        ).join('');
+
+        const signupLink = cfg.showSignup
+            ? `<button class="card-link" onclick="showSignup()">New patient? Register →</button>`
+            : `<span style="font-size:0.72rem;color:#94a3b8;">Staff login only</span>`;
+
+        document.getElementById('loginCard').innerHTML = `
+            <div class="role-badge ${cfg.badge}">${cfg.badgeText}</div>
+            <div class="card-title">${cfg.title}</div>
+            <div class="card-sub">${cfg.sub}</div>
+            ${cfg.demoHtml}
+            <form id="loginForm" onsubmit="handleLogin(event, '${role}')" novalidate>
+                <div class="form-group">${fieldsHtml}</div>
+                <div class="error-box" id="${cfg.errorId}">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                    <span id="${cfg.errorId}Msg">Invalid credentials. Please try again.</span>
+                </div>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                    Sign In
+                </button>
+            </form>
+            <div class="card-links">
+                ${signupLink}
+                <button class="card-link" onclick="alert('Please contact RRDCH IT support at it@rrdch.in')">Forgot Password?</button>
+            </div>
+        `;
+    }
+
+    // ======================
+    // SHOW / HIDE FORMS
+    // ======================
+    function showSignup() {
+        document.getElementById('loginCardWrap').style.display = 'none';
+        document.getElementById('signupCardWrap').style.display = 'block';
+    }
+    function showLogin() {
+        document.getElementById('loginCardWrap').style.display = 'block';
+        document.getElementById('signupCardWrap').style.display = 'none';
+    }
+
+    // ======================
+    // LOGIN HANDLER
+    // ======================
+    async function handleLogin(e, role) {
+        e.preventDefault();
+        const cfg = ROLES[role];
+        const demo = DEMO[role];
+        const errDiv  = document.getElementById(cfg.errorId);
+        const errMsg  = document.getElementById(cfg.errorId + 'Msg');
+        const btn     = document.getElementById('loginBtn');
+
+        errDiv.classList.remove('show');
+        btn.disabled = true;
+        btn.innerHTML = `<div class="spinner" style="width:20px;height:20px;border-width:3px;"></div> Signing in…`;
+
+        // Gather credentials
+        let identifier = '', password = '';
+        if (role === 'patient') {
+            identifier = document.getElementById('patId')?.value.trim();
+            password   = document.getElementById('patPw')?.value;
+        } else if (role === 'doctor') {
+            identifier = document.getElementById('docEmail')?.value.trim().toLowerCase();
+            password   = document.getElementById('docPw')?.value;
+        } else if (role === 'student') {
+            identifier = document.getElementById('stuId')?.value.trim();
+            password   = document.getElementById('stuPw')?.value;
+        } else if (role === 'admin') {
+            identifier = document.getElementById('admEmail')?.value.trim().toLowerCase();
+            password   = document.getElementById('admPw')?.value;
         }
-        
-        // Register Handler
-        function handleRegister(e) {
-            e.preventDefault();
-            alert('Registration successful! Please login.');
-            document.getElementById('formToggle').checked = false;
+
+        let success = false;
+        let redirectUrl = demo.redirect;
+
+        // — Try Supabase auth first (email/password roles) —
+        if (sb && (role === 'doctor' || role === 'admin')) {
+            try {
+                const { data, error } = await sb.auth.signInWithPassword({ email: identifier, password });
+                if (!error && data?.user) {
+                    success = true;
+                    // Log the login event
+                    try { await sb.from('admin_audit_log').insert({ role, user_email: identifier, action: 'login', status: 'success' }); } catch(_) {}
+                }
+            } catch(ex) { console.warn('Supabase auth error:', ex); }
         }
+
+        // — Demo fallback —
+        if (!success) {
+            if (role === 'patient'  && (identifier === demo.credential || identifier === 'patient@rrdch.in') && password === demo.password) success = true;
+            if (role === 'doctor'   && identifier === demo.email  && password === demo.password) success = true;
+            if (role === 'student'  && (identifier === demo.credential || identifier === demo.email) && password === demo.password) success = true;
+            if (role === 'admin'    && identifier === demo.email  && password === demo.password) success = true;
+        }
+
+        if (success) {
+            // Store session
+            sessionStorage.setItem('rrdch_role', role);
+            sessionStorage.setItem('rrdch_user', identifier);
+            sessionStorage.setItem('rrdch_login_time', new Date().toISOString());
+
+            showToast(`✓ Welcome! Redirecting to ${role} portal…`);
+            showSpinner('Loading your portal…');
+            await delay(1000);
+            window.location.href = redirectUrl;
+        } else {
+            errMsg.textContent = 'Invalid credentials. Please check and try again.';
+            errDiv.classList.add('show');
+            btn.disabled = false;
+            btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Sign In`;
+            // Shake the card
+            document.getElementById('loginCard').style.animation = 'none';
+            setTimeout(() => { document.getElementById('loginCard').style.animation = ''; }, 50);
+        }
+    }
+
+    // ======================
+    // PATIENT REGISTRATION
+    // ======================
+    async function handleRegister() {
+        const name  = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const phone = document.getElementById('regPhone').value.trim();
+        const pw    = document.getElementById('regPw').value;
+        const errDiv = document.getElementById('regError');
+        const errMsg = document.getElementById('regErrorMsg');
+        const btn    = document.getElementById('regBtn');
+
+        errDiv.classList.remove('show');
+        if (!name || !email || !phone || !pw) { errMsg.textContent = 'All fields are required.'; errDiv.classList.add('show'); return; }
+        if (pw.length < 6) { errMsg.textContent = 'Password must be at least 6 characters.'; errDiv.classList.add('show'); return; }
+
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:3px;"></div> Creating account…';
+
+        let success = false;
+        if (sb) {
+            try {
+                const { data, error } = await sb.auth.signUp({ email, password: pw, options: { data: { full_name: name, phone, role: 'patient' } } });
+                if (!error) {
+                    success = true;
+                    try { await sb.from('patients').insert({ name, email, phone, created_at: new Date().toISOString() }); } catch(_) {}
+                } else {
+                    errMsg.textContent = error.message || 'Registration failed.';
+                    errDiv.classList.add('show');
+                }
+            } catch(ex) { errMsg.textContent = 'Network error. Please try again.'; errDiv.classList.add('show'); }
+        } else {
+            // Demo mode: just show success
+            success = true;
+        }
+
+        if (success) {
+            showToast('✓ Account created! Please check your email to verify, then login.');
+            await delay(2500);
+            showLogin();
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg> Register`;
+    }
+
+    // ======================
+    // UTILS
+    // ======================
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> ${msg}`;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 4000);
+    }
+    function showSpinner(msg) {
+        document.getElementById('spinnerText').textContent = msg || 'Loading…';
+        document.getElementById('spinnerOverlay').classList.add('show');
+    }
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ======================
+    // URL HASH ROLE SELECTION
+    // ======================
+    function initFromHash() {
+        const hash = window.location.hash.replace('#','').toLowerCase();
+        const validRoles = ['patient','doctor','student','admin'];
+        if (validRoles.includes(hash)) {
+            switchRole(hash);
+        } else {
+            switchRole('patient');
+        }
+    }
+
+    // ======================
+    // INIT
+    // ======================
+    initFromHash();
+    window.addEventListener('hashchange', initFromHash);
     </script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard | RRDCH</title>
-    <meta name="description" content="RRDCH Doctor Portal — manage patient queues, schedules, and case notes.">
+    <title>Doctor Dashboard | RRDCH — Hospital Management System</title>
+    <meta name="description" content="RRDCH Doctor Portal — manage patient queues, schedules, case notes, and patient records.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -12,713 +12,896 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-            --blue: #1c4578; --blue-dark: #0f2d52; --blue-light: #2b61a3;
-            --gold: #c39c5b; --green: #16a34a; --red: #dc2626;
-            --border: #e2e8f0; --bg: #f8fafc; --text: #0f172a; --muted: #64748b;
+            --blue: #1c4578; --blue-dark: #0f2d52; --blue-light: #3b6fc7;
+            --gold: #c39c5b; --green: #16a34a; --red: #dc2626; --amber: #d97706;
+            --border: #e2e8f0; --bg: #f0f4f9; --bg2: #f8fafc;
+            --text: #0f172a; --muted: #64748b;
         }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-        /* Portal Nav */
-        .doc-nav { background: white; border-bottom: 1px solid var(--border); padding: 0 3%; display: flex; align-items: center; gap: 0; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.04); height: 64px; }
-        .doc-nav .brand { display: flex; align-items: center; gap: 1rem; text-decoration: none; margin-right: auto; }
-        .doc-nav .brand img { height: 50px; object-fit: contain; }
-        .portal-badge { background: #dcfce7; color: var(--green); font-size: 0.72rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 20px; }
-        .doc-nav .nav-links { display: flex; align-items: center; gap: 0.5rem; margin-right: 1.5rem; }
-        .doc-nav .nav-links a { color: var(--muted); font-size: 0.88rem; font-weight: 600; padding: 0.5rem 0.9rem; border-radius: 8px; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: all 0.2s; }
-        .doc-nav .nav-links a:hover { background: #f8fafc; color: var(--blue); }
-        .doc-nav .nav-links a.active { background: #f0f4ff; color: var(--blue); }
-        .doc-nav .exit-btn { background: var(--bg); border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: all 0.2s; }
-        .doc-nav .exit-btn:hover { border-color: var(--red); color: var(--red); }
-
-        /* Layout */
-        .doc-layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 64px); }
-        .doc-sidebar { background: white; border-right: 1px solid var(--border); padding: 1.5rem 1rem; }
-        .doc-main { padding: 2rem 2.5rem; overflow-y: auto; }
-
-        /* Sidebar Doctor Card */
-        .doc-profile { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; color: white; text-align: center; }
-        .doc-profile .avatar { width: 72px; height: 72px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.8rem; font-weight: 700; }
-        .doc-profile h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.25rem; }
-        .doc-profile p { font-size: 0.78rem; opacity: 0.7; }
-        .doc-profile .status-pill { display: inline-flex; align-items: center; gap: 0.4rem; background: rgba(255,255,255,0.15); padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-top: 0.75rem; }
-        .doc-profile .status-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: pulse-dot 2s infinite; }
-        @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-
-        /* Sidebar Nav */
-        .sidebar-nav { display: flex; flex-direction: column; gap: 0.25rem; }
-        .sidebar-nav a { display: flex; align-items: center; gap: 0.8rem; padding: 0.7rem 1rem; border-radius: 10px; color: var(--muted); font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-        .sidebar-nav a:hover { background: var(--bg); color: var(--blue); }
-        .sidebar-nav a.active { background: #f0f4ff; color: var(--blue); }
-        .sidebar-nav .section-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #94a3b8; padding: 1rem 1rem 0.5rem; }
-
-        /* Top stats row */
-        .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
-        .stat-card { background: white; border-radius: 14px; border: 1px solid var(--border); padding: 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .stat-ico { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .stat-ico.blue { background: #dbeafe; color: var(--blue); }
-        .stat-ico.green { background: #dcfce7; color: var(--green); }
-        .stat-ico.amber { background: #fef9c3; color: #c2870c; }
-        .stat-ico.red { background: #fee2e2; color: var(--red); }
-        .stat-num { font-size: 1.75rem; font-weight: 800; color: var(--text); line-height: 1; }
-        .stat-label { font-size: 0.78rem; color: var(--muted); font-weight: 500; margin-top: 0.2rem; }
-
-        /* Cards */
-        .d-card { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .d-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
-        .d-card-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 0.6rem; }
-        .d-card-header .badge { font-size: 0.72rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 12px; background: #f1f5f9; color: var(--muted); }
-
-        /* Queue Table */
-        .queue-table { width: 100%; border-collapse: collapse; }
-        .queue-table th { text-align: left; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 0rem 1rem 0.75rem 0; border-bottom: 1px solid var(--border); }
-        .queue-table td { padding: 1rem 1rem 1rem 0; border-bottom: 1px solid #f8fafc; font-size: 0.9rem; vertical-align: middle; }
-        .queue-table tr:last-child td { border: none; }
-        .token-badge { background: var(--blue-dark); color: white; font-weight: 800; font-size: 0.85rem; padding: 0.35rem 0.8rem; border-radius: 8px; display: inline-block; }
-        .status-tag { font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.8rem; border-radius: 20px; }
-        .status-tag.waiting { background: #fef9c3; color: #854d0e; }
-        .status-tag.ongoing { background: #dcfce7; color: #166534; }
-        .status-tag.called { background: #dbeafe; color: #1e40af; }
-        .status-tag.done { background: #f1f5f9; color: var(--muted); }
-        .action-btns { display: flex; gap: 0.5rem; }
-        .btn-sm { border: none; padding: 0.4rem 0.9rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .btn-call { background: #dbeafe; color: var(--blue); }
-        .btn-call:hover { background: var(--blue); color: white; }
-        .btn-done { background: #dcfce7; color: var(--green); }
-        .btn-done:hover { background: var(--green); color: white; }
-
-        /* Notes Area */
-        .notes-area { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .notes-form textarea { width: 100%; border: 1px solid var(--border); border-radius: 10px; padding: 1rem; font-family: inherit; font-size: 0.9rem; resize: vertical; min-height: 120px; transition: 0.2s; }
-        .notes-form textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(28,69,120,0.1); }
-        .btn-save { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 0.75rem 1.75rem; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.25s; margin-top: 0.75rem; }
-        .btn-save:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(17,40,75,0.25); }
-
-        /* Schedule */
-        .schedule-list { display: flex; flex-direction: column; gap: 0.75rem; }
-        .sched-item { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1rem; background: var(--bg); border-radius: 10px; border-left: 4px solid var(--border); }
-        .sched-item.upcoming { border-left-color: var(--blue); }
-        .sched-item.emergency { border-left-color: var(--red); background: #fff5f5; }
-        .sched-time { font-size: 0.85rem; font-weight: 700; color: var(--muted); min-width: 80px; }
-        .sched-name { font-weight: 600; font-size: 0.9rem; }
-        .sched-dept { font-size: 0.78rem; color: var(--muted); }
-
-        @media (max-width: 1024px) {
-            .doc-layout { grid-template-columns: 1fr; }
-            .doc-sidebar { display: none; }
-            .stat-row { grid-template-columns: repeat(2, 1fr); }
+        /* ─── AUTH OVERLAY ─── */
+        .auth-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: linear-gradient(135deg, #0f2d52, #1c4578 60%, #2b61a3);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
         }
-        @media (max-width: 640px) {
-            .stat-row { grid-template-columns: 1fr 1fr; }
-            .notes-area { grid-template-columns: 1fr; }
-            .doc-main { padding: 1.25rem; }
+        .auth-brand { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; font-family: inherit; margin-bottom: 1.5rem; text-decoration: none; }
+        .auth-brand img { height: 68px; width: 68px; object-fit: cover; object-position: left center; margin-bottom: 0.5rem; background: white; border-radius: 50%; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .auth-brand strong { color: white; font-size: 1.05rem; font-weight: 800; display: block; }
+        .auth-brand span { color: var(--gold); font-size: 0.72rem; }
+        .auth-card {
+            background: white; border-radius: 6px;
+            border: 2px solid #323232; box-shadow: 8px 8px 0 #323232;
+            padding: 2.25rem 2rem; width: 360px;
         }
+        .auth-badge { display: inline-block; padding: 4px 12px; border: 2px solid var(--green); color: var(--green); background: rgba(22,163,74,0.07); border-radius: 5px; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 2px 2px 0 var(--green); margin-bottom: 0.8rem; }
+        .auth-title { font-size: 1.45rem; font-weight: 900; margin-bottom: 0.2rem; }
+        .auth-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.25rem; }
+        .demo-hint { background: rgba(22,163,74,0.07); border: 2px dashed rgba(22,163,74,0.25); border-radius: 6px; padding: 10px 12px; margin-bottom: 1rem; font-size: 0.77rem; color: var(--muted); }
+        .demo-hint code { background: rgba(22,163,74,0.12); color: var(--green); padding: 1px 6px; border-radius: 3px; font-size: 0.72rem; font-weight: 700; font-family: monospace; }
+        .auth-input { width: 100%; height: 46px; margin-bottom: 0.75rem; border: 2px solid #323232; border-radius: 5px; box-shadow: 3px 3px 0 #323232; background: white; font-size: 14px; font-weight: 600; font-family: inherit; padding: 0 14px; outline: none; transition: all 0.2s; }
+        .auth-input:focus { border-color: var(--green); box-shadow: 3px 3px 0 var(--green); transform: translate(-1px,-1px); }
+        .auth-btn { width: 100%; height: 46px; border: 2px solid #323232; border-radius: 5px; box-shadow: 4px 4px 0 #323232; background: white; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 0.25rem; }
+        .auth-btn:hover { background: #323232; color: white; transform: translate(-2px,-2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.3); }
+        .auth-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .auth-err { display: none; background: #fff0f0; border: 2px solid var(--red); box-shadow: 3px 3px 0 var(--red); border-radius: 5px; padding: 8px 12px; font-size: 0.75rem; font-weight: 700; color: var(--red); margin-top: 0.5rem; align-items: center; gap: 6px; }
+        .auth-err.show { display: flex; }
+        .auth-security { color: rgba(255,255,255,0.55); font-size: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+
+        /* ─── NAV ─── */
+        .portal-nav { position: sticky; top: 0; z-index: 200; background: white; border-bottom: 1px solid var(--border); height: 64px; padding: 0 2%; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .nv-brand { display: flex; align-items: center; gap: 0.9rem; text-decoration: none; margin-right: auto; }
+        .nv-brand img { height: 46px; width: 46px; object-fit: cover; object-position: left center; background: white; border-radius: 50%; padding: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .nv-badge { background: #dcfce7; color: var(--green); font-size: 0.68rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 20px; }
+        .nv-time { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+        .nv-user { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.9rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-size: 0.82rem; font-weight: 600; }
+        .nv-avatar { width: 28px; height: 28px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; color: white; }
+        .nv-notif { position: relative; padding: 0.5rem; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; display: flex; background: white; }
+        .nv-notif:hover { border-color: var(--green); color: var(--green); }
+        .nv-dot { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: var(--red); border-radius: 50%; border: 2px solid white; }
+        .nv-exit { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: var(--muted); cursor: pointer; text-decoration: none; transition: all 0.2s; }
+        .nv-exit:hover { border-color: var(--red); color: var(--red); }
+
+        /* ─── LAYOUT ─── */
+        .portal-layout { display: flex; min-height: calc(100vh - 64px); }
+
+        /* ─── SIDEBAR ─── */
+        .sidebar { width: 250px; background: white; border-right: 1px solid var(--border); padding: 1.25rem 0.75rem; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; flex-shrink: 0; }
+        .sp { background: linear-gradient(135deg, var(--blue-dark), var(--blue)); border-radius: 14px; padding: 1.25rem; margin-bottom: 1.25rem; color: white; text-align: center; }
+        .sp-av { width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 3px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-size: 1.4rem; font-weight: 800; }
+        .sp h3 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.2rem; }
+        .sp p { font-size: 0.72rem; opacity: 0.7; }
+        .sp-pill { display: inline-flex; align-items: center; gap: 0.35rem; background: rgba(255,255,255,0.15); padding: 0.3rem 0.75rem; border-radius: 20px; font-size: 0.72rem; font-weight: 700; margin-top: 0.6rem; }
+        .sp-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: blink 2s infinite; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+        .s-section { font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; padding: 0.75rem 0.75rem 0.35rem; }
+        .s-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.9rem; border-radius: 10px; color: var(--muted); font-size: 0.84rem; font-weight: 600; cursor: pointer; background: none; border: none; width: 100%; text-align: left; transition: all 0.18s; text-decoration: none; }
+        .s-link:hover { background: var(--bg); color: var(--blue); }
+        .s-link.active { background: #f0fdf4; color: var(--green); font-weight: 700; }
+        .s-badge { margin-left: auto; background: var(--amber); color: white; font-size: 0.62rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; }
+
+        /* ─── MAIN ─── */
+        .main { flex: 1; padding: 2rem 2.25rem; overflow-y: auto; }
+        .page { display: none; } .page.active { display: block; animation: fadeIn 0.25s ease; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+
+        /* ─── PAGE HEADER ─── */
+        .ph { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; }
+        .ph h1 { font-size: 1.45rem; font-weight: 800; }
+        .ph p { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+        .ph-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+        /* ─── STATS ─── */
+        .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-bottom: 2rem; }
+        .sc { background: white; border-radius: 14px; border: 1px solid var(--border); padding: 1.35rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: all 0.2s; }
+        .sc:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+        .sc-ico { width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .ic-blue{background:#dbeafe;color:var(--blue);} .ic-green{background:#dcfce7;color:var(--green);} .ic-amber{background:#fef9c3;color:var(--amber);} .ic-red{background:#fee2e2;color:var(--red);}
+        .sc-num { font-size: 1.75rem; font-weight: 900; line-height: 1; }
+        .sc-lbl { font-size: 0.75rem; color: var(--muted); font-weight: 500; margin-top: 0.2rem; }
+
+        /* ─── CARDS ─── */
+        .card { background: white; border-radius: 16px; border: 1px solid var(--border); padding: 1.75rem; margin-bottom: 1.75rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .ch { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+        .ch h2 { font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 0.6rem; }
+        .ch .cbadge { font-size: 0.7rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 10px; background: var(--bg); color: var(--muted); }
+        .ch .cbadge.live { background: #dcfce7; color: var(--green); }
+
+        /* ─── QUEUE TABLE ─── */
+        .qt { width: 100%; border-collapse: collapse; }
+        .qt th { text-align: left; font-size: 0.7rem; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); padding: 0 0.9rem 0.75rem 0; border-bottom: 2px solid var(--border); }
+        .qt td { padding: 0.9rem 0.9rem 0.9rem 0; border-bottom: 1px solid var(--bg); font-size: 0.875rem; vertical-align: middle; }
+        .qt tr:hover td { background: var(--bg2); }
+        .qt tr:last-child td { border: none; }
+        .token { background: var(--blue-dark); color: white; font-weight: 800; font-size: 0.8rem; padding: 0.3rem 0.7rem; border-radius: 7px; display: inline-block; }
+        .stag { font-size: 0.72rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 20px; }
+        .stag.waiting{background:#fef9c3;color:#854d0e;} .stag.called{background:#dbeafe;color:#1e40af;} .stag.ongoing{background:#dcfce7;color:#166534;} .stag.done{background:#f1f5f9;color:var(--muted);}
+        .abtn { display: inline-flex; align-items: center; gap: 0.35rem; border: none; padding: 0.38rem 0.8rem; border-radius: 7px; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: all 0.18s; font-family: inherit; }
+        .abtn.call { background: #dbeafe; color: var(--blue); } .abtn.call:hover { background: var(--blue); color: white; }
+        .abtn.start { background: #dcfce7; color: var(--green); } .abtn.start:hover { background: var(--green); color: white; }
+        .abtn.done { background: #dcfce7; color: var(--green); } .abtn.done:hover { background: var(--green); color: white; }
+        .abtn.view { background: var(--bg); color: var(--muted); } .abtn.view:hover { background: var(--border); }
+
+        /* ─── NOTES FORM ─── */
+        .notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .nf-label { font-size: 0.78rem; font-weight: 700; color: var(--muted); display: block; margin-bottom: 0.4rem; }
+        .nf-input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 0.9rem; font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .nf-input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(28,69,120,0.08); }
+        .nf-textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 0.9rem; font-family: inherit; font-size: 0.875rem; resize: vertical; min-height: 100px; outline: none; transition: border-color 0.2s; }
+        .nf-textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(28,69,120,0.08); }
+        .btn-save { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 0.75rem 1.75rem; font-weight: 700; font-size: 0.88rem; cursor: pointer; transition: all 0.25s; margin-top: 0.75rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: inherit; }
+        .btn-save:hover { background: var(--blue-dark); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(28,69,120,0.25); }
+
+        /* ─── SCHEDULE ─── */
+        .sched-list { display: flex; flex-direction: column; gap: 0.65rem; }
+        .si { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1rem; background: var(--bg); border-radius: 10px; border-left: 4px solid var(--border); transition: all 0.2s; }
+        .si:hover { background: white; }
+        .si.upcoming { border-left-color: var(--blue); } .si.emergency { border-left-color: var(--red); background: #fff8f8; } .si.done-slot { border-left-color: var(--green); opacity: 0.7; }
+        .si-time { font-size: 0.82rem; font-weight: 800; color: var(--muted); min-width: 75px; }
+        .si-name { font-weight: 700; font-size: 0.88rem; }
+        .si-dept { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+
+        /* ─── PATIENT HISTORY ─── */
+        .hist-card { background: var(--bg); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; border-left: 4px solid var(--blue); }
+        .hist-card h4 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .hist-card p { font-size: 0.8rem; color: var(--muted); }
+        .hist-card .hist-date { font-size: 0.72rem; color: var(--blue); font-weight: 600; margin-bottom: 0.3rem; }
+
+        /* ─── BUTTONS ─── */
+        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; font-family: inherit; cursor: pointer; transition: all 0.2s; border: none; }
+        .btn-primary { background: var(--blue); color: white; } .btn-primary:hover { background: var(--blue-dark); }
+        .btn-secondary { background: white; color: var(--muted); border: 1px solid var(--border); } .btn-secondary:hover { border-color: var(--blue); color: var(--blue); }
+        .btn-green { background: var(--green); color: white; } .btn-green:hover { background: #15803d; }
+
+        /* ─── FILTER BAR ─── */
+        .fbar { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; align-items: center; }
+        .fi { height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.82rem; font-family: inherit; outline: none; transition: border-color 0.2s; background: white; }
+        .fi:focus { border-color: var(--blue); }
+
+        /* ─── CHATBOT ─── */
+        .chatbot-container { display: flex; flex-direction: column; height: 480px; background: white; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+        .chat-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); color: white; }
+        .chat-header h3 { font-size: 0.95rem; font-weight: 800; }
+        .chat-header p { font-size: 0.72rem; opacity: 0.8; }
+        .chat-ai-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: blink 2s infinite; }
+        .messages { flex: 1; overflow-y: auto; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; background: var(--bg); }
+        .msg { max-width: 82%; padding: 0.75rem 1rem; border-radius: 14px; font-size: 0.85rem; font-weight: 500; line-height: 1.5; }
+        .msg.user { align-self: flex-end; background: var(--blue); color: white; border-radius: 14px 14px 4px 14px; }
+        .msg.bot { align-self: flex-start; background: white; border: 1px solid var(--border); color: var(--text); border-radius: 14px 14px 14px 4px; }
+        .msg.bot.thinking { color: var(--muted); font-style: italic; }
+        .chat-input-row { padding: 1rem; border-top: 1px solid var(--border); display: flex; gap: 0.5rem; background: white; }
+        .chat-input { flex: 1; height: 42px; border: 1px solid var(--border); border-radius: 10px; padding: 0 14px; font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+        .chat-input:focus { border-color: var(--blue); }
+        .chat-send { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 0 1.1rem; height: 42px; cursor: pointer; transition: all 0.2s; font-family: inherit; font-weight: 700; font-size: 0.82rem; display: flex; align-items: center; gap: 0.4rem; }
+        .chat-send:hover { background: var(--blue-dark); }
+
+        /* ─── TOAST ─── */
+        .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999; background: var(--blue-dark); color: white; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 0.85rem; box-shadow: 0 8px 30px rgba(0,0,0,0.25); display: none; align-items: center; gap: 0.75rem; animation: toastIn 0.3s ease; }
+        .toast.show { display: flex; } .toast.success { background: var(--green); } .toast.error { background: var(--red); }
+        @keyframes toastIn { from{opacity:0;transform:translateX(20px);} to{opacity:1;transform:translateX(0);} }
+
+        /* ─── SPINNER ─── */
+        .spinner { width: 16px; height: 16px; border: 3px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; }
+        @keyframes spin { to{transform:rotate(360deg);} }
+
+        /* ─── EMPTY STATE ─── */
+        .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+        .empty h3 { font-weight: 700; color: var(--text); margin-bottom: 0.5rem; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width:1024px) { .sidebar{display:none;} }
+        @media (max-width:768px) { .main{padding:1.25rem;} .stats-row{grid-template-columns:repeat(2,1fr);} .notes-grid{grid-template-columns:1fr;} }
     </style>
 </head>
 <body>
-    <!-- Unified Login Theme -->
-    <link rel="stylesheet" href="css/login-theme.css">
 
-    <!-- Secure Access Gateway -->
-    <div id="doctorAuthOverlay" class="portal-login-overlay rrdch-login-root">
-        <a href="index.html" class="login-brand">
-            <img src="images/logo.png" alt="RRDCH">
-            <div class="login-brand-text">
-                <strong>RRDCH</strong>
-                <span>Return to Website</span>
+<!-- ─── AUTH OVERLAY ─── -->
+<div class="auth-overlay" id="authOverlay">
+    <a href="index.html" class="auth-brand">
+        <img src="images/logos/logo.png" alt="RRDCH">
+        <div><strong>RRDCH</strong><span>Rajarajeshwari Dental College & Hospital</span></div>
+    </a>
+    <div class="auth-card">
+        <div class="auth-badge">⚕️ Doctor Portal</div>
+        <div class="auth-title">Doctor Login</div>
+        <div class="auth-sub">Access your patient queue and dashboard</div>
+        <div class="demo-hint">Demo: <code>doctor@rrdch.in</code> / <code>doctor123</code></div>
+        <form onsubmit="doDoctorLogin(event)">
+            <input type="email" id="docEmail" class="auth-input" placeholder="Staff Email (doctor@rrdch.in)" required>
+            <input type="password" id="docPw" class="auth-input" placeholder="Password" required>
+            <div class="auth-err" id="authErr">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                Invalid credentials. Please try again.
             </div>
-        </a>
-        
-        <div class="login-wrapper">
-            <!-- For Doctor Portal, we don't have Sign Up, so we hide the switch but keep the structure -->
-            <label class="switch" style="visibility:hidden; height:0; margin:0;">
-                <input type="checkbox" class="toggle">
-                <span class="slider"></span>
-                <span class="card-side"></span>
-            </label>
-
-            <div class="flip-card__inner">
-                <div class="flip-card__front">
-                    <div class="flip-title">Doctor Dashboard</div>
-                    <form class="flip-card__form" onsubmit="event.preventDefault(); validateDoctorLogin();">
-                        <span class="flip-role-badge" style="color:var(--doctor); border-color:var(--doctor);">Staff Login</span>
-                        
-                        <input type="email" id="docUser" placeholder="Staff Email (doctor@rrdch.in)" class="flip-card__input" required>
-                        <input type="password" id="docPass" placeholder="Password" class="flip-card__input" required>
-                        
-                        <div id="docLoginErr" class="flip-error">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            Invalid credentials.
-                        </div>
-
-                        <button class="flip-card__btn" type="submit" id="docLoginBtn">Secure Login</button>
-                    </form>
-                    <div class="demo-credentials-badge">
-                        <div class="demo-title">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
-                            Demo Credentials
-                        </div>
-                        <div class="demo-credentials-row">Email: <code>doctor@rrdch.in</code></div>
-                        <div class="demo-credentials-row">Password: <code>doctor123</code></div>
-                    </div>
-                    <a href="#" class="flip-card__link">IT Support / Helpdesk</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="login-security">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            End-to-end encrypted connection
-        </div>
+            <button type="submit" class="auth-btn" id="authBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                Secure Login
+            </button>
+        </form>
+        <div style="margin-top:0.75rem;text-align:center;"><a href="portal.html" style="font-size:0.75rem;color:var(--muted);text-decoration:none;border-bottom:1px dashed var(--muted);">← Return to Portal Login</a></div>
     </div>
-
-    <!-- Auth script -->
-    <script>
-        // If not authenticated as doctor, redirect to unified portal login
-        if (sessionStorage.getItem('rrdch_role') !== 'doctor') {
-            window.location.replace('portal.html#doctor');
-        }
-        // Hide legacy overlay
-        const _dov = document.getElementById('doctorAuthOverlay');
-        if (_dov) { _dov.style.display = 'none'; document.body.classList.remove('no-scroll'); }
-
-        async function validateDoctorLogin() {
-            const user = document.getElementById('docUser').value.trim().toLowerCase();
-            const pass = document.getElementById('docPass').value;
-            const btn = document.getElementById('docLoginBtn');
-            const err = document.getElementById('docLoginErr');
-
-            err.classList.remove('visible');
-            btn.classList.add('loading');
-            btn.textContent = 'Verifying...';
-
-            await new Promise(r => setTimeout(r, 600)); // Simulating network
-            
-            // Supabase auth or fallback demo
-            let success = false;
-            if (window.supabase) {
-                try {
-                    const { data, error } = await window.supabase.auth.signInWithPassword({ email: user, password: pass });
-                    if (!error && data.user) success = true;
-                } catch(e) {}
-            }
-            if (!success && user === 'doctor@rrdch.in' && pass === 'doctor123') {
-                success = true;
-            }
-
-            if (success) {
-                sessionStorage.setItem('rrdch_role', 'doctor');
-                sessionStorage.setItem('rrdch_user', user);
-                document.getElementById('doctorAuthOverlay').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('doctorAuthOverlay').style.display = 'none';
-                    document.body.classList.remove('no-scroll');
-                }, 400);
-            } else {
-                err.classList.add('visible');
-                btn.classList.remove('loading');
-                btn.textContent = 'Secure Login';
-            }
-        }
-    </script>
-
-    <!-- Dr Portal Nav -->
-    <nav class="doc-nav">
-        <a href="index.html" class="brand">
-            <img src="images/logo.png" alt="RRDCH">
-            <span class="portal-badge">Doctor Portal</span>
-        </a>
-        <div class="nav-links">
-            <a href="#" class="active"><i data-lucide="layout-dashboard" width="16"></i> Dashboard</a>
-            <a href="#"><i data-lucide="users" width="16"></i> Patients</a>
-            <a href="#"><i data-lucide="calendar" width="16"></i> Schedule</a>
-            <a href="#"><i data-lucide="bar-chart-2" width="16"></i> Analytics</a>
-        </div>
-        <a href="portal.html" class="exit-btn">
-            <i data-lucide="log-out" width="16"></i> Exit
-        </a>
-    </nav>
-
-    <div class="doc-layout">
-        <!-- Sidebar -->
-        <aside class="doc-sidebar">
-            <div class="doc-profile">
-                <div class="avatar">DR</div>
-                <h3>Dr. Roshan M.</h3>
-                <p>Oral Surgery Dept.</p>
-                <div class="status-pill"><span class="dot"></span> On Duty</div>
-            </div>
-            <nav class="sidebar-nav">
-                <div class="section-label">Main</div>
-                <a href="#" class="active"><i data-lucide="layout-dashboard" width="17"></i> Dashboard</a>
-                <a href="#"><i data-lucide="list-ordered" width="17"></i> Today's Queue</a>
-                <a href="#"><i data-lucide="stethoscope" width="17"></i> Patient Records</a>
-                <a href="#"><i data-lucide="file-text" width="17"></i> Case Notes</a>
-                <div class="section-label">Management</div>
-                <a href="#"><i data-lucide="calendar-days" width="17"></i> My Schedule</a>
-                <a href="#"><i data-lucide="bell" width="17"></i> Notifications</a>
-                <a href="#"><i data-lucide="settings" width="17"></i> Settings</a>
-                <div class="section-label">Quick Links</div>
-                <a href="patients.html"><i data-lucide="clipboard-list" width="17"></i> Patient Portal</a>
-                <a href="departments.html"><i data-lucide="building-2" width="17"></i> Departments</a>
-            </nav>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="doc-main">
-
-            <!-- Stats Row -->
-            <div class="stat-row">
-                <div class="stat-card">
-                    <div class="stat-ico blue"><i data-lucide="users" width="22"></i></div>
-                    <div>
-                        <div class="stat-num" id="statTotal">14</div>
-                        <div class="stat-label">Today's Patients</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-ico green"><i data-lucide="check-circle" width="22"></i></div>
-                    <div>
-                        <div class="stat-num" id="statDone">6</div>
-                        <div class="stat-label">Completed</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-ico amber"><i data-lucide="clock" width="22"></i></div>
-                    <div>
-                        <div class="stat-num" id="statWaiting">8</div>
-                        <div class="stat-label">Waiting</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-ico red"><i data-lucide="alert-triangle" width="22"></i></div>
-                    <div>
-                        <div class="stat-num">2</div>
-                        <div class="stat-label">Urgent Cases</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Today's Queue -->
-            <div class="d-card">
-                <div class="d-card-header">
-                    <h2><i data-lucide="list-ordered" width="20"></i> Today's Patient Queue</h2>
-                    <span class="badge" id="queueTime">Live — Updated just now</span>
-                </div>
-                <table class="queue-table">
-                    <thead>
-                        <tr>
-                            <th>Token</th>
-                            <th>Patient Name</th>
-                            <th>Visit Reason</th>
-                            <th>Time Slot</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="queueBody">
-                        <tr>
-                            <td><span class="token-badge">#41</span></td>
-                            <td><strong>Ananya R.</strong><br><span style="font-size:0.78rem;color:var(--muted);">9845112233</span></td>
-                            <td>Tooth extraction</td>
-                            <td>09:00 AM</td>
-                            <td><span class="status-tag done">Done</span></td>
-                            <td>—</td>
-                        </tr>
-                        <tr>
-                            <td><span class="token-badge">#42</span></td>
-                            <td><strong>Ravi Kumar</strong><br><span style="font-size:0.78rem;color:var(--muted);">9900556677</span></td>
-                            <td>Post-op checkup</td>
-                            <td>10:30 AM</td>
-                            <td><span class="status-tag ongoing">Ongoing</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-done" onclick="markDone(this)">Mark Done</button></div></td>
-                        </tr>
-                        <tr>
-                            <td><span class="token-badge">#43</span></td>
-                            <td><strong>Meera Sharma</strong><br><span style="font-size:0.78rem;color:var(--muted);">9876543210</span></td>
-                            <td>Wisdom tooth pain</td>
-                            <td>11:00 AM</td>
-                            <td><span class="status-tag called">Called</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Start</button></div></td>
-                        </tr>
-                        <tr>
-                            <td><span class="token-badge">#44</span></td>
-                            <td><strong>Farhan Iqbal</strong><br><span style="font-size:0.78rem;color:var(--muted);">9123456789</span></td>
-                            <td>Braces tightening</td>
-                            <td>11:30 AM</td>
-                            <td><span class="status-tag waiting">Waiting</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Call</button></div></td>
-                        </tr>
-                        <tr>
-                            <td><span class="token-badge">#45</span></td>
-                            <td><strong>Lakshmi D.</strong><br><span style="font-size:0.78rem;color:var(--muted);">9988776655</span></td>
-                            <td>Gum bleeding</td>
-                            <td>12:00 PM</td>
-                            <td><span class="status-tag waiting">Waiting</span></td>
-                            <td><div class="action-btns"><button class="btn-sm btn-call" onclick="callNext(this)">Call</button></div></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Notes + Schedule Grid -->
-            <div class="notes-area">
-                <!-- Case Notes -->
-                <div class="d-card" style="margin:0;">
-                    <div class="d-card-header">
-                        <h2><i data-lucide="file-text" width="20"></i> Quick Case Note</h2>
-                    </div>
-                    <div class="notes-form">
-                        <div style="margin-bottom:0.75rem;">
-                            <label style="font-size:0.8rem;font-weight:700;color:var(--muted);display:block;margin-bottom:0.4rem;">Token / Patient</label>
-                            <input type="text" placeholder="e.g. #42 — Ravi Kumar" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;font-size:0.88rem;font-family:inherit;" />
-                        </div>
-                        <div style="margin-bottom:0.75rem;">
-                            <label style="font-size:0.8rem;font-weight:700;color:var(--muted);display:block;margin-bottom:0.4rem;">Diagnosis</label>
-                            <input type="text" placeholder="e.g. Pericoronitis, mandibular 3rd molar" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:0.65rem 1rem;font-size:0.88rem;font-family:inherit;" />
-                        </div>
-                        <label style="font-size:0.8rem;font-weight:700;color:var(--muted);display:block;margin-bottom:0.4rem;">Notes / Prescription</label>
-                        <textarea placeholder="Add clinical observations, treatment plan, medication details..."></textarea>
-                        <button class="btn-save" onclick="saveNote(this)"><i data-lucide="save" width="16"></i> Save Case Note</button>
-                    </div>
-                </div>
-
-                <!-- Today's Schedule -->
-                <div class="d-card" style="margin:0;">
-                    <div class="d-card-header">
-                        <h2><i data-lucide="calendar-days" width="20"></i> Today's Schedule</h2>
-                        <span class="badge">Sunday, 20 Apr</span>
-                    </div>
-                    <div class="schedule-list">
-                        <div class="sched-item upcoming">
-                            <div class="sched-time">09:00 AM</div>
-                            <div><div class="sched-name">Ananya R. — Tooth Extraction</div><div class="sched-dept">Oral Surgery • Done</div></div>
-                        </div>
-                        <div class="sched-item upcoming" style="border-left-color:#c39c5b">
-                            <div class="sched-time">10:30 AM</div>
-                            <div><div class="sched-name">Ravi Kumar — Post-Op Review</div><div class="sched-dept">Oral Surgery • Ongoing</div></div>
-                        </div>
-                        <div class="sched-item upcoming">
-                            <div class="sched-time">11:00 AM</div>
-                            <div><div class="sched-name">Meera Sharma — Wisdom Tooth</div><div class="sched-dept">Oral Surgery • Called</div></div>
-                        </div>
-                        <div class="sched-item emergency">
-                            <div class="sched-time">02:00 PM</div>
-                            <div><div class="sched-name" style="color:var(--red);">Walk-in Emergency</div><div class="sched-dept">Trauma / Urgent — TBD</div></div>
-                        </div>
-                        <div class="sched-item">
-                            <div class="sched-time">04:00 PM</div>
-                            <div><div class="sched-name">Department Meeting</div><div class="sched-dept">Oral Surgery + HOD — OT Block, Rm 3</div></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </main>
+    <div class="auth-security">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        End-to-end encrypted connection
     </div>
+</div>
 
-    <script>
-        // Backend API Configuration
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'http://localhost:3000/api' 
-            : '/api';
-        
-        const SUPABASE_URL = 'https://your-project.supabase.co';
-        const SUPABASE_KEY = 'your-anon-key';
-        
-        let currentDoctor = { name: 'Dr. Roshan M.', dept: 'Oral Surgery', id: 'doc_001' };
-        let currentPatient = null;
-        
-        // Initialize
-        lucide.createIcons();
-        loadQueueData();
-        startRealtimeUpdates();
-        
-        // Fetch patient queue from backend
-        async function loadQueueData() {
-            try {
-                // Fetch today's appointments from API
-                const today = new Date().toISOString().split('T')[0];
-                const deptId = 'omfs'; // Oral Surgery department
-                
-                const response = await fetch(`${API_BASE}/appointments/queue/${deptId}?date=${today}`);
-                if (!response.ok) throw new Error('Failed to fetch queue');
-                
-                const result = await response.json();
-                if (result.ok && result.data) {
-                    renderQueue(result.data.queue || []);
-                    updateStats(result.data);
-                }
-            } catch (error) {
-                console.error('Queue load error:', error);
-                // Fallback to localStorage for demo
-                loadLocalQueue();
-            }
-        }
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast"></div>
 
-        // Load from localStorage as fallback
-        function loadLocalQueue() {
-            const saved = localStorage.getItem('rrdch_doctor_queue');
-            if (saved) {
-                renderQueue(JSON.parse(saved));
-            }
-        }
-        
-        // Save to localStorage
-        function saveLocalQueue(queue) {
-            localStorage.setItem('rrdch_doctor_queue', JSON.stringify(queue));
-        }
-        
-        // Render queue table
-        function renderQueue(queue) {
-            const tbody = document.getElementById('queueBody');
-            if (!queue || queue.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);">No patients in queue</td></tr>';
-                return;
-            }
-            
-            tbody.innerHTML = queue.map((patient, index) => {
-                const statusClass = patient.status === 'done' ? 'done' : 
-                                   patient.status === 'ongoing' ? 'ongoing' :
-                                   patient.status === 'called' ? 'called' : 'waiting';
-                const statusText = patient.status === 'done' ? 'Done' :
-                                  patient.status === 'ongoing' ? 'Ongoing' :
-                                  patient.status === 'called' ? 'Called' : 'Waiting';
-                
-                let actionBtn = '';
-                if (patient.status === 'waiting') {
-                    actionBtn = `<div class="action-btns"><button class="btn-sm btn-call" onclick="callPatient('${patient.token_no}', this)">Call</button></div>`;
-                } else if (patient.status === 'called') {
-                    actionBtn = `<div class="action-btns"><button class="btn-sm btn-call" onclick="startConsultation('${patient.token_no}', this)">Start</button></div>`;
-                } else if (patient.status === 'ongoing') {
-                    actionBtn = `<div class="action-btns"><button class="btn-sm btn-done" onclick="markDone('${patient.token_no}', this)">Mark Done</button></div>`;
-                } else {
-                    actionBtn = '—';
-                }
-                
-                return `
-                    <tr data-token="${patient.token_no}">
-                        <td><span class="token-badge">${patient.token_no}</span></td>
-                        <td><strong>${patient.patient_name}</strong><br><span style="font-size:0.78rem;color:var(--muted);">${patient.patient_phone || 'N/A'}</span></td>
-                        <td>${patient.chief_complaint || 'General Consultation'}</td>
-                        <td>${patient.time_slot || 'Walk-in'}</td>
-                        <td><span class="status-tag ${statusClass}">${statusText}</span></td>
-                        <td>${actionBtn}</td>
-                    </tr>
-                `;
-            }).join('');
-            
-            lucide.createIcons();
-        }
-        
-        // Update statistics
-        function updateStats(data) {
-            const queue = data.queue || [];
-            const total = queue.length;
-            const done = queue.filter(p => p.status === 'done').length;
-            const waiting = queue.filter(p => p.status === 'waiting' || p.status === 'called').length;
-            const ongoing = queue.filter(p => p.status === 'ongoing').length;
-            
-            document.getElementById('statTotal').textContent = total;
-            document.getElementById('statDone').textContent = done;
-            document.getElementById('statWaiting').textContent = waiting;
-        }
+<!-- ─── NAV ─── -->
+<nav class="portal-nav">
+    <a href="index.html" class="nv-brand">
+        <img src="images/logos/logo.png" alt="RRDCH">
+        <span class="nv-badge">Doctor Portal</span>
+    </a>
+    <span class="nv-time" id="navTime"></span>
+    <div class="nv-user">
+        <div class="nv-avatar" id="docAvatarNav">DR</div>
+        <span id="docNameNav">Loading…</span>
+    </div>
+    <button class="nv-notif" onclick="switchPage('notifications')" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="nv-dot" id="notifDot"></div>
+    </button>
+    <a href="portal.html" class="nv-exit" onclick="doLogout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Exit
+    </a>
+</nav>
 
-        // Call patient
-        async function callPatient(token, btn) {
-            try {
-                const response = await fetch(`${API_BASE}/appointments/status`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token_no: token, status: 'called' })
-                });
-                
-                if (!response.ok) throw new Error('Failed to update status');
-                
-                // Update UI
-                const row = btn.closest('tr');
-                const statusCell = row.querySelector('.status-tag');
-                statusCell.className = 'status-tag called';
-                statusCell.textContent = 'Called';
-                btn.textContent = 'Start';
-                btn.onclick = function() { startConsultation(token, this); };
-                
-                // Emit real-time update
-                emitQueueUpdate();
-                
-            } catch (error) {
-                console.error('Call patient error:', error);
-                // Fallback - update locally
-                updateLocalStatus(token, 'called');
-            }
-        }
-        
-        // Start consultation
-        function startConsultation(token, btn) {
-            const row = btn.closest('tr');
-            const statusCell = row.querySelector('.status-tag');
-            statusCell.className = 'status-tag ongoing';
-            statusCell.textContent = 'Ongoing';
-            btn.textContent = 'Mark Done';
-            btn.className = 'btn-sm btn-done';
-            btn.onclick = function() { markDone(token, this); };
-            
-            // Update current patient for notes
-            currentPatient = {
-                token: token,
-                name: row.querySelector('strong').textContent,
-                phone: row.querySelector('td:nth-child(2) span').textContent
-            };
-            
-            // Auto-fill notes form
-            document.querySelector('.notes-form input').value = `${token} — ${currentPatient.name}`;
-            
-            updateLocalStatus(token, 'ongoing');
-            emitQueueUpdate();
-        }
+<!-- ─── LAYOUT ─── -->
+<div class="portal-layout">
 
-        // Mark patient as done
-        async function markDone(token, btn) {
-            try {
-                const response = await fetch(`${API_BASE}/appointments/status`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ token_no: token, status: 'done' })
-                });
-                
-                if (!response.ok) throw new Error('Failed to update status');
-                
-                // Update UI
-                const row = btn.closest('tr');
-                const statusCell = row.querySelector('.status-tag');
-                statusCell.className = 'status-tag done';
-                statusCell.textContent = 'Done';
-                btn.closest('.action-btns').innerHTML = '—';
-                
-                // Update stats
-                const statDone = document.getElementById('statDone');
-                const statWaiting = document.getElementById('statWaiting');
-                statDone.textContent = parseInt(statDone.textContent) + 1;
-                statWaiting.textContent = Math.max(0, parseInt(statWaiting.textContent) - 1);
-                
-                emitQueueUpdate();
-                
-            } catch (error) {
-                console.error('Mark done error:', error);
-                updateLocalStatus(token, 'done');
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sp">
+            <div class="sp-av" id="docInitials">DR</div>
+            <h3 id="docNameSidebar">Loading…</h3>
+            <p id="docDeptSidebar">Department</p>
+            <div class="sp-pill"><span class="sp-dot"></span> On Duty</div>
+        </div>
+        <nav>
+            <div class="s-section">Main</div>
+            <button class="s-link active" data-page="dashboard" onclick="switchPage('dashboard')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </button>
+            <button class="s-link" data-page="queue" onclick="switchPage('queue')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                Today's Queue
+                <span class="s-badge" id="queueBadge">0</span>
+            </button>
+            <button class="s-link" data-page="notes" onclick="switchPage('notes')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                Case Notes
+            </button>
+            <button class="s-link" data-page="records" onclick="switchPage('records')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Patient Records
+            </button>
+            <div class="s-section">Management</div>
+            <button class="s-link" data-page="schedule" onclick="switchPage('schedule')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                My Schedule
+            </button>
+            <button class="s-link" data-page="ai" onclick="switchPage('ai')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                AI Assistant
+            </button>
+            <button class="s-link" data-page="notifications" onclick="switchPage('notifications')">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Notifications
+            </button>
+            <div class="s-section">Quick Links</div>
+            <a href="admin-portal.html" class="s-link">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Admin Panel
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- ══════════ DASHBOARD ══════════ -->
+        <div class="page active" id="page-dashboard">
+            <div class="ph">
+                <div><h1>👋 Good Day, <span id="docGreetName">Doctor</span></h1><p id="dashSubtitle">Here's your clinical summary for today</p></div>
+                <div class="ph-actions">
+                    <button class="btn btn-secondary" onclick="loadAllData()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                        Refresh
+                    </button>
+                    <button class="btn btn-primary" onclick="switchPage('queue')">View Full Queue →</button>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="sc"><div class="sc-ico ic-blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><div class="sc-num" id="kpiTotal">0</div><div class="sc-lbl">Today's Patients</div></div></div>
+                <div class="sc"><div class="sc-ico ic-green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div><div class="sc-num" id="kpiDone">0</div><div class="sc-lbl">Completed</div></div></div>
+                <div class="sc"><div class="sc-ico ic-amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="sc-num" id="kpiWaiting">0</div><div class="sc-lbl">Waiting</div></div></div>
+                <div class="sc"><div class="sc-ico ic-red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div><div class="sc-num" id="kpiUrgent">0</div><div class="sc-lbl">Urgent / Priority</div></div></div>
+            </div>
+
+            <!-- Next patient + schedule preview -->
+            <div class="notes-grid">
+                <div class="card" style="margin:0;">
+                    <div class="ch"><h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Next Patient</h2><span class="cbadge live" id="nextBadge">—</span></div>
+                    <div id="nextPatientWidget">
+                        <div class="empty"><p>No patient currently in queue.</p></div>
+                    </div>
+                </div>
+                <div class="card" style="margin:0;">
+                    <div class="ch"><h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Today's Schedule</h2><span class="cbadge" id="schedDateBadge"></span></div>
+                    <div class="sched-list" id="schedPreview"><!-- Rendered --></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ QUEUE ══════════ -->
+        <div class="page" id="page-queue">
+            <div class="ph">
+                <div><h1>📋 Today's Patient Queue</h1><p>Manage your patient flow — call, start, mark done</p></div>
+                <div class="ph-actions">
+                    <span class="cbadge live" id="queueLiveBadge">● Live</span>
+                    <button class="btn btn-secondary" onclick="loadQueue()">Refresh</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="fbar">
+                    <input type="text" class="fi" id="qSearch" placeholder="🔍 Search patient…" oninput="filterQueue()" style="flex:1;">
+                    <select class="fi" id="qStatusFilter" onchange="filterQueue()">
+                        <option value="">All Status</option>
+                        <option value="waiting">Waiting</option>
+                        <option value="called">Called</option>
+                        <option value="ongoing">Ongoing</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="qt">
+                        <thead><tr><th>Token</th><th>Patient</th><th>Complaint</th><th>Slot</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="queueTbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ CASE NOTES ══════════ -->
+        <div class="page" id="page-notes">
+            <div class="ph">
+                <div><h1>📝 Case Notes</h1><p>Record diagnoses, prescriptions and clinical observations</p></div>
+                <div class="ph-actions">
+                    <button class="btn btn-secondary" onclick="loadSavedNotes()">View Saved Notes</button>
+                </div>
+            </div>
+            <div class="notes-grid">
+                <div class="card" style="margin:0;">
+                    <div class="ch"><h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> New Case Note</h2></div>
+                    <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                        <div>
+                            <label class="nf-label">Patient (Token / Name)</label>
+                            <input type="text" id="notePatient" class="nf-input" placeholder="e.g. #43 — Meera Sharma">
+                        </div>
+                        <div>
+                            <label class="nf-label">Diagnosis</label>
+                            <input type="text" id="noteDiagnosis" class="nf-input" placeholder="e.g. Pericoronitis, mandibular 3rd molar">
+                        </div>
+                        <div>
+                            <label class="nf-label">Treatment Given</label>
+                            <input type="text" id="noteTreatment" class="nf-input" placeholder="e.g. Surgical extraction, socket irrigation">
+                        </div>
+                        <div>
+                            <label class="nf-label">Prescription / Medications</label>
+                            <textarea id="notePrescription" class="nf-textarea" placeholder="Amoxicillin 500mg × 5 days, Ibuprofen 400mg…"></textarea>
+                        </div>
+                        <div>
+                            <label class="nf-label">Clinical Notes</label>
+                            <textarea id="noteContent" class="nf-textarea" placeholder="Additional observations, follow-up instructions…"></textarea>
+                        </div>
+                        <div style="display:flex;gap:0.75rem;align-items:center;">
+                            <button class="btn-save" id="noteSaveBtn" onclick="saveNote()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                                Save Case Note
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearNoteForm()">Clear</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="margin:0;">
+                    <div class="ch"><h2><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Saved Notes Today</h2></div>
+                    <div id="savedNotesContainer">
+                        <div class="empty"><p>No notes saved yet today.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ PATIENT RECORDS ══════════ -->
+        <div class="page" id="page-records">
+            <div class="ph">
+                <div><h1>👥 Patient Records</h1><p>Search and view patient history</p></div>
+            </div>
+            <div class="fbar">
+                <input type="text" class="fi" id="recordSearch" placeholder="🔍 Search patient by name or phone…" oninput="searchRecords()" style="flex:1;">
+            </div>
+            <div class="card">
+                <div style="overflow-x:auto;">
+                    <table class="qt">
+                        <thead><tr><th>Patient</th><th>Phone</th><th>Last Visit</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="recordsTbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════ SCHEDULE ══════════ -->
+        <div class="page" id="page-schedule">
+            <div class="ph">
+                <div><h1>📅 My Schedule</h1><p>Today's appointments and upcoming sessions</p></div>
+                <div class="ph-actions">
+                    <span class="cbadge" id="schedDateFull"></span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="sched-list" id="fullSchedule"></div>
+            </div>
+        </div>
+
+        <!-- ══════════ AI ASSISTANT ══════════ -->
+        <div class="page" id="page-ai">
+            <div class="ph">
+                <div><h1>🤖 AI Clinical Assistant</h1><p>Gemini-powered dental assistant — symptom checker & clinical queries</p></div>
+            </div>
+            <div class="chatbot-container">
+                <div class="chat-header">
+                    <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <span style="font-size:1.5rem;">🦷</span>
+                        <div>
+                            <h3>RRDCH AI Assistant</h3>
+                            <p>Powered by Gemini 1.5 Flash</p>
+                        </div>
+                    </div>
+                    <div class="chat-ai-dot" style="margin-left:auto;"></div>
+                </div>
+                <div class="messages" id="chatMessages">
+                    <div class="msg bot">Hello Dr! I'm the RRDCH AI assistant. I can help with:<br>• Symptom assessment & triage<br>• Treatment guidance<br>• Drug interaction checks<br>• Patient communication tips<br><br>How can I assist you today?</div>
+                </div>
+                <div class="chat-input-row">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Ask a clinical question…" onkeydown="if(event.key==='Enter')sendAIMessage()">
+                    <button class="chat-send" onclick="sendAIMessage()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Send
+                    </button>
+                </div>
+            </div>
+            <div style="margin-top:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <span style="font-size:0.75rem;color:var(--muted);font-weight:600;">Quick prompts:</span>
+                <button style="background:white;border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;font-family:inherit;" onclick="setPrompt('What is the first-line treatment for acute pericoronitis?')">Pericoronitis treatment</button>
+                <button style="background:white;border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;font-family:inherit;" onclick="setPrompt('Patient has swelling post-extraction, what should I check?')">Post-extraction swelling</button>
+                <button style="background:white;border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.8rem;font-size:0.75rem;cursor:pointer;font-family:inherit;" onclick="setPrompt('Recommend analgesics for dental pain in a diabetic patient')">Diabetic patient pain</button>
+            </div>
+        </div>
+
+        <!-- ══════════ NOTIFICATIONS ══════════ -->
+        <div class="page" id="page-notifications">
+            <div class="ph">
+                <div><h1>🔔 Notifications</h1><p>Recent alerts and queue updates</p></div>
+                <div class="ph-actions"><button class="btn btn-secondary" onclick="clearNotifications()">Mark All Read</button></div>
+            </div>
+            <div id="notifList"><!-- Rendered by JS --></div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  SUPABASE
+// ══════════════════════════════════════════════
+const SUPABASE_URL = 'https://hbalflsjvtovtmmypdvv.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiYWxmbHNqdnRvdnRtbXlwZHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1MDc1OTcsImV4cCI6MjA5MjA4MzU5N30.iq60dhhWA8oqwNHQr6R4hvnCDKNBZ-sP-1A2PXxkkRU';
+const GEMINI_KEY = 'AIzaSyBhCpDnWo8u_GdHfu7ermBLbnABuOJVA4U';
+let sb = null;
+try { sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+
+// ══════════════════════════════════════════════
+//  DEMO DATA
+// ══════════════════════════════════════════════
+const DEMO_QUEUE = [
+    { id:1, token_no:'#41', patient_name:'Ananya Rao', phone:'9845112233', reason:'Tooth Extraction', time_slot:'09:00 AM', status:'done' },
+    { id:2, token_no:'#42', patient_name:'Ravi Kumar', phone:'9900556677', reason:'Post-op Checkup', time_slot:'10:30 AM', status:'ongoing' },
+    { id:3, token_no:'#43', patient_name:'Meera Sharma', phone:'9876543210', reason:'Wisdom Tooth Pain', time_slot:'11:00 AM', status:'called' },
+    { id:4, token_no:'#44', patient_name:'Farhan Iqbal', phone:'9123456789', reason:'Braces Tightening', time_slot:'11:30 AM', status:'waiting' },
+    { id:5, token_no:'#45', patient_name:'Lakshmi D.', phone:'9988776655', reason:'Gum Bleeding', time_slot:'12:00 PM', status:'waiting' },
+    { id:6, token_no:'#46', patient_name:'Suresh Nair', phone:'9765432100', reason:'Root Canal Follow-up', time_slot:'01:30 PM', status:'waiting' },
+];
+const DEMO_SCHEDULE = [
+    { time:'09:00 AM', name:'Ananya Rao', procedure:'Tooth Extraction', type:'done-slot' },
+    { time:'10:30 AM', name:'Ravi Kumar', procedure:'Post-Op Review', type:'upcoming' },
+    { time:'11:00 AM', name:'Meera Sharma', procedure:'Wisdom Tooth Consultation', type:'upcoming' },
+    { time:'11:30 AM', name:'Farhan Iqbal', procedure:'Braces Tightening', type:'upcoming' },
+    { time:'12:00 PM', name:'Lakshmi D.', procedure:'Periodontal Checkup', type:'upcoming' },
+    { time:'02:00 PM', name:'Walk-in Emergency', procedure:'Trauma / Urgent — TBD', type:'emergency' },
+    { time:'04:00 PM', name:'Department Meeting', procedure:'HOD + Residents — OT Block', type:'' },
+];
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let queue = [...DEMO_QUEUE];
+let savedNotes = JSON.parse(localStorage.getItem('rrdch_case_notes') || '[]');
+let currentPage = 'dashboard';
+let notifications = [
+    { id:1, msg:'Patient #43 Meera Sharma is waiting — Wisdom Tooth Pain', time: new Date(Date.now()-3*60000).toISOString(), read: false },
+    { id:2, msg:'New walk-in patient added to queue: Farhan Iqbal', time: new Date(Date.now()-10*60000).toISOString(), read: false },
+    { id:3, msg:'Queue auto-refreshed — 4 patients active', time: new Date(Date.now()-20*60000).toISOString(), read: true },
+];
+let docProfile = { name: 'Dr. Roshan M.', dept: 'Oral Surgery', email: 'doctor@rrdch.in' };
+
+// ══════════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════════
+async function doDoctorLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('docEmail').value.trim().toLowerCase();
+    const pw    = document.getElementById('docPw').value;
+    const err   = document.getElementById('authErr');
+    const btn   = document.getElementById('authBtn');
+
+    err.classList.remove('show');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Verifying…';
+
+    let success = false;
+    if (sb) { try { const { data, error } = await sb.auth.signInWithPassword({ email, password: pw }); if (!error && data?.user) success = true; } catch(_){} }
+    if (!success && email === 'doctor@rrdch.in' && pw === 'doctor123') success = true;
+
+    if (success) {
+        sessionStorage.setItem('rrdch_role', 'doctor');
+        sessionStorage.setItem('rrdch_user', email);
+        docProfile.email = email;
+        document.getElementById('authOverlay').style.opacity = '0';
+        document.getElementById('authOverlay').style.transition = 'opacity 0.4s';
+        setTimeout(() => { document.getElementById('authOverlay').style.display = 'none'; }, 400);
+        initPortal();
+        showToast('✓ Welcome, Doctor!', 'success');
+    } else {
+        err.classList.add('show');
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Secure Login';
+    }
+}
+
+function doLogout() { sessionStorage.removeItem('rrdch_role'); sessionStorage.removeItem('rrdch_user'); if (sb) { try { sb.auth.signOut(); } catch(_){} } }
+
+// Check session
+(function checkSession() {
+    if (sessionStorage.getItem('rrdch_role') === 'doctor') {
+        document.getElementById('authOverlay').style.display = 'none';
+        initPortal();
+    }
+})();
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+function initPortal() {
+    updateClock();
+    setInterval(updateClock, 1000);
+    const greet = docProfile.name.split(' ').slice(0,2).join(' ') || 'Doctor';
+    setEl('docGreetName', greet);
+    setEl('docNameNav', greet);
+    setEl('docNameSidebar', docProfile.name);
+    setEl('docDeptSidebar', docProfile.dept);
+    const initials = docProfile.name.split(' ').filter(w=>w.startsWith('Dr.')||w.length>1).slice(1).map(w=>w[0]).join('').substring(0,2).toUpperCase() || 'DR';
+    setEl('docInitials', initials);
+    setEl('docAvatarNav', initials);
+    document.getElementById('schedDateBadge').textContent = new Date().toLocaleDateString('en-IN', {weekday:'short', month:'short', day:'numeric'});
+    document.getElementById('schedDateFull').textContent = new Date().toLocaleDateString('en-IN', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    document.getElementById('dashSubtitle').textContent = 'Clinical summary for ' + new Date().toLocaleDateString('en-IN', {weekday:'long', month:'long', day:'numeric'});
+    loadAllData();
+    setInterval(() => { loadQueue(); }, 30000);
+    renderNotifications();
+    updateNotifBadge();
+}
+
+function updateClock() { const el = document.getElementById('navTime'); if (el) el.textContent = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'}); }
+
+function loadAllData() { loadQueue(); renderSchedule(); loadSavedNotes(); }
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+function switchPage(name) {
+    currentPage = name;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const pg = document.getElementById('page-' + name);
+    if (pg) pg.classList.add('active');
+    document.querySelectorAll('.s-link').forEach(l => l.classList.toggle('active', l.dataset.page === name));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (name === 'notes') loadSavedNotes();
+    if (name === 'records') searchRecords();
+    if (name === 'notifications') renderNotifications();
+}
+
+// ══════════════════════════════════════════════
+//  QUEUE
+// ══════════════════════════════════════════════
+async function loadQueue() {
+    if (sb) {
+        try {
+            const today = new Date().toISOString().split('T')[0];
+            const { data, error } = await sb.from('opd_visits').select('*').gte('created_at', today + 'T00:00:00').order('id', { ascending: true });
+            if (!error && data && data.length > 0) {
+                queue = data.map(d => ({ ...d, token_no: d.token || d.token_no, reason: d.reason || d.chief_complaint || 'General', time_slot: d.scheduled_at ? new Date(d.scheduled_at).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}) : 'Walk-in' }));
             }
-        }
-        
-        // Update status in localStorage
-        function updateLocalStatus(token, newStatus) {
-            const saved = localStorage.getItem('rrdch_doctor_queue');
-            if (saved) {
-                const queue = JSON.parse(saved);
-                const patient = queue.find(p => p.token_no === token);
-                if (patient) {
-                    patient.status = newStatus;
-                    saveLocalQueue(queue);
-                    renderQueue(queue);
-                }
-            }
-        }
-        
-        // Save case note
-        async function saveNote(btn) {
-            const form = btn.closest('.notes-form');
-            const patientInput = form.querySelector('input');
-            const diagnosisInput = form.querySelectorAll('input')[1];
-            const notesText = form.querySelector('textarea');
-            
-            const noteData = {
-                token_no: currentPatient?.token || patientInput.value.split('—')[0].trim(),
-                patient_name: currentPatient?.name || patientInput.value.split('—')[1]?.trim() || 'Unknown',
-                doctor_id: currentDoctor.id,
-                doctor_name: currentDoctor.name,
-                department: currentDoctor.dept,
-                diagnosis: diagnosisInput.value,
-                notes: notesText.value,
-                created_at: new Date().toISOString()
-            };
-            
-            try {
-                // Try to save to backend
-                const response = await fetch(`${API_BASE}/doctor/notes`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(noteData)
-                });
-                
-                if (!response.ok) throw new Error('Failed to save note');
-                
-                showSaveSuccess(btn);
-                
-            } catch (error) {
-                console.error('Save note error:', error);
-                // Save to localStorage as fallback
-                const savedNotes = JSON.parse(localStorage.getItem('rrdch_doctor_notes') || '[]');
-                savedNotes.push(noteData);
-                localStorage.setItem('rrdch_doctor_notes', JSON.stringify(savedNotes));
-                showSaveSuccess(btn);
-            }
-        }
-        
-        function showSaveSuccess(btn) {
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="check" width="16"></i> Saved!';
-            btn.style.background = 'var(--green)';
-            lucide.createIcons();
-            
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.style.background = '';
-                lucide.createIcons();
-            }, 2000);
-        }
-        
-        // Real-time updates via polling (fallback for WebSocket)
-        function startRealtimeUpdates() {
-            // Poll every 30 seconds
-            setInterval(() => {
-                loadQueueData();
-            }, 30000);
-            
-            // Update time display
-            setInterval(() => {
-                const el = document.getElementById('queueTime');
-                if (el) el.textContent = 'Live — ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-            }, 30000);
-        }
-        
-        // Emit queue update (for real-time sync)
-        function emitQueueUpdate() {
-            // In production, this would use WebSocket
-            window.dispatchEvent(new CustomEvent('queue-updated', { detail: { doctor: currentDoctor.id } }));
-        }
-        
-        // Listen for queue updates from other tabs
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'rrdch_doctor_queue') {
-                renderQueue(JSON.parse(e.newValue));
-            }
+        } catch(_) {}
+    }
+    updateStats();
+    renderQueue(queue);
+    renderNextPatient();
+    renderSchedule();
+    updateApptCount();
+}
+
+function updateStats() {
+    const total = queue.length, done = queue.filter(p=>p.status==='done').length;
+    const waiting = queue.filter(p=>p.status==='waiting'||p.status==='called').length, urgent = 2;
+    setEl('kpiTotal', total); setEl('kpiDone', done); setEl('kpiWaiting', waiting); setEl('kpiUrgent', urgent);
+    setEl('queueBadge', queue.filter(p=>p.status==='waiting').length);
+}
+
+function renderQueue(q) {
+    const tbody = document.getElementById('queueTbody');
+    if (!tbody) return;
+    if (!q.length) { tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><h3>No patients in queue</h3></div></td></tr>`; return; }
+    tbody.innerHTML = q.map(p => {
+        let actions = '';
+        if (p.status==='waiting') actions = `<button class="abtn call" onclick="queueAction(${p.id},'called')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z"/></svg> Call</button>`;
+        else if (p.status==='called') actions = `<button class="abtn start" onclick="queueAction(${p.id},'ongoing')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start</button>`;
+        else if (p.status==='ongoing') actions = `<button class="abtn done" onclick="queueAction(${p.id},'done')"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Done</button><button class="abtn view" onclick="addNoteForPatient('${p.token_no}','${p.patient_name}')">Note</button>`;
+        else actions = '<span style="color:var(--muted);font-size:0.8rem;">✓ Complete</span>';
+        return `<tr id="qrow-${p.id}"><td><span class="token">${p.token_no}</span></td><td><strong>${p.patient_name}</strong><br><span style="font-size:0.72rem;color:var(--muted);">${p.phone||'—'}</span></td><td>${p.reason||'General'}</td><td>${p.time_slot||'Walk-in'}</td><td><span class="stag ${p.status}">${capitalize(p.status)}</span></td><td><div style="display:flex;gap:0.4rem;">${actions}</div></td></tr>`;
+    }).join('');
+}
+
+function filterQueue() {
+    const q = document.getElementById('qSearch').value.toLowerCase();
+    const st = document.getElementById('qStatusFilter').value;
+    renderQueue(queue.filter(p => {
+        const m = !q || (p.patient_name||'').toLowerCase().includes(q) || (p.token_no||'').includes(q) || (p.reason||'').toLowerCase().includes(q);
+        const sm = !st || p.status === st;
+        return m && sm;
+    }));
+}
+
+async function queueAction(id, newStatus) {
+    const p = queue.find(x => x.id === id); if (!p) return;
+    p.status = newStatus;
+    if (sb) { try { await sb.from('opd_visits').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', id); } catch(_){} }
+    updateStats(); filterQueue(); renderNextPatient();
+    addNotification(`Patient ${p.patient_name} (${p.token_no}) → ${capitalize(newStatus)}`);
+    if (newStatus === 'ongoing') addNoteForPatient(p.token_no, p.patient_name);
+    showToast(`✓ ${p.patient_name} marked as ${capitalize(newStatus)}`, 'success');
+}
+
+function renderNextPatient() {
+    const next = queue.find(p => p.status === 'waiting' || p.status === 'called' || p.status === 'ongoing');
+    const el = document.getElementById('nextPatientWidget');
+    const badge = document.getElementById('nextBadge');
+    if (!next || !el) return;
+    badge.textContent = next.token_no;
+    el.innerHTML = `
+        <div style="display:flex;flex-direction:column;gap:0.75rem;padding:0.25rem;">
+            <div style="display:flex;align-items:center;gap:1rem;">
+                <div style="width:52px;height:52px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:white;font-size:1.25rem;font-weight:800;">${next.patient_name[0]}</div>
+                <div><strong style="font-size:1.05rem;">${next.patient_name}</strong><br><span style="font-size:0.78rem;color:var(--muted);">${next.phone||'—'} • ${next.time_slot}</span></div>
+            </div>
+            <div style="background:var(--bg);border-radius:8px;padding:0.75rem;">
+                <div style="font-size:0.75rem;font-weight:700;color:var(--muted);margin-bottom:0.25rem;">CHIEF COMPLAINT</div>
+                <div style="font-weight:600;">${next.reason||'General Consultation'}</div>
+            </div>
+            <div style="display:flex;gap:0.5rem;">
+                ${next.status==='waiting'?`<button class="abtn call" onclick="queueAction(${next.id},'called');switchPage('queue')">📞 Call Patient</button>`:''}
+                ${next.status==='called'?`<button class="abtn start" onclick="queueAction(${next.id},'ongoing');switchPage('queue')">▶ Start Consultation</button>`:''}
+                ${next.status==='ongoing'?`<button class="abtn done" onclick="queueAction(${next.id},'done');switchPage('queue')">✓ Mark Done</button><button class="abtn view" onclick="addNoteForPatient('${next.token_no}','${next.patient_name}');switchPage('notes')">📝 Add Note</button>`:''}
+            </div>
+            <span class="stag ${next.status}" style="align-self:flex-start;">${capitalize(next.status)}</span>
+        </div>`;
+}
+
+function updateApptCount() { document.getElementById('queueBadge').textContent = queue.filter(p=>p.status==='waiting').length; }
+
+// ══════════════════════════════════════════════
+//  SCHEDULE
+// ══════════════════════════════════════════════
+function renderSchedule() {
+    const items = DEMO_SCHEDULE;
+    const html = items.map(s => `
+        <div class="si ${s.type}">
+            <div class="si-time">${s.time}</div>
+            <div>
+                <div class="si-name" ${s.type==='emergency'?'style="color:var(--red);"':''}>${s.name}</div>
+                <div class="si-dept">${s.procedure}</div>
+            </div>
+            ${s.type==='upcoming'?'<span class="stag called" style="margin-left:auto;font-size:0.65rem;">Scheduled</span>':''}
+            ${s.type==='done-slot'?'<span class="stag done" style="margin-left:auto;font-size:0.65rem;">Done</span>':''}
+            ${s.type==='emergency'?'<span class="stag ongoing" style="margin-left:auto;font-size:0.65rem;background:#fee2e2;color:#991b1b;">Urgent</span>':''}
+        </div>`).join('');
+    const ep = document.getElementById('schedPreview');
+    const fp = document.getElementById('fullSchedule');
+    if (ep) ep.innerHTML = html;
+    if (fp) fp.innerHTML = html;
+}
+
+// ══════════════════════════════════════════════
+//  CASE NOTES
+// ══════════════════════════════════════════════
+async function saveNote() {
+    const patient     = document.getElementById('notePatient').value.trim();
+    const diagnosis   = document.getElementById('noteDiagnosis').value.trim();
+    const treatment   = document.getElementById('noteTreatment').value.trim();
+    const prescription= document.getElementById('notePrescription').value.trim();
+    const content     = document.getElementById('noteContent').value.trim();
+    if (!patient || !diagnosis) { showToast('Patient and Diagnosis are required', 'error'); return; }
+
+    const btn = document.getElementById('noteSaveBtn');
+    btn.innerHTML = '<div class="spinner"></div> Saving…';
+    btn.disabled = true;
+
+    const note = { id: Date.now(), patient, diagnosis, treatment, prescription, content, doctor: docProfile.name, dept: docProfile.dept, created_at: new Date().toISOString() };
+
+    if (sb) { try { await sb.from('case_notes').insert({ patient_info: patient, diagnosis, treatment, prescription, notes: content, doctor_name: docProfile.name, department: docProfile.dept, created_at: new Date().toISOString() }); } catch(_){} }
+
+    savedNotes.unshift(note);
+    localStorage.setItem('rrdch_case_notes', JSON.stringify(savedNotes.slice(0, 50)));
+
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Saved!';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => {
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Case Note';
+        btn.style.background = ''; btn.disabled = false;
+    }, 2000);
+
+    loadSavedNotes();
+    showToast('✓ Case note saved', 'success');
+}
+
+function clearNoteForm() {
+    ['notePatient','noteDiagnosis','noteTreatment','notePrescription','noteContent'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+}
+
+function addNoteForPatient(token, name) {
+    const el = document.getElementById('notePatient');
+    if (el) el.value = `${token} — ${name}`;
+    switchPage('notes');
+}
+
+function loadSavedNotes() {
+    savedNotes = JSON.parse(localStorage.getItem('rrdch_case_notes') || '[]');
+    const el = document.getElementById('savedNotesContainer');
+    if (!el) return;
+    if (!savedNotes.length) { el.innerHTML = '<div class="empty"><p>No notes saved yet.</p></div>'; return; }
+    el.innerHTML = savedNotes.slice(0, 10).map(n => `
+        <div class="hist-card">
+            <div class="hist-date">${new Date(n.created_at).toLocaleString('en-IN')} — ${n.doctor}</div>
+            <h4>${n.patient}</h4>
+            <p><strong>Dx:</strong> ${n.diagnosis}</p>
+            ${n.treatment ? `<p><strong>Rx:</strong> ${n.treatment}</p>` : ''}
+            ${n.prescription ? `<p style="margin-top:0.3rem;font-style:italic;">${n.prescription}</p>` : ''}
+        </div>`).join('');
+}
+
+// ══════════════════════════════════════════════
+//  PATIENT RECORDS
+// ══════════════════════════════════════════════
+function searchRecords() {
+    const q = (document.getElementById('recordSearch')?.value || '').toLowerCase();
+    const records = queue.filter(p => !q || (p.patient_name||'').toLowerCase().includes(q) || (p.phone||'').includes(q));
+    const tbody = document.getElementById('recordsTbody');
+    if (!tbody) return;
+    if (!records.length) { tbody.innerHTML = `<tr><td colspan="6"><div class="empty"><h3>No records found</h3></div></td></tr>`; return; }
+    tbody.innerHTML = records.map(p => `
+        <tr>
+            <td><strong>${p.patient_name}</strong></td>
+            <td>${p.phone||'—'}</td>
+            <td>${p.time_slot||'—'}</td>
+            <td>${p.reason||'—'}</td>
+            <td><span class="stag ${p.status}">${capitalize(p.status)}</span></td>
+            <td>
+                <button class="abtn view" onclick="addNoteForPatient('${p.token_no}','${p.patient_name}');switchPage('notes')">Add Note</button>
+            </td>
+        </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════
+//  AI ASSISTANT
+// ══════════════════════════════════════════════
+async function sendAIMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    input.value = '';
+
+    const msgs = document.getElementById('chatMessages');
+    msgs.innerHTML += `<div class="msg user">${escapeHtml(msg)}</div>`;
+    msgs.innerHTML += `<div class="msg bot thinking" id="thinking">⏳ Thinking…</div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+
+    try {
+        const isSymptom = msg.toLowerCase().includes('pain') || msg.toLowerCase().includes('bleed') || msg.toLowerCase().includes('swelling') || msg.toLowerCase().includes('ache') || msg.toLowerCase().includes('extraction') || msg.toLowerCase().includes('tooth');
+        const mode = isSymptom ? 'symptom-checker' : 'clinical-assistant';
+
+        const prompt = mode === 'symptom-checker'
+            ? `You are a dental clinical assistant for a dentist at RRDCH Bangalore. The dentist says: "${msg}". Provide a concise clinical assessment including: possible diagnosis, recommended treatment, and any urgent considerations. Be specific and clinical.`
+            : `You are an expert dental clinical assistant. The dentist at RRDCH asks: "${msg}". Provide a precise, practical clinical answer. Use plain text, be concise, and focus on actionable advice.`;
+
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
-        
-        // Legacy support for old onclick handlers
-        window.markDone = function(token, btn) {
-            if (typeof token === 'object') {
-                // Old handler with button element
-                const row = token.closest('tr');
-                token = row.dataset.token;
-            }
-            markDone(token, btn);
-        };
-        
-        window.callNext = function(token, btn) {
-            if (typeof token === 'object') {
-                const row = token.closest('tr');
-                token = row.dataset.token;
-            }
-            callPatient(token, btn);
-        };
-    </script>
+        const data = await res.json();
+        let text = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'I could not generate a response. Please try again.';
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+        const thinking = document.getElementById('thinking');
+        if (thinking) thinking.outerHTML = `<div class="msg bot">${text}</div>`;
+
+        // Save to chatbot_sessions
+        if (sb) { try { await sb.from('chatbot_sessions').insert({ query: msg, mode: 'clinical-assistant', urgency: 'Routine', created_at: new Date().toISOString() }); } catch(_){} }
+    } catch(err) {
+        const thinking = document.getElementById('thinking');
+        if (thinking) thinking.outerHTML = `<div class="msg bot">⚠️ AI request failed. Please check your connection.</div>`;
+    }
+    msgs.scrollTop = msgs.scrollHeight;
+}
+
+function setPrompt(text) { document.getElementById('chatInput').value = text; document.getElementById('chatInput').focus(); }
+
+// ══════════════════════════════════════════════
+//  NOTIFICATIONS
+// ══════════════════════════════════════════════
+function addNotification(msg) {
+    notifications.unshift({ id: Date.now(), msg, time: new Date().toISOString(), read: false });
+    updateNotifBadge();
+}
+
+function updateNotifBadge() {
+    const unread = notifications.filter(n => !n.read).length;
+    const dot = document.getElementById('notifDot');
+    if (dot) dot.style.display = unread > 0 ? 'block' : 'none';
+}
+
+function renderNotifications() {
+    const el = document.getElementById('notifList');
+    if (!el) return;
+    if (!notifications.length) { el.innerHTML = '<div class="card"><div class="empty"><h3>No notifications</h3></div></div>'; return; }
+    el.innerHTML = notifications.map(n => `
+        <div class="card" style="margin-bottom:0.75rem;padding:1rem 1.25rem;border-left:4px solid ${n.read?'var(--border)':'var(--blue)'};display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+            <div>
+                <div style="font-size:0.88rem;font-weight:${n.read?'500':'700'};color:${n.read?'var(--muted)':'var(--text)'};">${n.msg}</div>
+                <div style="font-size:0.72rem;color:var(--muted);margin-top:0.25rem;">${timeAgo(n.time)}</div>
+            </div>
+            ${!n.read?`<button style="background:none;border:none;font-size:0.75rem;color:var(--blue);font-weight:700;cursor:pointer;font-family:inherit;padding:0.25rem 0.5rem;" onclick="markRead(${n.id})">Mark Read</button>`:''}
+        </div>`).join('');
+    notifications.forEach(n => n.read = true);
+    updateNotifBadge();
+}
+
+function markRead(id) { const n = notifications.find(x=>x.id===id); if(n) n.read=true; renderNotifications(); updateNotifBadge(); }
+function clearNotifications() { notifications.forEach(n=>n.read=true); renderNotifications(); updateNotifBadge(); showToast('All notifications cleared','success'); }
+
+// ══════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════
+function setEl(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+function timeAgo(ts) { const d=Math.floor((Date.now()-new Date(ts).getTime())/1000); if(d<60)return'just now'; if(d<3600)return Math.floor(d/60)+'m ago'; if(d<86400)return Math.floor(d/3600)+'h ago'; return new Date(ts).toLocaleDateString('en-IN'); }
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(msg, type='') { const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+type; clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3000); }
+</script>
 </body>
 </html>

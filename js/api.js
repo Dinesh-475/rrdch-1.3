@@ -1,5 +1,8 @@
-// js/api.js — Unified AI helper (server-side Gemini proxy)
+// js/api.js — Unified AI helper using Gemini REST API directly (no server needed)
 (function() {
+    const GEMINI_KEY = 'AIzaSyBhCpDnWo8u_GdHfu7ermBLbnABuOJVA4U';
+    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
+
     const RRDCH_SYSTEM_PROMPT = `You are the official AI assistant for Rajarajeshwari Dental College and Hospital (RRDCH), Bangalore.
 
 Key Facts:
@@ -23,32 +26,39 @@ Instructions:
 - Never invent information not listed above.`;
 
     /**
-     * Send a request to Gemini 1.5 Flash.
-     * @param {string} userMessage — The user's message
-     * @param {Array} history — Chat history array [{role, parts}]
-     * @param {string} [systemOverride] — Optional system prompt override
-     * @param {boolean} [jsonMode] — If true, request JSON output
+     * Send a message to Gemini 1.5 Flash directly from the browser.
+     * @param {string} userMessage
+     * @param {Array} history
+     * @param {string|null} systemOverride
+     * @param {boolean} jsonMode
      * @returns {Promise<{text: string, error: string|null}>}
      */
     window.askGemini = async function(userMessage, history = [], systemOverride = null, jsonMode = false) {
         const systemText = systemOverride || RRDCH_SYSTEM_PROMPT;
-        const merged = jsonMode ? userMessage : `${systemText}\n\n${history.map(h => h.parts?.[0]?.text || "").join("\n")}\n${userMessage}`;
+        const historyText = (history || []).map(h => h.parts?.[0]?.text || '').filter(Boolean).join('\n');
+        const fullPrompt = jsonMode
+            ? userMessage
+            : `${systemText}\n\n${historyText ? 'Conversation history:\n' + historyText + '\n\n' : ''}User: ${userMessage}`;
+
         try {
-            const res = await fetch("/api/gemini", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            const res = await fetch(GEMINI_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    mode: jsonMode ? "symptom-checker" : "site-assistant",
-                    input: merged
+                    contents: [{ parts: [{ text: fullPrompt }] }],
+                    generationConfig: jsonMode ? { responseMimeType: 'application/json' } : {}
                 })
             });
             const data = await res.json();
-            if (!res.ok || data.ok === false) {
-                return { text: null, error: data.msg || 'API error' };
+            if (!res.ok || data.error) {
+                return { text: null, error: data.error?.message || 'Gemini API error' };
             }
-            const text = jsonMode ? JSON.stringify(data.data || {}) : (data.data?.text || "");
-            if (!text) {
-                return { text: null, error: 'Empty response from AI.' };
+            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) return { text: null, error: 'Empty response from AI.' };
+
+            // Log session to Supabase
+            if (window.sb) {
+                try { await window.sb.from('chatbot_sessions').insert({ query: userMessage, response: text, mode: jsonMode ? 'symptom-checker' : 'site-assistant', urgency: 'Routine', created_at: new Date().toISOString() }); } catch (_) {}
             }
             return { text, error: null };
         } catch (e) {

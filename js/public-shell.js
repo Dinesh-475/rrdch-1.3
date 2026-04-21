@@ -70,37 +70,40 @@
     shell.id = "rrdch-public-shell";
     shell.innerHTML = `
 
-      <!-- Floating Header (Slanted Logo + Floating Buttons) -->
+      <!-- Floating Header (Left Logo + Right Actions) -->
       <header class="header-floating" id="siteHeader">
-        <div class="header-actions">
+        <!-- Left: Frosted Slanted Logo Container -->
+        <a href="index.html" class="header-brand-slanted" title="Home">
+          <div class="brand-top-bar">
+            RRDCH | Rajarajeshwari Dental College &amp; Hospital
+          </div>
+          <div class="brand-bottom-area">
+            <img src="images/logos/logo.png" alt="RRDCH Logo" class="animated-logo">
+          </div>
+        </a>
+
+        <!-- Right: Actions -->
+        <div class="header-actions" style="flex: 1; justify-content: flex-end;">
+          <a href="portal.html" class="header-action-btn header-login-btn">LOGIN</a>
+          <button class="header-action-btn header-lang-btn" id="langToggle" title="Toggle Language">
+            <span id="lang-en" class="active">EN</span> | <span id="lang-kn">KN</span>
+          </button>
           <button
-            class="menu-trigger-odd"
+            class="header-action-btn menu-trigger-odd"
             id="menuToggleBtn"
             type="button"
             aria-controls="siteDrawer"
             aria-expanded="false"
             aria-label="Open main menu"
           >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="3" y1="6"  x2="21" y2="6"/>
+            MENU
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-left: 4px;">
               <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="6"  x2="21" y2="6"/>
               <line x1="3" y1="18" x2="21" y2="18"/>
             </svg>
-            MENU
           </button>
-          <button class="header-lang-btn" id="langToggle" title="Translate to Kannada">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="2" y1="12" x2="22" y2="12"></line>
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-            </svg>
-            <span id="lang-en" class="active">EN</span> | <span id="lang-kn">KN</span>
-          </button>
-          <a href="login-select.html" class="header-login-btn">LOGIN</a>
         </div>
-        <a href="index.html#certifications" class="header-brand-slanted" title="View Our Certifications">
-          <img src="images/logo.png" alt="RRDCH" class="animated-logo">
-        </a>
       </header>
 
       <!-- Drawer Backdrop -->
@@ -205,65 +208,106 @@
             <div class="cu-accordion">
               <a href="index.html" class="cu-accordion-btn" style="text-decoration:none;">
                 Home
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
               </a>
             </div>
-            <div class="cu-accordion">
-              <a href="about.html" class="cu-accordion-btn" style="text-decoration:none;">
+            
+            <div class="cu-accordion has-submenu">
+              <button class="cu-accordion-btn" type="button">
                 About Us
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
-              </a>
+                <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </button>
+              <div class="cu-accordion-content">
+                <a href="about.html#trust">Trust</a>
+                <a href="about.html#management">Management</a>
+                <a href="about.html#council">Governing Council</a>
+                <a href="about.html#vision">Vision &amp; Mission</a>
+              </div>
             </div>
+
+            <div class="cu-accordion has-submenu">
+              <button class="cu-accordion-btn" type="button">
+                Courses Offered
+                <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </button>
+              <div class="cu-accordion-content">
+                <a href="admissions.html#bds">Bachelor of Dental Surgery (BDS)</a>
+                <a href="admissions.html#mds">Master of Dental Surgery (MDS)</a>
+                <a href="admissions.html#phd">Ph.D</a>
+                <a href="admissions.html#certificate">Certificate Course</a>
+              </div>
+            </div>
+
+            <div class="cu-accordion has-submenu">
+              <button class="cu-accordion-btn" type="button">
+                Department
+                <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </button>
+              <div class="cu-accordion-content">
+                <a href="departments.html#oral-medicine">Oral Medicine &amp; Radiology</a>
+                <a href="departments.html#prosthetics">Prosthetics &amp; Crown &amp; Bridge</a>
+                <a href="departments.html#omfs">Oral &amp; Maxillofacial Surgery</a>
+                <a href="departments.html#periodontology">Periodontology</a>
+                <a href="departments.html#pedodontics">Pedodontics &amp; Preventive Dentistry</a>
+                <a href="departments.html#conservative">Conservative Dentistry &amp; Endodontics</a>
+                <a href="departments.html#orthodontics">Orthodontics &amp; Dentofacial Orthopedics</a>
+                <a href="departments.html#public-health">Public Health Dentistry</a>
+                <a href="departments.html#pathology">Oral &amp; Maxillofacial Pathology</a>
+                <a href="departments.html#implantology">Implantology</a>
+                <a href="departments.html#research">Research &amp; Publication</a>
+                <a href="departments.html#orofacial">Orofacial Pain</a>
+              </div>
+            </div>
+
+            <div class="cu-accordion has-submenu">
+              <button class="cu-accordion-btn" type="button">
+                Academics
+                <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </button>
+              <div class="cu-accordion-content">
+                <a href="admission_enquiry.html">Admission Enquiry 2024-25</a>
+                <a href="students.html#results">Results</a>
+                <a href="econtent.html">E-Content</a>
+                <a href="achievements.html">Achievements</a>
+                <a href="activities.html">Extra Curricular Activities</a>
+              </div>
+            </div>
+
+            <div class="cu-accordion has-submenu">
+              <button class="cu-accordion-btn" type="button">
+                Facilities
+                <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </button>
+              <div class="cu-accordion-content">
+                <a href="facilities.html#campus">Campus Details</a>
+              </div>
+            </div>
+
             <div class="cu-accordion">
-              <a href="departments.html" class="cu-accordion-btn" style="text-decoration:none;">
-                Academics &amp; Departments
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
+              <a href="news.html" class="cu-accordion-btn" style="text-decoration:none;">
+                News &amp; Events
               </a>
             </div>
+
+            <div class="cu-accordion has-submenu">
+              <button class="cu-accordion-btn" type="button">
+                Gallery
+                <span class="icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+              </button>
+              <div class="cu-accordion-content">
+                <a href="gallery.html#photo">Photo Gallery</a>
+                <a href="gallery.html#video">Video Gallery</a>
+              </div>
+            </div>
+
             <div class="cu-accordion">
-              <a href="admissions.html" class="cu-accordion-btn" style="text-decoration:none;">
-                Admissions 2026–27
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
+              <a href="alumni.html" class="cu-accordion-btn" style="text-decoration:none;">
+                Alumni
               </a>
             </div>
-            <div class="cu-accordion">
-              <a href="patients.html" class="cu-accordion-btn" style="text-decoration:none;">
-                Patient Portal
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
-              </a>
-            </div>
-            <div class="cu-accordion">
-              <a href="students.html" class="cu-accordion-btn" style="text-decoration:none;">
-                Student Portal
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
-              </a>
-            </div>
-            <div class="cu-accordion">
-              <a href="doctors.html" class="cu-accordion-btn" style="text-decoration:none;">
-                Doctor Dashboard
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
-              </a>
-            </div>
+
             <div class="cu-accordion">
               <a href="contact.html" class="cu-accordion-btn" style="text-decoration:none;">
-                Contact Us
-                <span class="icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                </span>
+                Contact us
               </a>
             </div>
           </div>
@@ -281,7 +325,7 @@
     footer.innerHTML = `
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="images/logo.png" alt="RRDCH Logo" class="footer-logo">
+          <img src="images/logos/logo.png" alt="RRDCH Logo" class="footer-logo">
           <p>No. 14, Ramohalli Cross, Kumbalgodu,<br>Mysore Road, Bangalore - 560074.</p>
           <div class="footer-contact-meta">
             <strong>Ph:</strong> +91 80 2843 7150<br>
@@ -310,7 +354,7 @@
           <ul>
             <li><a href="patients.html">Book Appointment</a></li>
             <li><a href="patients.html">Patient Care</a></li>
-            <li><a href="doctors.html">Doctor Dashboard</a></li>
+            <li><a href="portal.html#doctor">Doctor Dashboard</a></li>
           </ul>
         </div>
         <div class="footer-links">
@@ -422,9 +466,42 @@
     closeBtn?.addEventListener("click", closeDrawer);
     backdrop?.addEventListener("click", closeDrawer);
 
-    // Close on any link click inside drawer
+    // Accordion Logic for Nested Menus
+    const accordions = drawer.querySelectorAll(".cu-accordion.has-submenu");
+    accordions.forEach(acc => {
+      const btn = acc.querySelector(".cu-accordion-btn");
+      const content = acc.querySelector(".cu-accordion-content");
+      if (btn && content) {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const isOpen = acc.classList.contains("active");
+          
+          // Close others to keep UI clean
+          accordions.forEach(other => {
+            if (other !== acc) {
+              other.classList.remove("active");
+              const otherContent = other.querySelector(".cu-accordion-content");
+              if (otherContent) otherContent.style.maxHeight = null;
+            }
+          });
+
+          // Toggle current
+          if (isOpen) {
+            acc.classList.remove("active");
+            content.style.maxHeight = null;
+          } else {
+            acc.classList.add("active");
+            content.style.maxHeight = content.scrollHeight + "px";
+          }
+        });
+      }
+    });
+
+    // Close on any terminal link click inside drawer
     drawer.querySelectorAll("a[href]").forEach((link) => {
-      link.addEventListener("click", () => setTimeout(closeDrawer, 80));
+      if (!link.classList.contains("cu-accordion-btn")) {
+        link.addEventListener("click", () => setTimeout(closeDrawer, 80));
+      }
     });
 
     // Keyboard: Escape
@@ -472,17 +549,14 @@
     window.RRDCH_PUBLIC_SHELL.openDrawer  = openDrawer;
     window.RRDCH_PUBLIC_SHELL.closeDrawer = closeDrawer;
     
-    // Backend connectivity check
+    // Backend: Supabase-only, no local server needed
     window.RRDCH_PUBLIC_SHELL.checkBackend = async function() {
-      const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-        ? 'http://localhost:3000/api' 
-        : '/api';
       try {
-        const response = await fetch(`${API_BASE}/health`, { method: 'GET', cache: 'no-cache' });
-        return response.ok;
-      } catch (e) {
-        return false;
-      }
+        const res = await fetch('https://hbalflsjvtovtmmypdvv.supabase.co/rest/v1/', {
+          headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhiYWxmbHNqdnRvdnRtbXlwZHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1MDc1OTcsImV4cCI6MjA5MjA4MzU5N30.iq60dhhWA8oqwNHQr6R4hvnCDKNBZ-sP-1A2PXxkkRU' }
+        });
+        return res.ok;
+      } catch (e) { return false; }
     };
   }
 
@@ -491,29 +565,12 @@
   window.RRDCH_PUBLIC_SHELL.render  = renderShell;
   window.RRDCH_PUBLIC_SHELL.getLang = getLang;
   window.RRDCH_PUBLIC_SHELL.setLang = setLang;
-  
-  // Global backend status
+
+  // Global backend: points to Supabase (no localhost)
   window.RRDCH_API = {
-    base: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-      ? 'http://localhost:3000/api' 
-      : '/api',
-    status: 'unknown',
-    check: async function() {
-      try {
-        const res = await fetch(`${this.base}/health`, { cache: 'no-cache' });
-        this.status = res.ok ? 'online' : 'offline';
-        return res.ok;
-      } catch (e) {
-        this.status = 'offline';
-        return false;
-      }
-    }
+    base: 'https://hbalflsjvtovtmmypdvv.supabase.co',
+    status: 'online'
   };
-  
-  // Auto-check backend on load
-  setTimeout(() => {
-    window.RRDCH_API.check();
-  }, 2000);
 
   // Apply lang early
   const _lang = getLang();

@@ -26,29 +26,98 @@
     <header class="hero-full-width" style="height: 100vh; position: relative;">
         <!-- Sliding Background -->
         <div class="hero-image-container" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1;">
-            <img src="images/new_hero_bg.png" alt="RRDCH Campus Building" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.65);">
-            
-            <!-- Carousel Arrows -->
+            <img src="images/media/new_hero_bg.png" alt="RRDCH Campus Building" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+
         <!-- Hero Content -->
-        <div class="hero-overlay-content">
-            <div class="container text-center">
-                <h1 class="hero-title hero-title-light" data-i18n="hero_title1">
-                    Rajarajeshwari Dental<br>
-                    <span data-i18n="hero_title2">College &amp; Hospital</span>
+        <div class="hero-overlay-content" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;text-align:center;z-index:20;">
+            <div class="container hero-animate-container">
+                <h1 class="hero-title hero-title-light split-text-target" style="text-align:center; margin:0 auto 1.5rem; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif; letter-spacing: -0.03em; font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.05; max-width: 900px; animation: heroTitleFade 1.2s ease-out;">
+                    <div class="split-line" style="animation: lineSlideUp 0.8s ease-out 0.2s both; margin-bottom: 0.3rem;">Rajarajeshwari Dental</div>
+                    <div class="split-line" style="animation: lineSlideUp 0.8s ease-out 0.4s both;">College &amp; Hospital</div>
                 </h1>
-                <p class="hero-desc hero-desc-light" data-i18n="hero_desc">
-                    Established to provide premier dental education and unparalleled patient care, fostering the next generation of healthcare professionals.
+                <p class="hero-desc hero-desc-light" style="text-align:center; margin:0 auto 2.5rem; line-height: 1.6; letter-spacing: 0.01em; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif; font-size: clamp(0.95rem, 2vw, 1.15rem); font-weight: 400; max-width: 550px; opacity: 0; animation: descFadeIn 1s ease-out 0.8s forwards; color: rgba(255,255,255,0.9);">
+                    Excellence in dental education. Unparalleled patient care.
                 </p>
-                <div class="hero-actions">
-                    <a href="patients.html" class="btn btn-primary" data-i18n="btn_book">Book Appointment</a>
-                    <a href="about.html" class="btn btn-outline-light">About College</a>
+                <style>
+                    @keyframes heroTitleFade {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes lineSlideUp {
+                        from { opacity: 0; transform: translateY(30px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes descFadeIn {
+                        from { opacity: 0; transform: translateY(15px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                </style>
+                <div class="hero-actions" style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; opacity: 0; animation: buttonsFadeIn 1s ease-out 1s forwards;">
+                    <a href="patients.html" class="btn hero-btn-solid" style="background: white; color: #1a1a1a; padding: 0.8rem 2rem; border-radius: 0.8rem; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; letter-spacing: -0.01em; font-size: 0.95rem; box-shadow: 0 4px 20px rgba(0,0,0,0.15); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); animation: btnSlideUp 0.8s ease-out 1.2s both;">Book Appointment</a>
+                    
+                    <a href="about.html" class="btn hero-btn-glossy" style="color: white; padding: 0.8rem 2rem; border-radius: 0.8rem; font-weight: 500; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; letter-spacing: -0.01em; font-size: 0.95rem; position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border: 1px solid rgba(255,255,255,0.35); box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.3), 0 0 20px rgba(195,156,91,0.1); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); animation: btnSlideUp 0.8s ease-out 1.4s both;">
+                        <span style="position: relative; z-index: 2;">About College</span>
+                        <span style="position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent); transform: translateX(-100%); transition: transform 0.6s ease;" class="glossy-shimmer"></span>
+                    </a>
                 </div>
+                <style>
+                    @keyframes buttonsFadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes btnSlideUp {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                </style>
             </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const target = document.querySelector('.split-text-target');
+                    if(!target) return;
+                    const lines = target.querySelectorAll('.split-line');
+                    const charDelay = 30; // 30ms per character
+                    const initialDelay = 200; // 200ms before starting
+                    
+                    let prevLinesLength = 0;
+                    lines.forEach((line) => {
+                        const text = line.textContent.trim();
+                        line.innerHTML = '';
+                        line.style.display = 'block';
+                        
+                        for(let charIndex = 0; charIndex < text.length; charIndex++) {
+                            const char = text[charIndex];
+                            const span = document.createElement('span');
+                            span.textContent = char === ' ' ? '\u00A0' : char;
+                            span.style.display = 'inline-block';
+                            span.style.opacity = '0';
+                            span.style.transform = 'translateX(-18px)';
+                            span.style.transition = 'opacity 500ms ease-out, transform 500ms ease-out';
+                            
+                            const delay = initialDelay + (prevLinesLength * charDelay) + (charIndex * charDelay);
+                            span.style.transitionDelay = delay + 'ms';
+                            
+                            line.appendChild(span);
+                            
+                            // Trigger reflow & animate
+                            requestAnimationFrame(() => {
+                                setTimeout(() => {
+                                    span.style.opacity = '1';
+                                    span.style.transform = 'translateX(0)';
+                                }, 50);
+                            });
+                        }
+                        prevLinesLength += text.length;
+                    });
+                });
+            </script>
         </div>
 
         <!-- WhatsApp Floating Icon -->
         <a href="https://wa.me/918028437150" class="whatsapp-float" aria-label="Chat on WhatsApp" target="_blank" rel="noopener noreferrer">
-            <img src="images/watsapp%20logo.png" alt="WhatsApp">
+            <img src="images/watsapp logo.png" alt="WhatsApp">
         </a>
 
         <!-- Bottom Campuses/Facilities Bar -->
@@ -147,108 +216,26 @@
         <p class="section-subtitle" style="font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.75rem;">Accreditations &amp; Institutional Recognition</p>
         <div class="accreditation-logos">
             <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/09/RRDCH-NABH-accredited.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="NABH Accreditation">
-                <img src="images/media__1776162900120.png" alt="NABH Accreditation">
+                <img src="images/logos/media__1776162900120.png" alt="NABH Accreditation">
             </a>
             <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2013/08/Certificate-of-Accreditation.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="NAAC Accreditation">
-                <img src="images/media__1776162900148.png" alt="NAAC Accreditation">
+                <img src="images/logos/media__1776162900148.png" alt="NAAC Accreditation">
             </a>
             <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2026/02/ISO-certificate-of-registration-12.05.2027.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="ISO Certification">
-                <img src="images/media__1776162900187.png" alt="ISO Certification">
+                <img src="images/logos/media__1776162900187.png" alt="ISO Certification">
             </a>
             <a href="https://www.rrdch.org/rrdch/wp-content/uploads/2021/07/SLMC.pdf" target="_blank" rel="noopener noreferrer" class="logo-item" title="Sri Lanka Medical Council">
-                <img src="images/media__1776163089873.png" alt="SLMC Accreditation">
+                <img src="images/logos/media__1776163089873.png" alt="SLMC Accreditation">
             </a>
             <a href="#" class="logo-item" title="Royal College of Physicians and Surgeons of Glasgow">
-                <img src="images/media__1776163089935.png" alt="RCPSG Accreditation">
+                <img src="images/logos/media__1776163089935.png" alt="RCPSG Accreditation">
             </a>
             <a href="#" class="logo-item" title="International Accreditation Organization">
-                <img src="images/media__1776163089970.png" alt="IAO Accreditation">
+                <img src="images/logos/media__1776163089970.png" alt="IAO Accreditation">
             </a>
         </div>
     </section>
 
-    <!-- ══════════════════════════════════════════════
-         DYNAMIC PHOTO GALLERY
-    ══════════════════════════════════════════════════ -->
-    <section class="container" style="padding-top:3rem;padding-bottom:4rem;">
-        <div class="text-center animate-on-scroll" style="margin-bottom:2rem;">
-            <div class="section-tag">Campus Gallery</div>
-            <h2 class="section-title" style="margin-top:0.5rem;">Explore RRDCH</h2>
-            <p class="section-subtitle">Scroll through our world-class facilities</p>
-        </div>
-        
-        <!-- Scrolling Photo Gallery -->
-        <div class="photo-scroll-container animate-on-scroll" style="position:relative;overflow:hidden;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
-            <div class="photo-scroll-track" id="photoTrack" style="display:flex;gap:1rem;padding:1rem;animation:scrollGallery 30s linear infinite;">
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_1.jpg" alt="RRDCH Campus" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_2.jpg" alt="Dental Clinic" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_3.jpg" alt="Laboratory" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_4.jpg" alt="Hospital Wing" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_5.jpg" alt="Student Activity" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_6.jpg" alt="Modern Equipment" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/im10.jpg" alt="Campus View" style="width:100%;height:100%;object-fit:cover;transition:transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                </div>
-                <!-- Duplicate for seamless loop -->
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_1.jpg" alt="RRDCH Campus" style="width:100%;height:100%;object-fit:cover;">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_2.jpg" alt="Dental Clinic" style="width:100%;height:100%;object-fit:cover;">
-                </div>
-                <div class="gallery-item" style="flex-shrink:0;width:400px;height:300px;border-radius:12px;overflow:hidden;">
-                    <img src="pictures/home page images/slider_3.jpg" alt="Laboratory" style="width:100%;height:100%;object-fit:cover;">
-                </div>
-            </div>
-            
-            <!-- Gradient Overlays -->
-            <div style="position:absolute;left:0;top:0;bottom:0;width:100px;background:linear-gradient(90deg,white,transparent);z-index:2;pointer-events:none;"></div>
-            <div style="position:absolute;right:0;top:0;bottom:0;width:100px;background:linear-gradient(-90deg,white,transparent);z-index:2;pointer-events:none;"></div>
-        </div>
-        
-        <!-- Gallery Controls -->
-        <div style="display:flex;justify-content:center;gap:1rem;margin-top:1.5rem;">
-            <button onclick="pauseGallery()" style="padding:0.5rem 1rem;background:var(--cu-blue);color:white;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:0.5rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                Pause
-            </button>
-            <button onclick="playGallery()" style="padding:0.5rem 1rem;background:var(--cu-gold);color:white;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:0.5rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
-                Play
-            </button>
-        </div>
-        
-        <style>
-            @keyframes scrollGallery {
-                0% { transform: translateX(0); }
-                100% { transform: translateX(-50%); }
-            }
-            .photo-scroll-track.paused {
-                animation-play-state: paused !important;
-            }
-        </style>
-        
-        <script>
-            function pauseGallery() {
-                document.getElementById('photoTrack').classList.add('paused');
-            }
-            function playGallery() {
-                document.getElementById('photoTrack').classList.remove('paused');
-            }
-        </script>
-    </section>
 
     <!-- ══════════════════════════════════════════════
          ABOUT RRDCH
@@ -286,346 +273,13 @@
             </div>
             <div class="animate-on-scroll" style="transition-delay:0.2s;">
                 <div class="about-img-wrap">
-                    <img src="images/media__1776159199603.jpg" alt="RRDCH Medical Team">
+                    <img src="images/media/media__1776159199603.jpg" alt="RRDCH Medical Team">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ══════════════════════════════════════════════
-         PHOTO SLIDER
-    ══════════════════════════════════════════════════ -->
-    <section class="container" style="padding-top:0;padding-bottom:4rem;">
-        <div class="slider-wrap hero-slider-container animate-on-scroll">
-            <div class="slide active"><img src="pictures/home page images/slider_1.jpg" alt="RRDCH Campus Image 1"></div>
-            <div class="slide"><img src="pictures/home page images/slider_2.jpg" alt="RRDCH Campus Image 2"></div>
-            <div class="slide"><img src="pictures/home page images/slider_3.jpg" alt="RRDCH Campus Image 3"></div>
-            <div class="slide"><img src="pictures/home page images/slider_4.jpg" alt="RRDCH Campus Image 4"></div>
-            <div class="slide"><img src="pictures/home page images/slider_5.jpg" alt="RRDCH Campus Image 5"></div>
-            <div class="slide"><img src="pictures/home page images/slider_6.jpg" alt="RRDCH Campus Image 6"></div>
-            <div class="slide"><img src="pictures/home page images/im10.jpg" alt="RRDCH Campus Image 7"></div>
-            <div class="slider-controls">
-                <div class="dot active"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-            </div>
-        </div>
-    </section>
 
-    <!-- ══════════════════════════════════════════════
-         DYNAMIC MASONRY GALLERY — Scrolling Vignettes
-    ══════════════════════════════════════════════════ -->
-    <section class="masonry-gallery-section" style="padding:4rem 0;overflow:hidden;background:linear-gradient(180deg,#fafbfc 0%,#f0f4f8 100%);">
-        <div class="container" style="margin-bottom:2rem;">
-            <div class="text-center animate-on-scroll">
-                <div class="section-tag" style="background:rgba(195,156,91,0.15);color:var(--cu-gold);">Campus Gallery</div>
-                <h2 class="section-title" style="margin-top:0.75rem;margin-bottom:0.5rem;">
-                    Glimpses of <span class="highlight">Excellence</span>
-                </h2>
-                <p class="section-subtitle">Scroll through moments that define the RRDCH experience</p>
-            </div>
-        </div>
-
-        <!-- Scrolling Masonry Grid -->
-        <div class="masonry-scroll-container" style="position:relative;">
-            <!-- Column 1 - Scrolls Down -->
-            <div class="masonry-column col-down">
-                <div class="masonry-track track-1">
-                    <div class="masonry-item tall">
-                        <img src="pictures/home page images/slider_1.jpg" alt="RRDCH Campus">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Campus</span>
-                            <h4>Main Building</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item wide">
-                        <img src="pictures/home page images/slider_2.jpg" alt="Dental Clinic">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Clinic</span>
-                            <h4>Patient Care</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item square">
-                        <img src="pictures/images rrdch in achivement sections/1.jpg" alt="Achievement">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Awards</span>
-                            <h4>Excellence</h4>
-                        </div>
-                    </div>
-                    <!-- Duplicate for seamless loop -->
-                    <div class="masonry-item tall">
-                        <img src="pictures/home page images/slider_1.jpg" alt="RRDCH Campus">
-                        <div class="masonry-overlay"><span class="masonry-tag">Campus</span><h4>Main Building</h4></div>
-                    </div>
-                    <div class="masonry-item wide">
-                        <img src="pictures/home page images/slider_2.jpg" alt="Dental Clinic">
-                        <div class="masonry-overlay"><span class="masonry-tag">Clinic</span><h4>Patient Care</h4></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Column 2 - Scrolls Up -->
-            <div class="masonry-column col-up">
-                <div class="masonry-track track-2">
-                    <div class="masonry-item square">
-                        <img src="pictures/home page images/media__1776159199583.jpg" alt="Surgery">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Surgery</span>
-                            <h4>Operating Theatre</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item tall">
-                        <img src="pictures/home page images/im10.jpg" alt="Laboratory">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Research</span>
-                            <h4>Advanced Labs</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item wide">
-                        <img src="pictures/images rrdch in achivement sections/12.jpg" alt="Convocation">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Events</span>
-                            <h4>Graduation Day</h4>
-                        </div>
-                    </div>
-                    <!-- Duplicate for seamless loop -->
-                    <div class="masonry-item square">
-                        <img src="pictures/home page images/media__1776159199583.jpg" alt="Surgery">
-                        <div class="masonry-overlay"><span class="masonry-tag">Surgery</span><h4>Operating Theatre</h4></div>
-                    </div>
-                    <div class="masonry-item tall">
-                        <img src="pictures/home page images/im10.jpg" alt="Laboratory">
-                        <div class="masonry-overlay"><span class="masonry-tag">Research</span><h4>Advanced Labs</h4></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Column 3 - Scrolls Down (Slower) -->
-            <div class="masonry-column col-down-slow">
-                <div class="masonry-track track-3">
-                    <div class="masonry-item wide">
-                        <img src="pictures/home page images/slider_4.jpg" alt="Auditorium">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Events</span>
-                            <h4>Seminar Hall</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item square">
-                        <img src="pictures/images rrdch in achivement sections/14.jpg" alt="Award">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Recognition</span>
-                            <h4>National Award</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item tall">
-                        <img src="pictures/home page images/slider_5.jpg" alt="Campus Life">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Life</span>
-                            <h4>Student Activities</h4>
-                        </div>
-                    </div>
-                    <!-- Duplicate for seamless loop -->
-                    <div class="masonry-item wide">
-                        <img src="pictures/home page images/slider_4.jpg" alt="Auditorium">
-                        <div class="masonry-overlay"><span class="masonry-tag">Events</span><h4>Seminar Hall</h4></div>
-                    </div>
-                    <div class="masonry-item square">
-                        <img src="pictures/images rrdch in achivement sections/14.jpg" alt="Award">
-                        <div class="masonry-overlay"><span class="masonry-tag">Recognition</span><h4>National Award</h4></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Column 4 - Scrolls Up (Faster) -->
-            <div class="masonry-column col-up-fast">
-                <div class="masonry-track track-4">
-                    <div class="masonry-item tall">
-                        <img src="pictures/home page images/media__1776159199698.jpg" alt="Equipment">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Technology</span>
-                            <h4>Modern Equipment</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item square">
-                        <img src="pictures/images rrdch in achivement sections/16.jpg" alt="Celebration">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Culture</span>
-                            <h4>College Day</h4>
-                        </div>
-                    </div>
-                    <div class="masonry-item wide">
-                        <img src="pictures/home page images/slider_6.jpg" alt="Library">
-                        <div class="masonry-overlay">
-                            <span class="masonry-tag">Knowledge</span>
-                            <h4>Digital Library</h4>
-                        </div>
-                    </div>
-                    <!-- Duplicate for seamless loop -->
-                    <div class="masonry-item tall">
-                        <img src="pictures/home page images/media__1776159199698.jpg" alt="Equipment">
-                        <div class="masonry-overlay"><span class="masonry-tag">Technology</span><h4>Modern Equipment</h4></div>
-                    </div>
-                    <div class="masonry-item square">
-                        <img src="pictures/images rrdch in achivement sections/16.jpg" alt="Celebration">
-                        <div class="masonry-overlay"><span class="masonry-tag">Culture</span><h4>College Day</h4></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Gallery Controls -->
-        <div class="gallery-controls" style="display:flex;justify-content:center;gap:1rem;margin-top:2rem;">
-            <button onclick="pauseMasonry()" class="ctrl-btn pause-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                Pause
-            </button>
-            <button onclick="playMasonry()" class="ctrl-btn play-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
-                Play
-            </button>
-        </div>
-
-        <style>
-            .masonry-scroll-container {
-                display:grid;
-                grid-template-columns:repeat(4,1fr);
-                gap:1.5rem;
-                max-width:1400px;
-                margin:0 auto;
-                padding:0 2rem;
-                height:600px;
-                overflow:hidden;
-            }
-            .masonry-column {
-                position:relative;
-                overflow:hidden;
-                border-radius:16px;
-            }
-            .masonry-track {
-                display:flex;
-                flex-direction:column;
-                gap:1rem;
-            }
-            .track-1 { animation:scrollDown 25s linear infinite; }
-            .track-2 { animation:scrollUp 30s linear infinite; }
-            .track-3 { animation:scrollDown 35s linear infinite; }
-            .track-4 { animation:scrollUp 20s linear infinite; }
-            
-            .masonry-track.paused { animation-play-state:paused !important; }
-            
-            @keyframes scrollDown {
-                0% { transform:translateY(0); }
-                100% { transform:translateY(-50%); }
-            }
-            @keyframes scrollUp {
-                0% { transform:translateY(-50%); }
-                100% { transform:translateY(0); }
-            }
-            
-            .masonry-item {
-                position:relative;
-                border-radius:12px;
-                overflow:hidden;
-                box-shadow:0 4px 15px rgba(0,0,0,0.1);
-                transition:all 0.4s ease;
-                cursor:pointer;
-            }
-            .masonry-item:hover {
-                transform:scale(1.03);
-                box-shadow:0 12px 40px rgba(0,0,0,0.2);
-                z-index:10;
-            }
-            .masonry-item.tall { height:320px; }
-            .masonry-item.wide { height:200px; }
-            .masonry-item.square { height:260px; }
-            
-            .masonry-item img {
-                width:100%;
-                height:100%;
-                object-fit:cover;
-                transition:transform 0.6s ease;
-            }
-            .masonry-item:hover img {
-                transform:scale(1.1);
-            }
-            
-            .masonry-overlay {
-                position:absolute;
-                bottom:0;
-                left:0;
-                right:0;
-                padding:1.5rem;
-                background:linear-gradient(transparent,rgba(28,69,120,0.9));
-                color:white;
-                transform:translateY(100%);
-                transition:transform 0.4s ease;
-            }
-            .masonry-item:hover .masonry-overlay {
-                transform:translateY(0);
-            }
-            .masonry-tag {
-                display:inline-block;
-                padding:0.25rem 0.75rem;
-                background:var(--cu-gold);
-                color:var(--cu-blue-dark);
-                font-size:0.7rem;
-                font-weight:700;
-                border-radius:4px;
-                margin-bottom:0.5rem;
-                text-transform:uppercase;
-                letter-spacing:0.5px;
-            }
-            .masonry-overlay h4 {
-                font-size:1.1rem;
-                font-weight:700;
-                margin:0;
-            }
-            
-            .ctrl-btn {
-                padding:0.75rem 1.5rem;
-                border:none;
-                border-radius:8px;
-                font-weight:600;
-                cursor:pointer;
-                display:flex;
-                align-items:center;
-                gap:0.5rem;
-                transition:all 0.2s;
-            }
-            .pause-btn {
-                background:var(--cu-blue);
-                color:white;
-            }
-            .play-btn {
-                background:var(--cu-gold);
-                color:white;
-            }
-            .ctrl-btn:hover {
-                transform:translateY(-2px);
-                box-shadow:0 4px 12px rgba(0,0,0,0.15);
-            }
-            
-            @media (max-width:1024px) {
-                .masonry-scroll-container { grid-template-columns:repeat(2,1fr); height:500px; }
-            }
-            @media (max-width:640px) {
-                .masonry-scroll-container { grid-template-columns:1fr; height:400px; }
-            }
-        </style>
-        
-        <script>
-            function pauseMasonry() {
-                document.querySelectorAll('.masonry-track').forEach(t => t.classList.add('paused'));
-            }
-            function playMasonry() {
-                document.querySelectorAll('.masonry-track').forEach(t => t.classList.remove('paused'));
-            }
-        </script>
-    </section>
 
     <!-- ══════════════════════════════════════════════
          CAMPUS LIFE — DIAMOND NAV
@@ -792,7 +446,7 @@
                     <div style="margin-top:1.5rem;color:var(--cu-gold);font-weight:700;font-size:0.88rem;">Go to Portal →</div>
                 </a>
 
-                <a href="doctors.html" class="portal-card animate-on-scroll" style="transition-delay:0.2s;">
+                <a href="portal.html#doctor" class="portal-card animate-on-scroll" style="transition-delay:0.2s;">
                     <div class="card-header">
                         <div class="card-icon"><i data-lucide="stethoscope" width="28" height="28" color="#1c4578"></i></div>
                         <h3 class="card-title" style="color:var(--cu-blue);" data-i18n="card_doctors">Doctor Dashboard</h3>
@@ -838,52 +492,77 @@
     </section>
 
     <!-- ══════════════════════════════════════════════
-         INSTITUTIONAL PRESTIGE BAND
+         CAMPUS TOUR & LOCATION MAP
     ══════════════════════════════════════════════════ -->
-    <section class="container" style="padding-top:0;padding-bottom:5rem;">
-        <div class="prestige-band animate-on-scroll">
-            <h2 class="section-title text-center" style="color:white;">Institutional <span style="color:var(--cu-gold);">Prestige</span></h2>
-            <div class="prestige-items">
-                <div>
-                    <div class="prestige-number">NAAC</div>
-                    <div class="prestige-label">A Grade Accredited</div>
-                </div>
-                <div>
-                    <div class="prestige-number">250+</div>
-                    <div class="prestige-label">Modern Dental Units</div>
-                </div>
-                <div>
-                    <div class="prestige-number">30+</div>
-                    <div class="prestige-label">Years of Academic Legacy</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ══════════════════════════════════════════════
-         CAMPUS TOUR
-    ══════════════════════════════════════════════════ -->
-    <section class="container" style="padding-top:0;padding-bottom:5rem;">
+    <section class="container" style="padding-top:4rem;padding-bottom:6rem;max-width:1400px;">
         <div class="text-center animate-on-scroll">
-            <div class="section-tag" style="display:block;width:fit-content;margin:0 auto 0.75rem;">Virtual Tour</div>
-            <h2 class="section-title" style="margin-bottom:0.5rem;">Campus <span class="highlight">Tour</span></h2>
-            <p class="section-subtitle">Experience RRDCH from anywhere — 360° view or institutional video</p>
+            <div class="section-tag" style="display:block;width:fit-content;margin:0 auto 0.75rem;">Campus Location & Tour</div>
+            <h2 class="section-title" style="margin-bottom:0.5rem; font-size:3rem;">Explore <span style="color:#c39c5b;">RRDCH</span></h2>
+            <p class="section-subtitle" style="font-size:1.15rem; max-width: 600px; margin: 0 auto 3rem auto;">Experience our state-of-the-art campus from anywhere through virtual media.</p>
         </div>
 
-        <div class="tour-grid animate-on-scroll" style="transition-delay:0.15s;">
-            <div class="tour-card">
-                <div class="tour-card-header" style="background:#0f172a;color:white;">
-                    <i data-lucide="globe" width="16" height="16"></i>
-                    360° Street View — RRDCH Campus
+        <div style="display:flex; flex-direction:column; gap:4rem;">
+            <!-- Huge Map Container -->
+            <div class="animate-on-scroll map-float-container" style="position:relative; border-radius: 24px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; animation: mapFloat 6s ease-in-out infinite;" onmouseover="this.style.transform='translateY(-10px) scale(1.01)'; this.style.boxShadow='0 30px 70px rgba(0,0,0,0.2), 0 0 30px rgba(195,156,91,0.15)'; this.style.animation='none';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 20px 50px rgba(0,0,0,0.12)'; this.style.animation='mapFloat 6s ease-in-out infinite';">
+                <!-- Hide Google UI overlay -->
+                <div style="position:absolute; top:0; left:0; right:0; height:60px; background:linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 100%); z-index:5; pointer-events:none;"></div>
+                
+                <!-- Attractive custom badge -->
+                <div style="position:absolute; top: 1.2rem; left: 1.2rem; background: rgba(255,255,255,0.95); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); padding: 0.6rem 1.25rem; border-radius: 16px; display:inline-flex; align-items:center; gap:0.6rem; font-weight:700; color:#0f172a; z-index:10; box-shadow: 0 8px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3); animation: badgePulse 2.5s ease-in-out infinite; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-size:0.9rem; letter-spacing:-0.01em;">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; background:linear-gradient(135deg, #c00 0%, #900 100%); border-radius:8px; box-shadow: 0 2px 8px rgba(204,0,0,0.4);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </span>
+                    <span>360° Street View</span>
                 </div>
-                <iframe src="https://www.google.com/maps/embed?pb=!4v1776281365595!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJQ0txcW45RlE.!2m2!1d12.8872363070956!2d77.4508580774884!3f284.27121207218994!4f-15.702741423491702!5f0.4000000000000002" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="RRDCH 360° View"></iframe>
+                <style>
+                    @keyframes mapFloat {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(-8px); }
+                    }
+                    @keyframes badgePulse {
+                        0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+                        50% { box-shadow: 0 4px 30px rgba(195,156,91,0.3), 0 0 20px rgba(195,156,91,0.2); }
+                    }
+                    @keyframes dotPulse {
+                        0%, 100% { opacity: 1; transform: scale(1); }
+                        50% { opacity: 0.7; transform: scale(1.2); }
+                    }
+                    .map-float-container:hover {
+                        border-color: rgba(195,156,91,0.3) !important;
+                    }
+                </style>
+                <iframe src="https://www.google.com/maps/embed?pb=!4v1776281365595!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJQ0txcW45RlE.!2m2!1d12.8872363070956!2d77.4508580774884!3f284.27121207218994!4f-15.702741423491702!5f0.4000000000000002" style="width: 100%; height: 600px; border: none; display: block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="RRDCH 360° View"></iframe>
             </div>
-            <div class="tour-card">
-                <div class="tour-card-header" style="background:#c00;color:white;">
-                    <i data-lucide="video" width="16" height="16"></i>
-                    Institutional Tour Video
+
+            <!-- Huge YT Video Container -->
+            <div class="animate-on-scroll video-float-container" style="position:relative; border-radius: 24px; overflow:hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.05); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; animation: videoFloat 7s ease-in-out infinite 1s;" onmouseover="this.style.transform='translateY(-10px) scale(1.01)'; this.style.boxShadow='0 30px 70px rgba(0,0,0,0.2), 0 0 30px rgba(195,156,91,0.15)'; this.style.animation='none';" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 20px 50px rgba(0,0,0,0.12)'; this.style.animation='videoFloat 7s ease-in-out infinite 1s';">
+                <!-- Hide YouTube UI overlay -->
+                <div style="position:absolute; top:0; left:0; right:0; height:70px; background:linear-gradient(180deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 40%, transparent 100%); z-index:5; pointer-events:none;"></div>
+                
+                <!-- Attractive custom badge -->
+                <div style="position:absolute; top: 1.2rem; left: 1.2rem; background: rgba(255,255,255,0.95); backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%); padding: 0.6rem 1.25rem; border-radius: 16px; display:inline-flex; align-items:center; gap:0.6rem; font-weight:700; color:#0f172a; z-index:10; box-shadow: 0 8px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.3); animation: videoBadgePulse 3s ease-in-out infinite; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif; font-size:0.9rem; letter-spacing:-0.01em;">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; background:linear-gradient(135deg, #c00 0%, #900 100%); border-radius:8px; box-shadow: 0 2px 8px rgba(204,0,0,0.4);">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
+                    </span>
+                    <span>Institutional Video</span>
                 </div>
-                <iframe src="https://www.youtube.com/embed/ktmSY1X4Gls?si=DSTFUw3p_bQUXsJL" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="RRDCH Campus Tour"></iframe>
+                <style>
+                    @keyframes videoFloat {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(-8px); }
+                    }
+                    @keyframes videoBadgePulse {
+                        0%, 100% { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+                        50% { box-shadow: 0 4px 30px rgba(195,156,91,0.3), 0 0 20px rgba(195,156,91,0.2); }
+                    }
+                    .video-float-container:hover {
+                        border-color: rgba(195,156,91,0.3) !important;
+                    }
+                </style>
+                <!-- 16:9 aspect ratio wrapper for responsive wide iframe -->
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%;">
+                    <iframe src="https://www.youtube.com/embed/ktmSY1X4Gls?si=DSTFUw3p_bQUXsJL" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; display: block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="RRDCH Campus Tour"></iframe>
+                </div>
             </div>
         </div>
     </section>
@@ -1018,10 +697,6 @@
 
         // Degree Section - Backend Connected with Scroll Hide/Show
         (function initDegreeSection() {
-            const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-                ? 'http://localhost:3000/api'
-                : '/api';
-
             // Extended course data with backend mapping
             const courseData = {
                 'DOCTORAL (PhD)': [
@@ -1056,15 +731,9 @@
             const degreeSection = document.getElementById('degree-section');
             let currentExpandedCourse = null;
 
-            // Fetch additional course details from backend
+            // Fetch additional course details (local-only, no server needed)
             async function fetchCourseDetails(courseId) {
-                try {
-                    const res = await fetch(`${API_BASE}/public/course/${courseId}`);
-                    if (!res.ok) throw new Error('Failed to fetch');
-                    return await res.json();
-                } catch (e) {
-                    return null; // Fallback to local data
-                }
+                return null; // Use local courseData only
             }
 
             function renderCourseDetail(course, backendData) {
