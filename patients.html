@@ -89,170 +89,31 @@
     </style>
 </head>
 <body>
-    <!-- Unified Login Theme -->
-    <link rel="stylesheet" href="css/login-theme.css">
-
-    <!-- Back to Home Button - Top Left -->
-    <a href="index.html" style="position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.3s; z-index: 100; box-shadow: 4px 4px 0 rgba(0,0,0,0.2);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span>Back to Home</span>
-    </a>
-
-    <!-- Secure Access Gateway -->
-    <div id="patientAuthOverlay" class="portal-login-overlay rrdch-login-root" style="display: flex;">
-        <!-- Centered Logo Brand -->
-        <div style="position: absolute; top: 80px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
-            <a href="index.html" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none;">
-                <img src="images/logos/logo.png" alt="RRDCH" style="height: 70px; width: 70px; object-fit: cover; object-position: left center; background: white; border-radius: 50%; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(195,156,91,0.7)); animation: logoGlow 3s ease-in-out infinite;">
-                <div style="color: white; text-align: center;">
-                    <div style="font-size: 1.2rem; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">RRDCH</div>
-                    <div style="font-size: 0.75rem; opacity: 0.9; letter-spacing: 1px;">Rajarajeshwari Dental College</div>
-                </div>
-            </a>
-        </div>
-
-        <style>
-            @keyframes logoGlow {
-                0%, 100% { filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(195,156,91,0.7)); }
-                50% { filter: drop-shadow(0 0 25px rgba(255,255,255,1)) drop-shadow(0 0 50px rgba(195,156,91,0.9)); }
-            }
-        </style>
-        
-        <div class="login-wrapper" style="perspective:1000px;">
-            <label class="switch">
-                <input type="checkbox" class="toggle" id="patToggle">
-                <span class="slider"></span>
-                <span class="card-side"></span>
-            </label>
-
-            <div class="flip-card__inner" id="patFlipInner">
-                <!-- FRONT: Log In -->
-                <div class="flip-card__front">
-                    <div class="flip-title">Patient Portal</div>
-                    <form class="flip-card__form" onsubmit="event.preventDefault(); validatePatientLogin();">
-                        <span class="flip-role-badge" style="color:var(--patient); border-color:var(--patient);">Patient Login</span>
-                        
-                        <input type="text" id="patUser" placeholder="patient@rrdch.in" class="flip-card__input" required>
-                        <input type="password" id="patPass" placeholder="Password" class="flip-card__input" required>
-                        
-                        <div id="patLoginErr" class="flip-error">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            Invalid credentials.
-                        </div>
-
-                        <button class="flip-card__btn" type="submit" id="patLoginBtn">Secure Login</button>
-                    </form>
-                    <div class="demo-credentials-badge">
-                        <div class="demo-title">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
-                            Demo Credentials
-                        </div>
-                        <div class="demo-credentials-row">Patient ID: <code>patient@rrdch.in</code></div>
-                        <div class="demo-credentials-row">Password: <code>Patient@2024</code></div>
-                    </div>
-                    <a href="#" class="flip-card__link">Forgot Password?</a>
-                </div>
-
-                <!-- BACK: Sign Up -->
-                <div class="flip-card__back">
-                    <div class="flip-title">Register</div>
-                    <form class="flip-card__form" onsubmit="event.preventDefault(); alert('Registration sent to OPD desk. We will contact you.'); document.getElementById('patToggle').checked = false;">
-                        <span class="flip-role-badge" style="color:var(--patient); border-color:var(--patient);">New Patient</span>
-                        
-                        <input type="text" placeholder="Full Name" class="flip-card__input" required>
-                        <input type="email" placeholder="Email Address" class="flip-card__input" required>
-                        <input type="tel" placeholder="Mobile Number" class="flip-card__input" required>
-                        
-                        <button class="flip-card__btn" type="submit">Create Account</button>
-                    </form>
-                    <a href="#" class="flip-card__link" onclick="document.getElementById('patToggle').checked = false;">Back to Login</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="login-security">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            End-to-end encrypted connection
-        </div>
-    </div>
-
     <!-- Auth script -->
     <script>
         // If not yet authenticated, redirect to the unified portal login for 'patient'
         if (sessionStorage.getItem('rrdch_role') !== 'patient') {
             window.location.replace('portal.html#patient');
         }
-        // Hide the old inline overlay if it still exists in DOM
-        const _ov = document.getElementById('patientAuthOverlay');
-        if (_ov) _ov.style.display = 'none';
-
-        // manual toggle flip logic in case the adjacent sibling selector CSS breaks
-        document.getElementById('patToggle')?.addEventListener('change', function() {
-            const inner = document.getElementById('patFlipInner');
-            if (this.checked) {
-                inner.style.transform = 'rotateY(180deg)';
-                inner.querySelector('.flip-card__front').style.boxShadow = 'none';
-            } else {
-                inner.style.transform = '';
-                // Wait for animation
-                setTimeout(() => {
-                  inner.querySelector('.flip-card__front').style.boxShadow = '';
-                }, 800);
-            }
-        });
-
-        async function validatePatientLogin() {
-            const user = document.getElementById('patUser').value.trim().toLowerCase();
-            const pass = document.getElementById('patPass').value;
-            const btn = document.getElementById('patLoginBtn');
-            const err = document.getElementById('patLoginErr');
-
-            err.classList.remove('visible');
-            btn.classList.add('loading');
-            btn.textContent = 'Verifying...';
-
-            await new Promise(r => setTimeout(r, 600)); // Simulate network
-            
-            let success = false;
-            try {
-                // Try backend integration
-                const data = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user, pass, role: 'patient' })
-                }).then(r => r.json());
-                if (data.ok) success = true;
-            } catch (e) {
-                // Fallback demo auth
-                success = (user === 'patient@rrdch.in' && pass === 'Patient@2024');
-            }
-
-            if (success) {
-                sessionStorage.setItem('rrdch_role', 'patient');
-                sessionStorage.setItem('rrdch_user', user);
-                document.getElementById('patientAuthOverlay').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('patientAuthOverlay').style.display = 'none';
-                }, 400);
-            } else {
-                err.classList.add('visible');
-                btn.classList.remove('loading');
-                btn.textContent = 'Secure Login';
-            }
-        }
     </script>
-<!-- Unified Top Nav -->
-    <nav class="portal-nav">
-        <a href="index.html" class="nav-brand">
-            <img src="images/logos/logo.png" alt="RRDCH" style="height: 48px; width: 48px; object-fit: cover; object-position: left center; background: white; border-radius: 50%; padding: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-            <span style="background: #e0f2fe; color: #0284c7; padding: 0.4rem 0.8rem; border-radius: 8px; font-weight: 700; font-size: 0.85rem; border: 1px solid #bae6fd; letter-spacing: 0.5px;" class="tl" data-kn="ರೋಗಿಗಳ ಪೋರ್ಟಲ್">PATIENT PORTAL</span>
+    
+    <!-- Unified Top Nav -->
+    <nav class="portal-nav" style="position: relative; display: flex; justify-content: space-between; align-items: center;">
+        <div style="flex: 1; display: flex; align-items: center;">
+            <span style="background: #e0f2fe; color: #0284c7; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 700; font-size: 0.85rem; border: 1px solid #bae6fd; letter-spacing: 0.5px;" class="tl" data-kn="ರೋಗಿಗಳ ಪೋರ್ಟಲ್">PATIENT PORTAL</span>
+        </div>
+        
+        <!-- Left: Frosted Logo background with animated text -->
+        <a href="index.html" class="header-frosted-logo" title="Home">
+            <img src="images/logos/logo.png" alt="RRDCH Logo">
         </a>
-        <div style="display:flex; gap:1rem; align-items:center;">
-            <button class="header-lang-btn" onclick="toggleLang()" style="border-radius: 8px; background: white;">
-                <i data-lucide="languages" width="16"></i> 
-                <span id="enBtn" class="active">EN</span> | <span id="knBtn" style="opacity:0.5;">KN</span>
+
+        <div style="flex: 1; display:flex; gap:1rem; align-items:center; justify-content: flex-end;">
+            <button class="header-lang-btn" onclick="toggleLang()" style="border-radius: 8px; background: white; border: 1px solid #e2e8f0; padding: 0.5rem 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; font-size: 0.85rem; color: #475569;">
+                <i data-lucide="languages" style="width: 16px; height: 16px;"></i> 
+                <span id="enBtn" class="active" style="color: #0284c7;">EN</span> <span style="opacity:0.3; margin: 0 0.2rem;">|</span> <span id="knBtn" style="opacity:0.5;">KN</span>
             </button>
-            <a href="index.html" class="btn btn-outline" style="border:1px solid #e2e8f0; background:white;"><i data-lucide="log-out" width="16"></i> Exit</a>
+            <a href="index.html" class="btn btn-outline" style="border:1px solid #e2e8f0; background:white; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s;"><i data-lucide="log-out" style="width: 16px; height: 16px;"></i> Exit</a>
         </div>
     </nav>
 
@@ -391,20 +252,6 @@
                     
                     <select id="treatmentSelect" class="form-control" style="margin-bottom:1rem;">
                         <option value="">Select a treatment...</option>
-                        <option value="Routine Checkup & Cleaning">Routine Checkup & Cleaning</option>
-                        <option value="Tooth Extraction (Simple)">Tooth Extraction (Simple)</option>
-                        <option value="Tooth Extraction (Surgical)">Tooth Extraction (Surgical)</option>
-                        <option value="Root Canal Treatment (RCT)">Root Canal Treatment (RCT)</option>
-                        <option value="Dental Crown (Ceramic)">Dental Crown (Ceramic)</option>
-                        <option value="Dental Implant">Dental Implant</option>
-                        <option value="Braces (Metal)">Braces (Metal)</option>
-                        <option value="Braces (Ceramic)">Braces (Ceramic)</option>
-                        <option value="Invisible Aligners">Invisible Aligners</option>
-                        <option value="Teeth Whitening">Teeth Whitening</option>
-                        <option value="Gum Treatment (Scaling)">Gum Treatment (Scaling)</option>
-                        <option value="Dentures (Full)">Dentures (Full)</option>
-                        <option value="Composite Filling">Composite Filling</option>
-                        <option value="Pediatric Dental Checkup">Pediatric Dental Checkup</option>
                     </select>
 
                     <div id="costResult" style="display:none; animation: pulse 0.5s ease 1; margin-bottom:1.5rem;">
@@ -560,20 +407,6 @@
                     </div>
                 </div>
 
-                <!-- Achievements & Tour -->
-                <div class="card" style="padding:1.5rem; background:#1e293b; color:white; border:none;">
-                    <h2 class="card-header" style="color:white; border-bottom:1px solid rgba(255,255,255,0.1);"><i data-lucide="award"></i> Accreditations</h2>
-                    <div style="display:flex; justify-content:space-around; align-items:center; margin:1.5rem 0;">
-                        <div style="text-align:center;"><div style="font-size:1.5rem; font-weight:800; color:#facc15;">A+</div><span style="font-size:0.75rem;">NAAC Graded</span></div>
-                        <div style="text-align:center;"><div style="font-size:1.5rem; font-weight:800; color:#38bdf8;">ISO</div><span style="font-size:0.75rem;">9001:2015</span></div>
-                        <div style="text-align:center;"><div style="font-size:1.5rem; font-weight:800; color:#22c55e;">DCI</div><span style="font-size:0.75rem;">Recognised</span></div>
-                    </div>
-                    <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:1.5rem 0;">
-                    <h3 style="margin:0 0 1rem 0; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"><i data-lucide="video"></i> Virtual Campus Tour</h3>
-                    <div style="width:100%; height:250px; background:#0f172a; border-radius:8px; border:1px solid #475569; position:relative; overflow:hidden;">
-                        <iframe src="https://www.google.com/maps/embed?pb=!4v1776281365595!6m8!1m7!1sCAoSFkNJSE0wb2dLRUlDQWdJQ0txcW45RlE.!2m2!1d12.8872363070956!2d77.4508580774884!3f284.27121207218994!4f-15.702741423491702!5f0.4000000000000002" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
 
             </div>
         </div>
@@ -682,7 +515,7 @@
             }
         }
 
-        const COST_DATA = {
+        const FALLBACK_COST_DATA = {
             "Routine Checkup & Cleaning": { min:500, max:1200, sessions:1, insurance:false, emi:false, department:"General Dentistry" },
             "Tooth Extraction (Simple)": { min:500, max:1500, sessions:1, insurance:true, emi:false, department:"Oral Surgery" },
             "Tooth Extraction (Surgical)": { min:2000, max:5000, sessions:1, insurance:true, emi:false, department:"Oral Surgery" },
@@ -698,6 +531,39 @@
             "Composite Filling": { min:800, max:2500, sessions:1, insurance:false, emi:false, department:"Conservative Dentistry and Endodontics" },
             "Pediatric Dental Checkup": { min:300, max:800, sessions:1, insurance:false, emi:false, department:"Pedodontics" }
         };
+
+        let COST_DATA = {};
+
+        async function loadTreatmentCosts() {
+            let loaded = false;
+            if (sb) {
+                try {
+                    const { data } = await sb.from('treatment_costs').select('*');
+                    if (data && data.length > 0) {
+                        data.forEach(d => {
+                            COST_DATA[d.treatment_name] = d;
+                        });
+                        loaded = true;
+                    }
+                } catch(e) {}
+            }
+            if (!loaded) {
+                COST_DATA = JSON.parse(localStorage.getItem('mock_treatment_costs')) || FALLBACK_COST_DATA;
+                if (!localStorage.getItem('mock_treatment_costs')) {
+                    localStorage.setItem('mock_treatment_costs', JSON.stringify(FALLBACK_COST_DATA));
+                }
+            }
+            
+            const select = document.getElementById("treatmentSelect");
+            select.innerHTML = '<option value="">Select a treatment...</option>';
+            Object.keys(COST_DATA).forEach(key => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = key;
+                select.appendChild(opt);
+            });
+        }
+        document.addEventListener('DOMContentLoaded', loadTreatmentCosts);
 
         document.getElementById("treatmentSelect")?.addEventListener("change", function() {
             const val = this.value; const resEl = document.getElementById("costResult");
@@ -779,7 +645,7 @@
         function printToken() {
             const content = document.getElementById("tokenCardInner").outerHTML;
             const win = window.open("", "_blank");
-            win.document.write(\`<html><head><title>RRDCH Token</title><style>body{margin:2rem;font-family:Arial;}</style></head><body>\${content}<script>window.print();</script></body></html>\`);
+            win.document.write(`<html><head><title>RRDCH Token</title><style>body{margin:2rem;font-family:Arial;}</style></head><body>${content}<script>window.print();<\/script></body></html>`);
             win.document.close();
         }
 

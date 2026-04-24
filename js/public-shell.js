@@ -70,16 +70,12 @@
     shell.id = "rrdch-public-shell";
     shell.innerHTML = `
 
-      <!-- Floating Header (Left Logo + Right Actions) -->
+      <!-- Floating Header (Pill Logo + Floating Buttons) -->
       <header class="header-floating" id="siteHeader">
-        <!-- Left: Frosted Slanted Logo Container -->
-        <a href="index.html" class="header-brand-slanted" title="Home">
-          <div class="brand-top-bar">
-            RRDCH | Rajarajeshwari Dental College &amp; Hospital
-          </div>
-          <div class="brand-bottom-area">
-            <img src="images/logos/logo.png" alt="RRDCH Logo" class="animated-logo">
-          </div>
+        
+        <!-- Left: Frosted Logo background with animated text -->
+        <a href="index.html" class="header-frosted-logo" title="Home">
+          <img src="images/logos/logo.png" alt="RRDCH Logo">
         </a>
 
         <!-- Right: Actions -->

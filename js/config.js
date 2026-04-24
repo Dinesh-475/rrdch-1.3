@@ -30,5 +30,6 @@ window.RRDCH_DEMO_USERS = {
     patient:  { id: 'PAT001', email: 'patient@rrdch.in', password: 'patient123', name: 'Demo Patient', redirect: 'patients.html' },
     doctor:   { email: 'doctor@rrdch.in',  password: 'doctor123',  name: 'Dr. Roshan M.',   redirect: 'doctor-portal.html' },
     student:  { id: 'stu2024001', email: 'student@rrdch.in', password: 'Student@2024', name: 'Demo Student', redirect: 'students.html' },
-    admin:    { email: 'admin@rrdch.in',   password: 'admin123',   name: 'System Admin',    redirect: 'admin-portal.html' }
+    admin:    { email: 'admin@rrdch.in',   password: 'admin123',   name: 'System Admin',    redirect: 'admin-portal.html' },
+    security: { email: 'security@rrdch.in', password: 'Security@2024', name: 'Security Guard', redirect: 'security-portal.html' }
 };

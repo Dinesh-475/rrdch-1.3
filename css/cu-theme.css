@@ -124,15 +124,98 @@ body {
   padding: 0;
   pointer-events: auto;
   transition: background 0.3s ease, box-shadow 0.3s ease, height 0.3s ease;
-  height: 90px;
+  height: 110px;
 }
 
 .header-floating.scrolled {
-  height: 70px;
+  height: 75px;
   background: rgba(15, 45, 82, 0.92);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+}
+
+/* ── FROSTED BRAND LOGO (CHRIST SHAPE, FROSTED BG) ── */
+.header-frosted-logo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 70px 0 25px; /* Extra padding on right to account for slant */
+  background: rgba(10, 15, 25, 0.7); /* deeper, darker frosted tint */
+  backdrop-filter: blur(50px) saturate(200%);
+  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 45px) 100%, 0 100%);
+  overflow: hidden;
+}
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  text-decoration: none;
+  z-index: 10;
+  transition: padding 0.3s ease, background 0.3s ease, backdrop-filter 0.3s ease;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-frosted-logo:hover {
+  background: rgba(10, 15, 25, 0.85);
+  backdrop-filter: blur(60px) saturate(220%);
+  -webkit-backdrop-filter: blur(60px) saturate(220%);
+}
+
+/* Decorative Thin Golden Bottom Line */
+.header-frosted-logo::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0.5px;
+  background: #c39c5b; /* Elegant gold */
+  z-index: 20;
+  transition: all 0.3s ease;
+}
+
+.header-frosted-logo:hover::after {
+  background: #dab068; /* Brighter gold on hover */
+  height: 1px;
+}
+
+.header-frosted-logo img {
+  height: 85px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  transition: height 0.3s ease, transform 0.3s ease;
+}
+
+.header-floating.scrolled .header-frosted-logo {
+  padding: 0 60px 0 20px;
+}
+
+.header-floating.scrolled .header-frosted-logo img {
+  height: 60px;
+}
+
+.header-floating.scrolled .header-brand-pill {
+  padding: 4px 12px 4px 4px;
+}
+
+.header-floating.scrolled .pill-logo-img {
+  height: 45px;
+}
+
+.header-floating.scrolled .pill-title-main {
+  font-size: 1.1rem;
+}
+
+.header-floating.scrolled .pill-title-sub {
+  font-size: 0.8rem;
+}
+
+.header-floating.scrolled .pill-desc {
+  font-size: 0.42rem;
 }
 
 /* ── CENTER: Frosted Pill Logo ── */
@@ -196,40 +279,30 @@ body {
 }
 
 .brand-top-bar {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.7rem;
-  padding: 8px 70px 8px 1.5rem;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  transition: all 0.3s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  text-transform: uppercase;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  display: none; /* Hidden as requested */
 }
 
 .brand-bottom-area {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px) saturate(200%);
-  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 12px;
-  padding: 12px 70px 12px 1.5rem;
+  padding: 20px 80px 20px 2rem;
   flex-grow: 1;
+  height: 100%;
   transition: all 0.3s ease;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .brand-bottom-area img,
 .animated-logo {
-  height: 85px;
+  height: 110px;
   width: auto;
-  max-width: 320px;
+  max-width: 360px;
   object-fit: contain;
   transition: all 0.3s ease;
   filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
@@ -254,8 +327,8 @@ body {
 
 /* Scrolled state */
 .header-floating.scrolled .brand-top-bar {
-  padding: 6px 50px 6px 1.2rem;
-  font-size: 0.65rem;
+  padding: 8px 50px 8px 1.2rem;
+  font-size: 0.6rem;
 }
 
 .header-floating.scrolled .brand-bottom-area {
@@ -263,7 +336,7 @@ body {
 }
 
 .header-floating.scrolled .animated-logo {
-  height: 65px;
+  height: 85px;
 }
 
 /* ── Right: LOGIN + MENU + LANG buttons ────── */
@@ -1729,6 +1802,8 @@ body.nav-drawer-open .cu-drawer-right {
 #chatBubble {
   bottom: 28px !important;
   right: 28px !important;
+  width: 60px !important;
+  height: 60px !important;
 }
 
 /* =====================================================

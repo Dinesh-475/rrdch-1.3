@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Portal | RRDCH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <!-- Leaflet for Ambulance -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script src="js/config.js"></script>
+    <style>
+        :root {
+            --bg: #f8fafc; --bg-card: #ffffff;
+            --text: #1e293b; --muted: #64748b;
+            --border: #e2e8f0; --blue: #1c4578;
+            --purple: #7c3aed; --green: #16a34a; --amber: #d97706; --red: #dc2626;
+            --gold: #c39c5b; --sidebar-bg: #0f2d52;
+            --font: 'Inter', sans-serif;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: var(--font); background: var(--bg); color: var(--text); overflow-x: hidden; }
+        
+        /* Layout */
+        .layout { display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; z-index: 100; transition: transform 0.3s; }
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .header { height: 64px; background: white; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; z-index: 10; }
+        .content { flex: 1; overflow-y: auto; padding: 1.5rem; }
+        
+        /* Sidebar */
+        .brand { padding: 1.5rem 1rem; display: flex; align-items: center; justify-content: center; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .brand img { width: 100%; max-width: 220px; height: auto; object-fit: contain; }
+        .nav { padding: 1rem 0; flex: 1; overflow-y: auto; }
+        .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.5rem; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: 0.2s; border-left: 3px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); color: white; border-left-color: var(--gold); }
+        .user-menu { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: space-between; }
+        .user-info { display: flex; align-items: center; gap: 0.5rem; }
+        .avatar { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--sidebar-bg); font-weight: bold; }
+        
+        /* Sections */
+        .page-section { display: none; animation: fadeIn 0.3s ease; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+        .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        
+        /* Cards & Grids */
+        .card { background: white; border-radius: 10px; border: 1px solid var(--border); padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        
+        /* KPI Cards */
+        .kpi { display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: white; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .kpi-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
+        .kpi-info h3 { font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+        .kpi-info p { font-size: 0.8rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+        
+        /* Buttons & Forms */
+        .btn { padding: 0.5rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border: none; transition: 0.2s; }
+        .btn-primary { background: var(--blue); color: white; }
+        .btn-primary:hover { background: var(--sidebar-bg); }
+        .btn-danger { background: var(--red); color: white; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-success { background: var(--green); color: white; }
+        .btn-warning { background: var(--amber); color: white; }
+        
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 0.3rem; }
+        .form-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.9rem; }
+        .form-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(28,69,120,0.1); }
+        
+        /* Parking Grid */
+        .zone-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 2rem; }
+        .parking-slot { height: 80px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; border: 2px solid; }
+        .parking-slot[data-status="free"] { background: #dcfce7; border-color: #16a34a; color: #15803d; }
+        .parking-slot[data-status="occupied"] { background: #fee2e2; border-color: #dc2626; color: #991b1b; }
+        .parking-slot:hover { transform: scale(0.95); }
+        
+        /* Badges */
+        .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .badge.in { background: #dcfce7; color: #16a34a; }
+        .badge.out { background: #fee2e2; color: #dc2626; }
+        
+        /* Feed */
+        .feed-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .feed-item { padding: 0.75rem; background: var(--bg); border-radius: 6px; border-left: 3px solid var(--blue); display: flex; justify-content: space-between; align-items: center; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-10px);} to{opacity:1;transform:translateY(0);} }
+        
+        /* Modals & Overlays */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: white; padding: 1.5rem; border-radius: 10px; width: 90%; max-width: 400px; }
+        
+        .sos-overlay { display: none; position: fixed; inset: 0; background: rgba(220, 38, 38, 0.95); z-index: 10000; align-items: center; justify-content: center; flex-direction: column; color: white; text-align: center; }
+        .sos-overlay.active { display: flex; animation: pulseSOS 1.5s infinite alternate; }
+        @keyframes pulseSOS { from { background: rgba(220, 38, 38, 0.95); } to { background: rgba(185, 28, 28, 0.95); } }
+        
+        /* Pass Card */
+        .pass-card { background: white; border: 2px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .barcode { height: 60px; background: repeating-linear-gradient(90deg, #000, #000 2px, #fff 2px, #fff 4px, #000 4px, #000 8px, #fff 8px, #fff 10px); margin: 1rem 0; }
+        
+        /* Map */
+        #ambulanceMap { height: 400px; width: 100%; border-radius: 10px; border: 1px solid var(--border); z-index: 1; }
+        
+        .toast { position: fixed; bottom: 1rem; right: 1rem; padding: 1rem; border-radius: 8px; color: white; z-index: 9999; display: none; }
+        .toast.success { background: var(--green); }
+        .toast.error { background: var(--red); }
+    </style>
+</head>
+<body>
+
+<div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="#" class="brand">
+            <img src="images/logos/logo.png" alt="RRDCH Logo">
+        </a>
+        <nav class="nav">
+            <a href="#" class="nav-item active" data-section="parking" onclick="switchSection('parking')"><i data-lucide="car"></i> Parking Management</a>
+            <a href="#" class="nav-item" data-section="gate" onclick="switchSection('gate')"><i data-lucide="shield-check"></i> Gate Entry Log</a>
+            <a href="#" class="nav-item" data-section="visitor" onclick="switchSection('visitor')"><i data-lucide="user-plus"></i> Visitor Pass</a>
+            <a href="#" class="nav-item" data-section="ambulance" onclick="switchSection('ambulance')"><i data-lucide="ambulance"></i> Ambulance Dispatch</a>
+        </nav>
+        <div class="user-menu">
+            <div class="user-info">
+                <div class="avatar">G</div>
+                <div style="font-size:0.8rem;"><strong>Guard ID:</strong><br><span id="guardIdText">...</span></div>
+            </div>
+            <button class="btn btn-danger" style="padding:0.4rem;" onclick="logout()"><i data-lucide="log-out" style="width:16px;height:16px;"></i></button>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <header class="header">
+            <div style="display:flex; align-items:center;">
+                <strong style="color:var(--blue);">Security Command Center</strong>
+                <button class="btn btn-danger" style="margin-left:1rem; padding:0.25rem 0.75rem; font-size:0.75rem;" onclick="testSOS()"><i data-lucide="siren" style="width:14px;height:14px;"></i> Test SOS</button>
+            </div>
+            <div style="font-size:0.85rem; font-weight:600; color:var(--muted);" id="clock">Loading...</div>
+        </header>
+
+        <div class="content">
+            
+            <!-- SECTION: PARKING -->
+            <div id="section-parking" class="page-section active">
+                <div class="section-title"><i data-lucide="car" style="color:var(--blue);"></i> Campus Parking Management</div>
+                <div class="grid-3" style="margin-bottom:1.5rem;">
+                    <div class="kpi"><div class="kpi-icon" style="background:var(--blue);"><i data-lucide="grid"></i></div><div class="kpi-info"><h3 id="parkTotal">48</h3><p>Total Slots</p></div></div>
+                    <div class="kpi"><div class="kpi-icon" style="background:var(--green);"><i data-lucide="check-circle"></i></div><div class="kpi-info"><h3 id="parkFree" style="color:var(--green);">--</h3><p>Available</p></div></div>
+                    <div class="kpi"><div class="kpi-icon" style="background:var(--red);"><i data-lucide="slash"></i></div><div class="kpi-info"><h3 id="parkOcc" style="color:var(--red);">--</h3><p>Occupied</p></div></div>
+                </div>
+                
+                <div class="card">
+                    <h4 style="margin-bottom:1rem;">Zone A (Staff & Doctors)</h4>
+                    <div class="zone-grid" id="gridZoneA"></div>
+                    <h4 style="margin-bottom:1rem;">Zone B (Students)</h4>
+                    <div class="zone-grid" id="gridZoneB"></div>
+                    <h4 style="margin-bottom:1rem;">Zone C (Visitors)</h4>
+                    <div class="zone-grid" id="gridZoneC"></div>
+                </div>
+            </div>
+
+            <!-- SECTION: GATE ENTRY -->
+            <div id="section-gate" class="page-section">
+                <div class="section-title"><i data-lucide="shield-check" style="color:var(--blue);"></i> Gate Entry Log</div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4 style="margin-bottom:1rem;">Manual Entry</h4>
+                        <div class="form-group"><label class="form-label">Person Type</label><select id="gType" class="form-input"><option>student</option><option>staff</option><option>doctor</option><option>visitor</option></select></div>
+                        <div class="form-group"><label class="form-label">Person ID (Optional)</label><input type="text" id="gId" class="form-input"></div>
+                        <div class="form-group"><label class="form-label">Name</label><input type="text" id="gName" class="form-input"></div>
+                        <div class="form-group"><label class="form-label">Gate</label><select id="gGate" class="form-input"><option>main</option><option>side</option></select></div>
+                        <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+                            <button class="btn btn-success" style="flex:1;" onclick="submitGateLog('in')"><i data-lucide="arrow-down-right"></i> Log IN</button>
+                            <button class="btn btn-danger" style="flex:1;" onclick="submitGateLog('out')"><i data-lucide="arrow-up-right"></i> Log OUT</button>
+                        </div>
+                        
+                        <hr style="margin:1.5rem 0; border:0; border-top:1px solid var(--border);">
+                        <h4 style="margin-bottom:1rem;">QR Scanner</h4>
+                        <div style="background:#000; height:200px; border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-size:0.8rem; margin-bottom:1rem;">
+                            <video id="qrVideo" style="width:100%; height:100%; object-fit:cover; border-radius:6px; display:none;"></video>
+                            <span id="qrPlaceholder">Camera Off</span>
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;" onclick="startQR()"><i data-lucide="camera"></i> Start Scanner</button>
+                    </div>
+                    <div class="card">
+                        <h4 style="margin-bottom:1rem; display:flex; justify-content:space-between; align-items:center;">
+                            Live Activity <span class="badge in" id="gateTodayCount">0 Today</span>
+                        </h4>
+                        <div class="feed-list" id="gateFeed"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: VISITOR PASS -->
+            <div id="section-visitor" class="page-section">
+                <div class="section-title"><i data-lucide="user-plus" style="color:var(--blue);"></i> Visitor Management</div>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4 style="margin-bottom:1rem;">Generate Pass</h4>
+                        <div class="form-group"><label class="form-label">Visitor Name *</label><input type="text" id="vName" class="form-input"></div>
+                        <div class="grid-2">
+                            <div class="form-group"><label class="form-label">ID Type *</label><select id="vIdType" class="form-input"><option>aadhar</option><option>pan</option><option>driving_license</option></select></div>
+                            <div class="form-group"><label class="form-label">ID Number *</label><input type="text" id="vIdNum" class="form-input"></div>
+                        </div>
+                        <div class="form-group"><label class="form-label">Phone</label><input type="text" id="vPhone" class="form-input"></div>
+                        <div class="grid-2">
+                            <div class="form-group"><label class="form-label">Visiting Whom *</label><input type="text" id="vWhom" class="form-input"></div>
+                            <div class="form-group"><label class="form-label">Department</label><select id="vDept" class="form-input"><option>Oral Surgery</option><option>Orthodontics</option><option>Periodontology</option><option>Admin</option><option>Other</option></select></div>
+                        </div>
+                        <div class="form-group"><label class="form-label">Purpose</label><input type="text" id="vPurpose" class="form-input"></div>
+                        <div class="form-group"><label class="form-label">Vehicle Number</label><input type="text" id="vVehicle" class="form-input"></div>
+                        <button class="btn btn-primary" style="width:100%; margin-top:0.5rem;" onclick="generateVisitorPass()"><i data-lucide="printer"></i> Generate & Print</button>
+                        
+                        <hr style="margin:1.5rem 0; border:0; border-top:1px solid var(--border);">
+                        <h4 style="margin-bottom:1rem;">Visitor Exit</h4>
+                        <div style="display:flex; gap:0.5rem;">
+                            <input type="text" id="vSearch" class="form-input" placeholder="Search pass number or name...">
+                            <button class="btn btn-secondary" onclick="searchVisitor()">Search</button>
+                        </div>
+                        <div id="vExitResult" style="margin-top:1rem;"></div>
+                    </div>
+                    <div>
+                        <div class="kpi" style="margin-bottom:1.5rem;">
+                            <div class="kpi-icon" style="background:var(--purple);"><i data-lucide="users"></i></div>
+                            <div class="kpi-info"><h3 id="vInsideCount" style="color:var(--purple);">0</h3><p>Currently Inside</p></div>
+                        </div>
+                        <div id="passPreviewContainer" style="display:none;">
+                            <div class="pass-card" id="passCard">
+                                <h3 style="color:var(--blue); margin-bottom:0.5rem;">VISITOR PASS</h3>
+                                <div style="font-size:0.75rem; color:var(--muted); margin-bottom:1rem;">Rajarajeshwari Dental College & Hospital</div>
+                                <h1 id="passNumDisplay" style="font-size:2rem; letter-spacing:2px; margin-bottom:1rem;">VP-0000</h1>
+                                <div class="barcode"></div>
+                                <div style="text-align:left; font-size:0.85rem; line-height:1.6;">
+                                    <strong>Name:</strong> <span id="pNameDisplay">...</span><br>
+                                    <strong>Visiting:</strong> <span id="pWhomDisplay">...</span> (<span id="pDeptDisplay">...</span>)<br>
+                                    <strong>Purpose:</strong> <span id="pPurposeDisplay">...</span><br>
+                                    <strong>Entry:</strong> <span id="pTimeDisplay">...</span>
+                                </div>
+                                <button class="btn btn-primary" style="margin-top:1.5rem; width:100%;" onclick="window.print()">Print Pass</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: AMBULANCE -->
+            <div id="section-ambulance" class="page-section">
+                <div class="section-title"><i data-lucide="ambulance" style="color:var(--red);"></i> Ambulance Dispatch</div>
+                <div class="grid-3" style="margin-bottom:1.5rem;">
+                    <div class="kpi" style="grid-column: span 1;"><div class="kpi-icon" id="ambIcon" style="background:var(--green);"><i data-lucide="activity"></i></div><div class="kpi-info"><h3 id="ambStatusTxt">Standby</h3><p>Current Status</p></div></div>
+                    <div class="card" style="grid-column: span 2; margin-bottom:0; display:flex; align-items:center; gap:1rem;">
+                        <input type="text" id="ambDest" class="form-input" placeholder="Destination / Location..." style="flex:1;">
+                        <button class="btn btn-danger" onclick="updateAmbulance('dispatched')"><i data-lucide="siren"></i> Dispatch</button>
+                        <button class="btn btn-warning" onclick="updateAmbulance('returning')"><i data-lucide="corner-down-left"></i> Return</button>
+                        <button class="btn btn-success" onclick="updateAmbulance('standby')"><i data-lucide="check-circle"></i> Standby</button>
+                    </div>
+                </div>
+                <div class="card" style="padding:0; overflow:hidden;">
+                    <div id="ambulanceMap"></div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+</div>
+
+<!-- Parking Modal -->
+<div class="modal" id="parkModal">
+    <div class="modal-content">
+        <h3 id="pModalTitle" style="margin-bottom:1rem;">Slot Action</h3>
+        <input type="hidden" id="pModalSlotNum">
+        <input type="hidden" id="pModalAction">
+        <div class="form-group" id="pModalVehicleGroup">
+            <label class="form-label">Vehicle Number</label>
+            <input type="text" id="pModalVehicle" class="form-input" placeholder="e.g. KA-01-AB-1234">
+        </div>
+        <div style="display:flex; gap:0.5rem; margin-top:1.5rem;">
+            <button class="btn btn-secondary" style="flex:1;" onclick="document.getElementById('parkModal').classList.remove('show')">Cancel</button>
+            <button class="btn btn-primary" style="flex:1;" id="pModalSubmit" onclick="confirmParkAction()">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<!-- SOS OVERLAY (Fullscreen Alert) -->
+<div class="sos-overlay" id="sosOverlay">
+    <i data-lucide="siren" style="width:80px;height:80px;margin-bottom:1rem;"></i>
+    <h1 style="font-size:3rem;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:2px;">EMERGENCY SOS</h1>
+    <p id="sosDetails" style="font-size:1.25rem;margin-bottom:2rem;max-width:600px;">Loading details...</p>
+    <div style="display:flex;gap:1rem;">
+        <button class="btn" style="background:white;color:var(--red);font-size:1.1rem;padding:0.75rem 2rem;" onclick="acknowledgeSOS()">Acknowledge & Respond</button>
+        <button class="btn" style="background:rgba(0,0,0,0.5);color:white;font-size:1.1rem;padding:0.75rem 2rem;" onclick="resolveSOS()">Mark Resolved</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Audio for SOS -->
+<audio id="sosAudio" loop preload="auto">
+    <!-- Inline base64 generic beep or use web audio api if src fails -->
+</audio>
+
+<script>
+    lucide.createIcons();
+    
+    // --- AUTH CHECK ---
+    const userRole = sessionStorage.getItem('rrdch_role');
+    const userEmail = sessionStorage.getItem('rrdch_user');
+    if (userRole !== 'security') {
+        window.location.replace('portal.html#security');
+    }
+    document.getElementById('guardIdText').textContent = userEmail || 'guard@rrdch.in';
+
+    function logout() {
+        sessionStorage.clear();
+        window.location.replace('portal.html');
+    }
+
+    // --- UTILS ---
+    function switchSection(name) {
+        document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('section-' + name).classList.add('active');
+        document.querySelector(`.nav-item[data-section="${name}"]`).classList.add('active');
+        
+        if (name === 'ambulance') setTimeout(() => { if (ambMap) ambMap.invalidateSize(); }, 100);
+    }
+
+    function showToast(msg, type='success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'toast show ' + type;
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+    
+    setInterval(() => {
+        document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-IN', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    }, 1000);
+
+    // --- DB SETUP ---
+    const sb = window.sb; // Available from config.js
+    
+    // Fallback Mock Datasets
+    const getMock = (key, defaultVal) => JSON.parse(localStorage.getItem(key)) || defaultVal;
+    const setMock = (key, val) => { localStorage.setItem(key, JSON.stringify(val)); window.dispatchEvent(new Event('storage')); };
+    
+    // ==========================================
+    // PARKING MANAGEMENT
+    // ==========================================
+    let parkingSlots = [];
+    
+    async function loadParking() {
+        if (sb) {
+            try {
+                const { data } = await sb.from('parking_slots').select('*').order('slot_number', {ascending: true});
+                if (data && data.length > 0) { parkingSlots = data; renderParkingGrid(); updateParkingCounts(); return; }
+            } catch (e) {}
+        }
+        // Fallback
+        parkingSlots = getMock('mock_parking', Array.from({length: 48}, (_, i) => ({
+            slot_number: i+1,
+            slot_label: `${i<16?'A':(i<32?'B':'C')}-${(i%16)+1}`,
+            zone: i<16?'A':(i<32?'B':'C'),
+            status: 'free',
+            vehicle_number: null
+        })));
+        renderParkingGrid();
+        updateParkingCounts();
+    }
+    
+    function renderParkingGrid() {
+        const za = document.getElementById('gridZoneA');
+        const zb = document.getElementById('gridZoneB');
+        const zc = document.getElementById('gridZoneC');
+        za.innerHTML = ''; zb.innerHTML = ''; zc.innerHTML = '';
+        
+        parkingSlots.forEach(slot => {
+            const el = document.createElement('div');
+            el.className = 'parking-slot';
+            el.textContent = slot.slot_label;
+            el.dataset.status = slot.status;
+            el.id = 'slot-' + slot.slot_number;
+            el.onclick = () => handleSlotClick(slot);
+            
+            if (slot.zone === 'A') za.appendChild(el);
+            else if (slot.zone === 'B') zb.appendChild(el);
+            else if (slot.zone === 'C') zc.appendChild(el);
+        });
+    }
+    
+    function updateParkingCounts() {
+        const free = parkingSlots.filter(s => s.status === 'free').length;
+        const occ = parkingSlots.filter(s => s.status === 'occupied').length;
+        document.getElementById('parkFree').textContent = free;
+        document.getElementById('parkOcc').textContent = occ;
+    }
+    
+    function handleSlotClick(slot) {
+        const m = document.getElementById('parkModal');
+        document.getElementById('pModalSlotNum').value = slot.slot_number;
+        
+        if (slot.status === 'free') {
+            document.getElementById('pModalTitle').textContent = `Occupy Slot ${slot.slot_label}`;
+            document.getElementById('pModalAction').value = 'occupy';
+            document.getElementById('pModalVehicleGroup').style.display = 'block';
+            document.getElementById('pModalVehicle').value = '';
+            document.getElementById('pModalSubmit').textContent = 'Mark Occupied';
+            document.getElementById('pModalSubmit').className = 'btn btn-danger';
+        } else {
+            document.getElementById('pModalTitle').textContent = `Release Slot ${slot.slot_label}`;
+            document.getElementById('pModalAction').value = 'release';
+            document.getElementById('pModalVehicleGroup').style.display = 'none';
+            document.getElementById('pModalSubmit').textContent = 'Mark Free';
+            document.getElementById('pModalSubmit').className = 'btn btn-success';
+        }
+        m.classList.add('show');
+    }
+    
+    async function confirmParkAction() {
+        const num = document.getElementById('pModalSlotNum').value;
+        const action = document.getElementById('pModalAction').value;
+        const vehicle = document.getElementById('pModalVehicle').value;
+        
+        const updates = action === 'occupy' 
+            ? { status: 'occupied', vehicle_number: vehicle, occupied_by: userEmail, occupied_at: new Date().toISOString() }
+            : { status: 'free', vehicle_number: null, occupied_by: null, occupied_at: null };
+            
+        if (sb) {
+            try {
+                const { error } = await sb.from('parking_slots').update(updates).eq('slot_number', num);
+                if (!error) {
+                    document.getElementById('parkModal').classList.remove('show');
+                    showToast(`Slot marked as ${action === 'occupy' ? 'Occupied' : 'Free'}`);
+                    return;
+                }
+            } catch (e) {}
+        }
+        // Fallback
+        const idx = parkingSlots.findIndex(s => String(s.slot_number) === String(num));
+        if (idx > -1) {
+            parkingSlots[idx] = { ...parkingSlots[idx], ...updates };
+            setMock('mock_parking', parkingSlots);
+            renderParkingGrid();
+            updateParkingCounts();
+            document.getElementById('parkModal').classList.remove('show');
+            showToast(`[Mock] Slot marked as ${action === 'occupy' ? 'Occupied' : 'Free'}`);
+        }
+    }
+
+    // ==========================================
+    // GATE ENTRY LOG
+    // ==========================================
+    async function submitGateLog(direction) {
+        const type = document.getElementById('gType').value;
+        const id = document.getElementById('gId').value;
+        const name = document.getElementById('gName').value;
+        const gate = document.getElementById('gGate').value;
+        
+        if (!name) { showToast('Name is required', 'error'); return; }
+        
+        const logEntry = {
+            person_type: type, person_id: id || 'MANUAL', person_name: name,
+            entry_type: direction, method: 'manual', gate: gate, logged_by: userEmail,
+            timestamp: new Date().toISOString()
+        };
+        
+        if (sb) {
+            try {
+                const { error } = await sb.from('gate_entry_log').insert(logEntry);
+                if (!error) {
+                    showToast(`Logged ${direction.toUpperCase()} for ${name}`);
+                    document.getElementById('gId').value = '';
+                    document.getElementById('gName').value = '';
+                    return;
+                }
+            } catch(e) {}
+        }
+        
+        // Fallback
+        const logs = getMock('mock_gate', []);
+        logs.unshift(logEntry);
+        setMock('mock_gate', logs);
+        showToast(`[Mock] Logged ${direction.toUpperCase()} for ${name}`);
+        document.getElementById('gId').value = '';
+        document.getElementById('gName').value = '';
+        loadGateFeed();
+    }
+    
+    async function loadGateFeed() {
+        let data = [];
+        if (sb) {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                const res = await sb.from('gate_entry_log').select('*').gte('timestamp', today + 'T00:00:00').order('timestamp', {ascending: false}).limit(20);
+                if (res.data && res.data.length > 0) data = res.data;
+            } catch(e) {}
+        }
+        
+        if (data.length === 0) data = getMock('mock_gate', []).slice(0, 20);
+        
+        document.getElementById('gateTodayCount').textContent = `${data.length} Today`;
+        const feed = document.getElementById('gateFeed');
+        feed.innerHTML = data.map(log => `
+            <div class="feed-item">
+                <div>
+                    <div style="font-weight:600; font-size:0.9rem;">${log.person_name} <span style="font-size:0.7rem;color:var(--muted);font-weight:normal;">(${log.person_type})</span></div>
+                    <div style="font-size:0.75rem; color:var(--muted);">${new Date(log.timestamp).toLocaleTimeString('en-IN')} • Gate: ${log.gate}</div>
+                </div>
+                <span class="badge ${log.entry_type}">${log.entry_type.toUpperCase()}</span>
+            </div>
+        `).join('');
+    }
+
+    // ==========================================
+    // VISITOR PASS
+    // ==========================================
+    async function loadVisitorCount() {
+        let count = 0;
+        if (sb) {
+            try {
+                const { data } = await sb.from('visitor_log').select('id').eq('status', 'inside');
+                if (data) count = data.length;
+            } catch(e) {}
+        } else {
+            const visitors = getMock('mock_visitors', []);
+            count = visitors.filter(v => v.status === 'inside').length;
+        }
+        document.getElementById('vInsideCount').textContent = count;
+    }
+    
+    async function generateVisitorPass() {
+        const name = document.getElementById('vName').value;
+        const idType = document.getElementById('vIdType').value;
+        const idNum = document.getElementById('vIdNum').value;
+        const phone = document.getElementById('vPhone').value;
+        const whom = document.getElementById('vWhom').value;
+        const dept = document.getElementById('vDept').value;
+        const purpose = document.getElementById('vPurpose').value;
+        const vehicle = document.getElementById('vVehicle').value;
+        
+        if (!name || !idNum || !whom) { showToast('Fill required fields', 'error'); return; }
+        
+        const seq = Math.floor(1000 + Math.random() * 9000);
+        const dateStr = new Date().toISOString().split('T')[0].replace(/-/g,'');
+        const passNum = `VP-${dateStr}-${seq}`;
+        
+        const passData = {
+            id: crypto.randomUUID(), visitor_name: name, visitor_id_type: idType, visitor_id_number: idNum,
+            phone: phone, visiting_whom: whom, visiting_department: dept,
+            purpose: purpose, vehicle_number: vehicle, pass_number: passNum,
+            logged_by: userEmail, status: 'inside', entry_time: new Date().toISOString()
+        };
+        
+        let success = false;
+        if (sb) {
+            try {
+                const { data, error } = await sb.from('visitor_log').insert(passData).select().single();
+                if (!error) success = true;
+            } catch(e) {}
+        }
+        
+        if (!success) {
+            const visitors = getMock('mock_visitors', []);
+            visitors.push(passData);
+            setMock('mock_visitors', visitors);
+            success = true;
+        }
+        
+        if (success) {
+            showToast('Pass Generated successfully');
+            document.getElementById('passPreviewContainer').style.display = 'block';
+            document.getElementById('passNumDisplay').textContent = passNum;
+            document.getElementById('pNameDisplay').textContent = name;
+            document.getElementById('pWhomDisplay').textContent = whom;
+            document.getElementById('pDeptDisplay').textContent = dept;
+            document.getElementById('pPurposeDisplay').textContent = purpose;
+            document.getElementById('pTimeDisplay').textContent = new Date().toLocaleTimeString('en-IN');
+            
+            document.getElementById('vName').value = '';
+            document.getElementById('vIdNum').value = '';
+            document.getElementById('vPhone').value = '';
+            document.getElementById('vWhom').value = '';
+            document.getElementById('vPurpose').value = '';
+            document.getElementById('vVehicle').value = '';
+            loadVisitorCount();
+        } else {
+            showToast('Error generating pass', 'error');
+        }
+    }
+    
+    async function searchVisitor() {
+        const q = document.getElementById('vSearch').value.toLowerCase();
+        if (!q) return;
+        
+        let data = [];
+        if (sb) {
+            try {
+                const res = await sb.from('visitor_log').select('*').eq('status', 'inside').or(`pass_number.eq.${q},visitor_name.ilike.%${q}%`);
+                if (res.data) data = res.data;
+            } catch(e) {}
+        }
+        if (data.length === 0) {
+            const visitors = getMock('mock_visitors', []);
+            data = visitors.filter(v => v.status === 'inside' && (v.pass_number.toLowerCase() === q || v.visitor_name.toLowerCase().includes(q)));
+        }
+        
+        const res = document.getElementById('vExitResult');
+        if (data && data.length > 0) {
+            res.innerHTML = data.map(v => `
+                <div class="feed-item" style="margin-bottom:0.5rem; flex-direction:column; align-items:flex-start; gap:0.5rem;">
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <div><strong>${v.visitor_name}</strong> (${v.pass_number})</div>
+                        <button class="btn btn-danger" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="markVisitorExit('${v.id}')">Mark Exit</button>
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--muted);">Entry: ${new Date(v.entry_time).toLocaleTimeString('en-IN')}</div>
+                </div>
+            `).join('');
+        } else {
+            res.innerHTML = '<div style="font-size:0.8rem; color:var(--muted);">No matching active visitor found.</div>';
+        }
+    }
+    
+    async function markVisitorExit(id) {
+        let success = false;
+        if (sb) {
+            try {
+                const { error } = await sb.from('visitor_log').update({ status: 'exited', exit_time: new Date().toISOString() }).eq('id', id);
+                if (!error) success = true;
+            } catch(e) {}
+        }
+        if (!success) {
+            const visitors = getMock('mock_visitors', []);
+            const idx = visitors.findIndex(v => v.id === id);
+            if (idx > -1) {
+                visitors[idx].status = 'exited';
+                visitors[idx].exit_time = new Date().toISOString();
+                setMock('mock_visitors', visitors);
+                success = true;
+            }
+        }
+        
+        if (success) {
+            showToast('Visitor marked as exited');
+            searchVisitor();
+            loadVisitorCount();
+        }
+    }
+
+    // ==========================================
+    // AMBULANCE
+    // ==========================================
+    let ambMap, ambMarker;
+    let baseCoords = [12.9082, 77.5026]; // RRDCH Campus
+
+    function initAmbulanceMap() {
+        if (!document.getElementById('ambulanceMap')) return;
+        ambMap = L.map('ambulanceMap').setView(baseCoords, 14);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(ambMap);
+        
+        const ambIcon = L.divIcon({
+            html: `<div style="background:var(--red);width:30px;height:30px;border-radius:50%;border:3px solid white;display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 0 10px rgba(220,38,38,0.5);"><i data-lucide="cross" style="width:16px;height:16px;"></i></div>`,
+            className: '', iconSize: [30, 30], iconAnchor: [15, 15]
+        });
+        
+        ambMarker = L.marker(baseCoords, {icon: ambIcon}).addTo(ambMap);
+        lucide.createIcons();
+    }
+    
+    async function loadAmbulanceState() {
+        let data = null;
+        if (sb) {
+            try {
+                const res = await sb.from('ambulance_position').select('*').limit(1).single();
+                data = res.data;
+            } catch(e) {}
+        }
+        if (!data) data = getMock('mock_ambulance', { status: 'standby', current_lat: baseCoords[0], current_lng: baseCoords[1] });
+        
+        if (data) {
+            updateAmbulanceUI(data.status, data.current_lat, data.current_lng);
+        }
+    }
+    
+    function updateAmbulanceUI(status, lat, lng) {
+        if (ambMarker && lat && lng) ambMarker.setLatLng([lat, lng]);
+        
+        const txt = document.getElementById('ambStatusTxt');
+        const icon = document.getElementById('ambIcon');
+        
+        if (status === 'standby') {
+            txt.textContent = 'Standby'; txt.style.color = 'var(--green)';
+            icon.style.background = 'var(--green)';
+        } else if (status === 'dispatched') {
+            txt.textContent = 'Dispatched'; txt.style.color = 'var(--red)';
+            icon.style.background = 'var(--red)';
+        } else {
+            txt.textContent = 'Returning'; txt.style.color = 'var(--amber)';
+            icon.style.background = 'var(--amber)';
+        }
+    }
+    
+    async function updateAmbulance(status) {
+        let updates = { status, updated_at: new Date().toISOString() };
+        if (status === 'standby') {
+            updates.current_lat = baseCoords[0]; updates.current_lng = baseCoords[1];
+            updates.dispatched_to = null;
+            document.getElementById('ambDest').value = '';
+        } else if (status === 'dispatched') {
+            updates.dispatched_to = document.getElementById('ambDest').value || 'Unknown Location';
+        }
+        
+        if (sb) {
+            try {
+                const { error } = await sb.from('ambulance_position').update(updates).eq('ambulance_id', 'AMB-01');
+                if (!error) { showToast(`Ambulance marked as ${status}`); return; }
+            } catch(e) {}
+        }
+        
+        // Fallback
+        const amb = getMock('mock_ambulance', { current_lat: baseCoords[0], current_lng: baseCoords[1] });
+        setMock('mock_ambulance', { ...amb, ...updates });
+        updateAmbulanceUI(updates.status, updates.current_lat || amb.current_lat, updates.current_lng || amb.current_lng);
+        showToast(`[Mock] Ambulance marked as ${status}`);
+    }
+
+    // ==========================================
+    // SOS
+    // ==========================================
+    let currentSOSId = null;
+    let audioCtx = null;
+    
+    function playBeep() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.type = 'square'; osc.frequency.value = 1200;
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.1);
+        gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+        osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.5);
+    }
+    
+    let beepInterval;
+
+    function showSOSAlert(alertData) {
+        currentSOSId = alertData.id || crypto.randomUUID();
+        const overlay = document.getElementById('sosOverlay');
+        const mapLink = alertData.lat ? `<br><a href="https://maps.google.com/?q=${alertData.lat},${alertData.lng}" target="_blank" style="color:var(--gold);text-decoration:underline;">View on Map</a>` : '';
+        document.getElementById('sosDetails').innerHTML = `
+            <strong>Triggered by:</strong> ${alertData.triggered_by_name} (${alertData.user_type})<br>
+            <strong>Time:</strong> ${new Date(alertData.created_at).toLocaleTimeString('en-IN')}
+            ${mapLink}
+        `;
+        overlay.classList.add('active');
+        playBeep();
+        beepInterval = setInterval(playBeep, 2000);
+    }
+    
+    function testSOS() {
+        const testData = {
+            id: crypto.randomUUID(), triggered_by_name: 'Test Trigger', user_type: 'guard',
+            created_at: new Date().toISOString(), lat: 12.9082, lng: 77.5026
+        };
+        showSOSAlert(testData);
+        setMock('mock_sos', testData);
+    }
+    
+    async function acknowledgeSOS() {
+        if (sb && currentSOSId) {
+            try { await sb.from('sos_alerts').update({ status: 'acknowledged', acknowledged_by: userEmail, acknowledged_at: new Date().toISOString() }).eq('id', currentSOSId); } catch(e) {}
+        }
+        clearInterval(beepInterval);
+        document.getElementById('sosOverlay').classList.remove('active');
+        setMock('mock_sos', null);
+        showToast('SOS Acknowledged. Please respond immediately.', 'warning');
+    }
+    
+    async function resolveSOS() {
+        if (sb && currentSOSId) {
+            try { await sb.from('sos_alerts').update({ status: 'resolved', resolved_at: new Date().toISOString() }).eq('id', currentSOSId); } catch(e) {}
+        }
+        clearInterval(beepInterval);
+        document.getElementById('sosOverlay').classList.remove('active');
+        setMock('mock_sos', null);
+        showToast('SOS Resolved.', 'success');
+    }
+
+    // ==========================================
+    // INIT & REALTIME
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+        loadParking();
+        loadGateFeed();
+        loadVisitorCount();
+        
+        setTimeout(() => {
+            initAmbulanceMap();
+            loadAmbulanceState();
+        }, 500);
+
+        if (sb) {
+            sb.channel('parking-live-sec').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'parking_slots' }, (payload) => {
+                  const s = payload.new;
+                  const idx = parkingSlots.findIndex(x => x.slot_number === s.slot_number);
+                  if (idx > -1) parkingSlots[idx] = s;
+                  const el = document.getElementById('slot-' + s.slot_number);
+                  if (el) el.dataset.status = s.status;
+                  updateParkingCounts();
+            }).subscribe();
+              
+            sb.channel('gate-log-live').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gate_entry_log' }, () => loadGateFeed()).subscribe();
+            sb.channel('visitor-live-sec').on('postgres_changes', { event: '*', schema: 'public', table: 'visitor_log' }, () => loadVisitorCount()).subscribe();
+            sb.channel('ambulance-live-sec').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'ambulance_position' }, (payload) => {
+                  updateAmbulanceUI(payload.new.status, payload.new.current_lat, payload.new.current_lng);
+            }).subscribe();
+            sb.channel('sos-alerts-sec').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, (payload) => showSOSAlert(payload.new)).subscribe();
+        } else {
+            showToast('Running in standalone demo mode.', 'warning');
+            
+            // Listen to localStorage changes for cross-tab sync in demo mode
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'mock_parking') { parkingSlots = JSON.parse(e.newValue); renderParkingGrid(); updateParkingCounts(); }
+                if (e.key === 'mock_gate') loadGateFeed();
+                if (e.key === 'mock_visitors') loadVisitorCount();
+                if (e.key === 'mock_ambulance') { const amb = JSON.parse(e.newValue); if(amb) updateAmbulanceUI(amb.status, amb.current_lat, amb.current_lng); }
+                if (e.key === 'mock_sos' && e.newValue) { const sos = JSON.parse(e.newValue); if (sos) showSOSAlert(sos); }
+            });
+        }
+    });
+
+    window.addEventListener('beforeunload', () => {
+        if (sb) sb.removeAllChannels();
+    });
+
+</script>
+</body>
+</html>

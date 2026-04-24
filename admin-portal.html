@@ -10,6 +10,25 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* New Logo Styles */
+        .header-brand-pill {
+            display: flex; align-items: center; text-decoration: none; padding: 6px 16px 6px 6px;
+            border-radius: 90px;
+            background: linear-gradient(135deg, rgba(58, 98, 153, 0.9) 0%, rgba(162, 59, 90, 0.9) 100%);
+            backdrop-filter: blur(16px) saturate(180%); -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease; z-index: 10; gap: 12px; margin-left: 20px;
+            position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+        }
+        .header-brand-pill:hover { transform: translateY(-50%) translateY(-2px) !important; box-shadow: 0 8px 25px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4); }
+        .header-brand-pill .pill-logo-img { height: 55px; width: auto; object-fit: contain; background: white; border-radius: 50%; padding: 2px; flex-shrink: 0; }
+        .header-brand-pill .pill-logo-text { display: flex; flex-direction: column; justify-content: center; color: white; text-align: left; }
+        .header-brand-pill .pill-title-main { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-weight: 800; font-size: 1.35rem; line-height: 1; letter-spacing: 0.5px; margin:0; padding:0; }
+        .header-brand-pill .pill-title-sub { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-weight: 700; font-size: 0.9rem; line-height: 1.2; margin: 0 0 2px 0; padding:0;}
+        .header-brand-pill .pill-divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.4); margin: 2px 0 1px 0; width: 100%; height: 0;}
+        .header-brand-pill .pill-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 0.48rem; font-weight: 600; line-height: 1.2; letter-spacing: 0.2px; text-transform: uppercase; margin:0; padding:0;}
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --blue: #1c4578; --blue-dark: #0f2d52; --blue-light: #3b6fc7;
@@ -77,7 +96,7 @@
             box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         }
         .portal-nav .brand { display: flex; align-items: center; gap: 0.9rem; text-decoration: none; margin-right: auto; }
-        .portal-nav .brand img { height: 46px; width: 46px; object-fit: cover; object-position: left center; background: white; border-radius: 50%; padding: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .portal-nav .brand img { height: 46px; width: auto; object-fit: contain; }
         .portal-nav .p-badge { background: #ede9fe; color: var(--purple); font-size: 0.68rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 20px; }
         .nav-meta { display: flex; align-items: center; gap: 0.5rem; }
         .nav-time { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
@@ -306,43 +325,21 @@
 </head>
 <body>
 
-<!-- ─── AUTH OVERLAY ─────────────────────────────────────── -->
-<div class="auth-overlay" id="authOverlay">
-    <a href="index.html" class="brand">
-        <img src="images/logos/logo.png" alt="RRDCH">
-        <div class="brand-text">
-            <strong>RRDCH</strong>
-            <span>Rajarajeshwari Dental College & Hospital</span>
-        </div>
-    </a>
-    <div class="auth-card">
-        <div class="auth-badge">🛡️ Admin Portal</div>
-        <div class="auth-title">Admin Access</div>
-        <div class="auth-sub">Hospital Management System — Restricted Area</div>
-        <div class="demo-hint">
-            <strong>Demo:</strong> <code>admin@rrdch.in</code> / <code>admin123</code>
-        </div>
-        <form onsubmit="doAdminLogin(event)">
-            <input type="email" id="admEmail" class="auth-input" placeholder="Admin Email" required>
-            <input type="password" id="admPw" class="auth-input" placeholder="Master Password" required>
-            <div class="auth-err" id="authErr">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
-                Access denied. Invalid credentials.
-            </div>
-            <button type="submit" class="auth-btn" id="authBtn" style="margin-top:1rem;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                Unlock Admin System
-            </button>
-        </form>
-    </div>
-    <div class="auth-security">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        End-to-end encrypted • Root access session
-    </div>
-</div>
+
 
 <!-- ─── TOAST ─────────────────────────────────────── -->
 <div class="toast" id="toast"></div>
+
+<!-- SOS OVERLAY (Fullscreen Alert) -->
+<div class="sos-overlay" id="sosOverlay" style="display:none; position:fixed; inset:0; background:rgba(220, 38, 38, 0.95); z-index:10000; align-items:center; justify-content:center; flex-direction:column; color:white; text-align:center;">
+    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:1rem;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <h1 style="font-size:3rem;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:2px;">EMERGENCY SOS</h1>
+    <p id="sosDetails" style="font-size:1.25rem;margin-bottom:2rem;max-width:600px;">Loading details...</p>
+    <div style="display:flex;gap:1rem;">
+        <button class="btn" style="background:white;color:var(--red);font-size:1.1rem;padding:0.75rem 2rem;" onclick="acknowledgeSOS()">Acknowledge & Respond</button>
+    </div>
+</div>
+<audio id="sosAudio" loop preload="auto"></audio>
 
 <!-- ─── MODAL (Doctor Add / Edit Patient) ─────────────────────────────────────── -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
@@ -350,12 +347,17 @@
 </div>
 
 <!-- ─── PORTAL NAV ─────────────────────────────────────── -->
-<nav class="portal-nav">
-    <a href="index.html" class="brand">
-        <img src="images/logos/logo.png" alt="RRDCH">
+<nav class="portal-nav" style="position: relative; justify-content: space-between;">
+    <div style="flex: 1; display: flex; align-items: center;">
         <span class="p-badge">Admin Portal</span>
+    </div>
+
+    <!-- Left: Frosted Logo background with animated text -->
+    <a href="index.html" class="header-frosted-logo" title="Home">
+        <img src="images/logos/logo.png" alt="RRDCH Logo">
     </a>
-    <div class="nav-meta">
+
+    <div class="nav-meta" style="flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 1rem;">
         <span class="nav-time" id="navTime"></span>
         <div class="nav-user">
             <div class="nav-avatar">SA</div>
@@ -494,6 +496,25 @@
                     <span class="c-badge live">● Live</span>
                 </div>
                 <div class="dept-grid" id="deptGrid"><!-- Rendered by JS --></div>
+            </div>
+
+            <!-- Campus Security & Transport -->
+            <div class="chart-wrap" style="margin-bottom:1.5rem;">
+                <div class="chart-card">
+                    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Today's Gate Activity</h3>
+                    <div style="font-size:2rem; font-weight:800; color:var(--blue); margin-top:1rem;" id="adminGateCount">0</div>
+                    <div style="font-size:0.8rem; color:var(--muted); margin-bottom:1rem;">Total Entries & Exits</div>
+                    <div style="max-height:150px; overflow-y:auto;" id="adminGateList">
+                        <div style="font-size:0.8rem;color:var(--muted);">Loading...</div>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Campus Parking Overview</h3>
+                    <div style="display:flex; justify-content:space-around; text-align:center; margin-top:2rem;">
+                        <div><div style="font-size:2.5rem; font-weight:800; color:var(--green);" id="adminParkFree">--</div><div style="font-size:0.8rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Available Slots</div></div>
+                        <div><div style="font-size:2.5rem; font-weight:800; color:var(--red);" id="adminParkOcc">--</div><div style="font-size:0.8rem; color:var(--muted); text-transform:uppercase; font-weight:700;">Occupied Slots</div></div>
+                    </div>
+                </div>
             </div>
 
             <!-- Recent activity -->
@@ -800,49 +821,6 @@ let adminUser = sessionStorage.getItem('rrdch_user') || 'admin@rrdch.in';
 // ══════════════════════════════════════════════
 //  AUTH
 // ══════════════════════════════════════════════
-async function doAdminLogin(e) {
-    e.preventDefault();
-    const email = document.getElementById('admEmail').value.trim().toLowerCase();
-    const pw    = document.getElementById('admPw').value;
-    const err   = document.getElementById('authErr');
-    const btn   = document.getElementById('authBtn');
-
-    err.classList.remove('show');
-    btn.disabled = true;
-    btn.innerHTML = '<div class="spinner"></div> Verifying…';
-
-    let success = false;
-
-    // Try Supabase
-    if (sb) {
-        try {
-            const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
-            if (!error && data?.user) success = true;
-        } catch(_) {}
-    }
-    // Demo fallback
-    if (!success && email === 'admin@rrdch.in' && (pw === 'admin123' || pw === 'Admin@2024')) success = true;
-
-    if (success) {
-        sessionStorage.setItem('rrdch_role', 'admin');
-        sessionStorage.setItem('rrdch_user', email);
-        adminUser = email;
-        document.getElementById('adminName').textContent = email.split('@')[0];
-        document.getElementById('sidebarAdminName').textContent = email.split('@')[0];
-        // Log
-        if (sb) { try { await sb.from('admin_audit_log').insert({ role:'admin', user_email:email, action:'Login', status:'success' }); } catch(_) {} }
-        document.getElementById('authOverlay').style.opacity = '0';
-        document.getElementById('authOverlay').style.transition = 'opacity 0.4s';
-        setTimeout(() => { document.getElementById('authOverlay').style.display = 'none'; }, 400);
-        initPortal();
-        showToast('✓ Welcome, Admin!', 'success');
-    } else {
-        err.classList.add('show');
-        btn.disabled = false;
-        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Unlock Admin System';
-    }
-}
-
 function doLogout() {
     sessionStorage.removeItem('rrdch_role');
     sessionStorage.removeItem('rrdch_user');
@@ -851,8 +829,9 @@ function doLogout() {
 
 // Check existing session
 (function checkSession() {
-    if (sessionStorage.getItem('rrdch_role') === 'admin') {
-        document.getElementById('authOverlay').style.display = 'none';
+    if (sessionStorage.getItem('rrdch_role') !== 'admin') {
+        window.location.replace('portal.html#admin');
+    } else {
         initPortal();
     }
 })();
@@ -1442,10 +1421,110 @@ function downloadFile(content, filename, mime) {
 }
 
 // ══════════════════════════════════════════════
+//  ADMIN SECURITY MODULE & REALTIME
+// ══════════════════════════════════════════════
+let currentSOSId = null;
+let audioCtx = null;
+
+function playBeep() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.type = 'square'; osc.frequency.value = 1200;
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.1);
+    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.5);
+    osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.5);
+}
+
+let beepInterval;
+function showSOSAlert(alertData) {
+    currentSOSId = alertData.id;
+    const overlay = document.getElementById('sosOverlay');
+    const mapLink = alertData.lat ? `<br><a href="https://maps.google.com/?q=${alertData.lat},${alertData.lng}" target="_blank" style="color:#fde047;text-decoration:underline;">View on Map</a>` : '';
+    document.getElementById('sosDetails').innerHTML = `
+        <strong>Triggered by:</strong> ${alertData.triggered_by_name} (${alertData.user_type})<br>
+        <strong>Time:</strong> ${new Date(alertData.created_at).toLocaleTimeString('en-IN')}
+        ${mapLink}
+    `;
+    overlay.style.display = 'flex';
+    playBeep();
+    beepInterval = setInterval(playBeep, 2000);
+}
+
+const getMock = (key, defaultVal) => JSON.parse(localStorage.getItem(key)) || defaultVal;
+const setMock = (key, val) => { localStorage.setItem(key, JSON.stringify(val)); window.dispatchEvent(new Event('storage')); };
+
+async function acknowledgeSOS() {
+    if (sb && currentSOSId) {
+        try { await sb.from('sos_alerts').update({ status: 'acknowledged', acknowledged_by: 'System Admin', acknowledged_at: new Date().toISOString() }).eq('id', currentSOSId); } catch(e) {}
+    }
+    clearInterval(beepInterval);
+    document.getElementById('sosOverlay').style.display = 'none';
+    setMock('mock_sos', null);
+    showToast('SOS Acknowledged.', 'warning');
+}
+
+async function loadAdminSecurityData() {
+    let pData = null;
+    let gData = null;
+    
+    if (sb) {
+        try {
+            const { data: p } = await sb.from('parking_slots').select('status');
+            pData = p;
+            const today = new Date().toISOString().split('T')[0];
+            const { data: g } = await sb.from('gate_entry_log').select('*').gte('timestamp', today + 'T00:00:00').order('timestamp', {ascending: false}).limit(10);
+            gData = g;
+        } catch(e) {}
+    }
+    
+    if (!pData) pData = getMock('mock_parking', []);
+    if (!gData) gData = getMock('mock_gate', []).slice(0, 10);
+    
+    if (pData) {
+        document.getElementById('adminParkFree').textContent = pData.filter(s => s.status === 'free').length;
+        document.getElementById('adminParkOcc').textContent = pData.filter(s => s.status === 'occupied').length;
+    }
+    
+    if (gData) {
+        document.getElementById('adminGateCount').textContent = gData.length;
+        document.getElementById('adminGateList').innerHTML = gData.map(log => `
+            <div style="padding:0.5rem; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; font-size:0.8rem;">
+                <div>
+                    <div style="font-weight:700;">${log.person_name}</div>
+                    <div style="color:var(--muted);">${new Date(log.timestamp).toLocaleTimeString('en-IN')} • Gate ${log.gate}</div>
+                </div>
+                <span style="padding:2px 6px; border-radius:4px; font-weight:700; font-size:0.7rem; background:${log.entry_type==='in'?'#dcfce7':'#fee2e2'}; color:${log.entry_type==='in'?'#16a34a':'#dc2626'}; text-transform:uppercase;">${log.entry_type}</span>
+            </div>
+        `).join('');
+    }
+}
+
+// ══════════════════════════════════════════════
 //  AUTO-REFRESH (Supabase realtime polling)
 // ══════════════════════════════════════════════
+setTimeout(() => {
+    loadAdminSecurityData();
+    if (sb) {
+        try {
+            sb.channel('admin-sec-live')
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'parking_slots' }, () => loadAdminSecurityData())
+              .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'gate_entry_log' }, () => loadAdminSecurityData())
+              .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, (payload) => showSOSAlert(payload.new))
+              .subscribe();
+        } catch(e) {}
+    } else {
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'mock_parking' || e.key === 'mock_gate') loadAdminSecurityData();
+            if (e.key === 'mock_sos' && e.newValue) { const sos = JSON.parse(e.newValue); if (sos) showSOSAlert(sos); }
+        });
+    }
+}, 1000);
+
 setInterval(() => {
-    if (currentSection === 'dashboard') loadDashboard();
+    if (currentSection === 'dashboard') { loadDashboard(); loadAdminSecurityData(); }
     if (currentSection === 'appointments') loadAppointments();
     if (currentSection === 'audit') loadAuditData();
 }, 30000);

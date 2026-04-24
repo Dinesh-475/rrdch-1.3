@@ -9,6 +9,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* New Logo Styles */
+        .header-brand-pill {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            padding: 6px 16px 6px 6px;
+            border-radius: 90px;
+            background: linear-gradient(135deg, rgba(58, 98, 153, 0.9) 0%, rgba(162, 59, 90, 0.9) 100%);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            z-index: 10;
+            gap: 12px;
+        }
+        .header-brand-pill:hover {
+            transform: translateY(-50%) translateY(-2px) !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
+        }
+        .header-brand-pill .pill-logo-img { height: 55px; width: auto; object-fit: contain; background: white; border-radius: 50%; padding: 2px; flex-shrink: 0; }
+        .header-brand-pill .pill-logo-text { display: flex; flex-direction: column; justify-content: center; color: white; text-align: left; }
+        .header-brand-pill .pill-title-main { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-weight: 800; font-size: 1.35rem; line-height: 1; letter-spacing: 0.5px; margin:0; padding:0; }
+        .header-brand-pill .pill-title-sub { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-weight: 700; font-size: 0.9rem; line-height: 1.2; margin: 0 0 2px 0; padding:0;}
+        .header-brand-pill .pill-divider { border: none; border-top: 1px solid rgba(255, 255, 255, 0.4); margin: 2px 0 1px 0; width: 100%; height: 0;}
+        .header-brand-pill .pill-desc { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 0.48rem; font-weight: 600; line-height: 1.2; letter-spacing: 0.2px; text-transform: uppercase; margin:0; padding:0;}
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
             --patient: #0284c7; --doctor: #16a34a; --student: #d97706; --admin: #7c3aed;
@@ -26,33 +53,18 @@
             background: #0f2d52;
         }
 
-        /* Enhanced frosted background with homepage images */
+        /* Single background image */
         .bg-layer {
             position: fixed; inset: 0; z-index: 0; overflow: hidden;
         }
-        .bg-slideshow {
+        .bg-image {
             position: absolute; inset: 0;
-            animation: bgFade 24s ease-in-out infinite;
-        }
-        .bg-slideshow:nth-child(1) { 
             background: url('images/media/new_hero_bg.png') center/cover no-repeat;
-            animation-delay: 0s;
+            animation: bgZoom 20s ease-in-out infinite;
         }
-        .bg-slideshow:nth-child(2) { 
-            background: url('images/pictures/home page images/slider_1.jpg') center/cover no-repeat;
-            animation-delay: 8s;
-            opacity: 0;
-        }
-        .bg-slideshow:nth-child(3) { 
-            background: url('images/pictures/home page images/slider_2.jpg') center/cover no-repeat;
-            animation-delay: 16s;
-            opacity: 0;
-        }
-        @keyframes bgFade {
-            0%, 100% { opacity: 1; transform: scale(1.05); }
-            33% { opacity: 1; transform: scale(1.05); }
-            38% { opacity: 0; transform: scale(1.1); }
-            95% { opacity: 0; transform: scale(1.05); }
+        @keyframes bgZoom {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         .bg-overlay {
             position: absolute; inset: 0;
@@ -65,7 +77,6 @@
             position: absolute; inset: 0;
             background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.1) 100%);
         }
-        @keyframes bgMove { 0%,100%{transform:scale(1.1) translate(0,0);} 50%{transform:scale(1.15) translate(-8px,-8px);} }
 
         /* Particles */
         .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
@@ -81,7 +92,7 @@
             border-bottom: none;
         }
         .top-nav .brand { display: flex; align-items: center; text-decoration: none; }
-        .top-nav .brand img { height: 52px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); transition: transform 0.3s; }
+        .top-nav .brand img { height: 75px; width: auto; object-fit: contain; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.4)); transition: transform 0.3s; }
         .top-nav .brand:hover img { transform: scale(1.05); }
         .back-link {
             color: rgba(255,255,255,0.6); font-size: 0.82rem;
@@ -289,9 +300,7 @@
 </head>
 <body>
     <div class="bg-layer">
-        <div class="bg-slideshow"></div>
-        <div class="bg-slideshow"></div>
-        <div class="bg-slideshow"></div>
+        <div class="bg-image"></div>
         <div class="bg-overlay"></div>
     </div>
     <div class="particles" id="particles"></div>
@@ -305,15 +314,23 @@
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
-    <!-- Nav -->
-    <nav class="top-nav">
-        <a href="index.html" class="brand">
+    <!-- Nav — centered logo matching main site header -->
+    <nav class="top-nav" style="position:relative; display:flex; align-items:center; justify-content:space-between;">
+        <!-- Left spacer -->
+        <div style="flex:1;"></div>
+
+        <!-- Left: Frosted Logo background with animated text -->
+        <a href="index.html" class="header-frosted-logo" title="Home">
             <img src="images/logos/logo.png" alt="RRDCH Logo">
         </a>
-        <a href="index.html" class="back-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
-            Back to Website
-        </a>
+
+        <!-- Right: Back link -->
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+            <a href="index.html" class="back-link">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15,18 9,12 15,6"/></svg>
+                Back to Website
+            </a>
+        </div>
     </nav>
 
     <div class="portal-wrap">
@@ -323,6 +340,7 @@
             <button class="role-tab" data-role="doctor" id="tab-doctor" role="tab" onclick="switchRole('doctor')">⚕️ Doctor</button>
             <button class="role-tab" data-role="student" id="tab-student" role="tab" onclick="switchRole('student')">🎓 Student</button>
             <button class="role-tab" data-role="admin" id="tab-admin" role="tab" onclick="switchRole('admin')">🛡️ Admin</button>
+            <button class="role-tab" data-role="security" id="tab-security" role="tab" onclick="switchRole('security')">🚨 Security</button>
         </div>
 
         <!-- Login Card -->
@@ -377,7 +395,8 @@
         patient: { credential: 'PAT001', password: 'patient123', email: 'patient@rrdch.in', redirect: 'patients.html' },
         doctor:  { email: 'doctor@rrdch.in',  password: 'doctor123',  redirect: 'doctor-portal.html' },
         student: { credential: 'stu2024001',   password: 'Student@2024', email: 'student@rrdch.in', redirect: 'students.html' },
-        admin:   { email: 'admin@rrdch.in',    password: 'admin123',  redirect: 'admin-portal.html' }
+        admin:   { email: 'admin@rrdch.in',    password: 'admin123',  redirect: 'admin-portal.html' },
+        security: { email: 'security@rrdch.in', password: 'Security@2024', redirect: 'security-portal.html' }
     };
 
     // Role configs
@@ -425,6 +444,17 @@
             ],
             showSignup: false,
             errorId: 'admErr'
+        },
+        security: {
+            badge: 'admin', badgeText: 'Security Portal', title: 'Security Login',
+            sub: 'Gate, Parking & SOS Operations',
+            demoHtml: `<div class="demo-box adm">Demo: <code>security@rrdch.in</code> / <code>Security@2024</code></div>`,
+            fields: [
+                { id: 'secEmail', type: 'email',    placeholder: 'Security Email (security@rrdch.in)' },
+                { id: 'secPw',    type: 'password', placeholder: 'Password' }
+            ],
+            showSignup: false,
+            errorId: 'secErr'
         }
     };
 
@@ -530,21 +560,28 @@
         } else if (role === 'admin') {
             identifier = document.getElementById('admEmail')?.value.trim().toLowerCase();
             password   = document.getElementById('admPw')?.value;
+        } else if (role === 'security') {
+            identifier = document.getElementById('secEmail')?.value.trim().toLowerCase();
+            password   = document.getElementById('secPw')?.value;
         }
 
         let success = false;
         let redirectUrl = demo.redirect;
 
         // — Try Supabase auth first (email/password roles) —
-        if (sb && (role === 'doctor' || role === 'admin')) {
+        if (sb && (role === 'doctor' || role === 'admin' || role === 'security')) {
             try {
-                const { data, error } = await sb.auth.signInWithPassword({ email: identifier, password });
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2500));
+                const { data, error } = await Promise.race([
+                    sb.auth.signInWithPassword({ email: identifier, password }),
+                    timeoutPromise
+                ]);
                 if (!error && data?.user) {
                     success = true;
                     // Log the login event
                     try { await sb.from('admin_audit_log').insert({ role, user_email: identifier, action: 'login', status: 'success' }); } catch(_) {}
                 }
-            } catch(ex) { console.warn('Supabase auth error:', ex); }
+            } catch(ex) { console.warn('Supabase auth error or timeout falling back to demo:', ex); }
         }
 
         // — Demo fallback —
@@ -553,6 +590,7 @@
             if (role === 'doctor'   && identifier === demo.email  && password === demo.password) success = true;
             if (role === 'student'  && (identifier === demo.credential || identifier === demo.email) && password === demo.password) success = true;
             if (role === 'admin'    && identifier === demo.email  && password === demo.password) success = true;
+            if (role === 'security' && identifier === demo.email  && password === demo.password) success = true;
         }
 
         if (success) {
@@ -642,7 +680,7 @@
     // ======================
     function initFromHash() {
         const hash = window.location.hash.replace('#','').toLowerCase();
-        const validRoles = ['patient','doctor','student','admin'];
+        const validRoles = ['patient','doctor','student','admin','security'];
         if (validRoles.includes(hash)) {
             switchRole(hash);
         } else {

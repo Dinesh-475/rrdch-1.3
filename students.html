@@ -62,8 +62,7 @@
         /* Dashboard Layout */
         .erp-layout { display: flex; height: 100vh; width: 100vw; background: #f8fafc; }
         .erp-sidebar { width: 280px; background: #0f172a; color: #94a3b8; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
-        .erp-brand { padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .erp-brand img { height: 60px; width: 60px; object-fit: cover; object-position: left center; background: white; border-radius: 50%; padding: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .erp-brand { padding: 0rem; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar-menu { list-style: none; padding: 1rem 0; margin: 0; }
         .sidebar-item { padding: 0.8rem 1.5rem; display: flex; align-items: center; gap: 0.85rem; cursor: pointer; transition: all 0.2s; font-size: 0.95rem; }
         .sidebar-item i { width: 18px; height: 18px; }
@@ -176,129 +175,7 @@
     <!-- Unified Login Theme -->
     <link rel="stylesheet" href="css/login-theme.css">
 
-    <!-- Back to Home Button - Top Left -->
-    <a href="index.html" style="position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border: 2px solid rgba(255,255,255,0.3); border-radius: 8px; color: white; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.3s; z-index: 100; box-shadow: 4px 4px 0 rgba(0,0,0,0.2);">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        <span>Back to Home</span>
-    </a>
 
-    <!-- Secure Access Gateway -->
-    <div id="erpLogin" class="portal-login-overlay rrdch-login-root" style="display: flex;">
-        <!-- Centered Logo Brand -->
-        <div style="position: absolute; top: 80px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10;">
-            <a href="index.html" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-decoration: none;">
-                <img src="images/logos/logo.png" alt="RRDCH" style="height: 70px; width: 70px; object-fit: cover; object-position: left center; background: white; border-radius: 50%; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(195,156,91,0.7)); animation: logoGlow 3s ease-in-out infinite;">
-                <div style="color: white; text-align: center;">
-                    <div style="font-size: 1.2rem; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">RRDCH</div>
-                    <div style="font-size: 0.75rem; opacity: 0.9; letter-spacing: 1px;">Rajarajeshwari Dental College</div>
-                </div>
-            </a>
-        </div>
-
-        <style>
-            @keyframes logoGlow {
-                0%, 100% { filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)) drop-shadow(0 0 30px rgba(195,156,91,0.7)); }
-                50% { filter: drop-shadow(0 0 25px rgba(255,255,255,1)) drop-shadow(0 0 50px rgba(195,156,91,0.9)); }
-            }
-        </style>
-        
-        <div class="login-wrapper">
-            <!-- No Sign Up for students, hide toggle -->
-            <label class="switch" style="visibility:hidden; height:0; margin:0;">
-                <input type="checkbox" class="toggle">
-                <span class="slider"></span>
-                <span class="card-side"></span>
-            </label>
-
-            <div class="flip-card__inner">
-                <div class="flip-card__front">
-                    <div class="flip-title">Student Portal</div>
-                    <form class="flip-card__form" onsubmit="event.preventDefault(); validateStudentLogin();">
-                        <span class="flip-role-badge" style="color:#d97706; border-color:#d97706;">University Login</span>
-                        
-                        <input type="text" id="stuUser" placeholder="USN (e.g., 1RR24MDS001)" class="flip-card__input" required>
-                        <input type="password" id="stuPass" placeholder="Student Password" class="flip-card__input" required>
-                        
-                        <div id="stuLoginErr" class="flip-error">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            Invalid credentials.
-                        </div>
-
-                        <button class="flip-card__btn" type="submit" id="stuLoginBtn" style="color:var(--font-color);">Authenticate</button>
-                    </form>
-                    <div class="demo-credentials-badge">
-                        <div class="demo-title">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12" y2="16"/></svg>
-                            Demo Credentials
-                        </div>
-                        <div class="demo-credentials-row">Student ID: <code>stu2024001</code></div>
-                        <div class="demo-credentials-row">Password: <code>Student@2024</code></div>
-                    </div>
-                    <a href="#" class="flip-card__link">Forgot Password?</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="login-security">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            End-to-end encrypted connection
-        </div>
-    </div>
-
-    <!-- Auth script -->
-    <script>
-        // If not authenticated as student, redirect to unified portal login
-        if (sessionStorage.getItem('rrdch_role') !== 'student') {
-            window.location.replace('portal.html#student');
-        }
-        // Show dashboard, hide legacy login overlay
-        const _erpLogin = document.getElementById('erpLogin');
-        const _erpLayout = document.getElementById('erpLayout');
-        if (_erpLogin) _erpLogin.style.display = 'none';
-        if (_erpLayout) _erpLayout.style.display = 'flex';
-
-        async function validateStudentLogin() {
-            const user = document.getElementById('stuUser').value.trim().toLowerCase();
-            const pass = document.getElementById('stuPass').value;
-            const btn = document.getElementById('stuLoginBtn');
-            const err = document.getElementById('stuLoginErr');
-
-            err.classList.remove('visible');
-            btn.classList.add('loading');
-            btn.textContent = 'Verifying...';
-
-            await new Promise(r => setTimeout(r, 600)); // Simulate network
-            
-            let success = false;
-            try {
-                // Try backend integration
-                const data = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ user, pass, role: 'student' })
-                }).then(r => r.json());
-                if (data.ok) success = true;
-            } catch (e) {
-                // Fallback demo auth
-                success = (user === 'stu2024001' && pass === 'Student@2024');
-            }
-
-            if (success) {
-                sessionStorage.setItem('rrdch_role', 'student');
-                sessionStorage.setItem('rrdch_user', user);
-                document.getElementById('erpLogin').style.opacity = '0';
-                
-                setTimeout(() => {
-                    document.getElementById('erpLogin').style.display = 'none';
-                    document.getElementById('erpLayout').style.display = 'flex';
-                }, 400);
-            } else {
-                err.classList.add('visible');
-                btn.classList.remove('loading');
-                btn.textContent = 'Authenticate';
-            }
-        }
-    </script>
 
     <!-- ERP Dashboard Interface -->
     <div id="erpLayout" class="erp-layout" style="display: none;">
@@ -306,7 +183,30 @@
         <!-- Sidebar Navigation -->
         <aside class="erp-sidebar">
             <div class="erp-brand">
-                <img src="images/logos/logo.png" alt="RRDCH Logo">
+                 <!-- Main Logo Integration -->
+                <a href="index.html" class="header-frosted-logo" title="Home" style="position: relative; height: 75px; display: flex; align-items: center; justify-content: center; padding: 0 40px 0 20px; background: rgba(10, 15, 25, 0.7); backdrop-filter: blur(50px) saturate(200%); -webkit-backdrop-filter: blur(50px) saturate(200%); clip-path: polygon(0 0, 100% 0, calc(100% - 25px) 100%, 0 100%); overflow: hidden; width: 100%;">
+                    <style>
+                        .erp-brand .header-frosted-logo img {
+                            height: 55px;
+                            width: auto;
+                            object-fit: contain;
+                            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+                            transition: height 0.3s ease, transform 0.3s ease;
+                        }
+                        .erp-brand .header-frosted-logo::after {
+                            content: "";
+                            position: absolute;
+                            left: 0;
+                            bottom: 0;
+                            width: 100%;
+                            height: 1px;
+                            background: #c39c5b; /* Elegant gold */
+                            z-index: 20;
+                            transition: all 0.3s ease;
+                        }
+                    </style>
+                    <img src="images/logos/logo.png" alt="RRDCH Logo">
+                </a>
             </div>
             
             <ul class="sidebar-menu">
@@ -321,6 +221,8 @@
                 <li class="sidebar-item" data-target="calendar"><i data-lucide="calendar"></i> Institution Calendar</li>
                 <li class="sidebar-item" data-target="feedback"><i data-lucide="message-square"></i> Faculty Feedback</li>
                 <li class="sidebar-item" data-target="campusmap"><i data-lucide="map"></i> Campus Map</li>
+                <li class="sidebar-item" onclick="window.location.href='bus-tracking.html'"><i data-lucide="bus"></i> Bus Tracker</li>
+                <li class="sidebar-item" onclick="window.location.href='security-portal.html'"><i data-lucide="car"></i> Campus Parking</li>
             </ul>
         </aside>
 
@@ -444,6 +346,23 @@
                                 <li><a href="#" style="color:inherit;">Final Exam Routine Notification</a></li>
                                 <li><a href="#" style="color:inherit;">University Academic Guidelines</a></li>
                             </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Campus Services Row -->
+                    <div class="dashboard-grid" style="grid-template-columns: repeat(2, 1fr); margin-top:1.5rem;">
+                        <div class="erp-card">
+                            <h3><i data-lucide="car"></i> Campus Parking Status</h3>
+                            <div style="display:flex; justify-content:space-around; text-align:center; margin-bottom:1rem; margin-top:1rem;">
+                                <div><span style="font-size:2rem; font-weight:800; color:#16a34a;" id="dashParkFree">--</span><br><span style="font-size:0.8rem; color:#64748b; font-weight:600; text-transform:uppercase;">Available</span></div>
+                                <div><span style="font-size:2rem; font-weight:800; color:#dc2626;" id="dashParkOcc">--</span><br><span style="font-size:0.8rem; color:#64748b; font-weight:600; text-transform:uppercase;">Occupied</span></div>
+                            </div>
+                            <button class="btn btn-outline" style="width:100%;" onclick="window.location.href='security-portal.html'"><i data-lucide="external-link"></i> View Full Grid</button>
+                        </div>
+                        <div class="erp-card">
+                            <h3><i data-lucide="bus"></i> College Transport</h3>
+                            <p style="font-size:0.85rem; color:#64748b; margin-bottom:1rem; flex:1;">Track the college bus in real-time, view active routes, and get accurate arrival ETAs for all designated stops.</p>
+                            <button class="btn btn-primary" style="width:100%;" onclick="window.location.href='bus-tracking.html'"><i data-lucide="map"></i> Open Bus Tracker</button>
                         </div>
                     </div>
                 </div>
@@ -739,56 +658,37 @@
         };
 
         // --- AUTH & ROUTING LOGIC ---
-        const loginEl = document.getElementById('erpLogin');
         const layoutEl = document.getElementById('erpLayout');
-        const errorEl = document.getElementById('loginError');
         let cUser = null;
 
-        async function handleLogin() {
-            const usnRaw = document.getElementById('usnInput').value.trim();
-            const usn = usnRaw.toUpperCase();
-            const password = document.getElementById('passInput').value.trim();
-            if(!/^1RR\d{2}(BDS|MDS)\d{3}$/.test(usn) && !usnRaw.includes('@')) { errorEl.style.display = 'block'; return; }
-
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('rrdch_role') !== 'student') {
+                window.location.replace('portal.html#student');
+                return;
+            }
+            
+            const usn = (sessionStorage.getItem('rrdch_user') || '1RR24MDS001').toUpperCase();
             cUser = studentDB[usn];
             if(!cUser) {
-                // Generative fallback
                 const isPG = usn.includes('MDS');
                 cUser = JSON.parse(JSON.stringify(isPG ? studentDB['1RR24MDS001'] : studentDB['1RR24BDS002']));
                 cUser.profile.name = isPG ? "Dr. Student Mock" : "Student Mock";
                 cUser.profile.usn = usn;
             } else { cUser.profile.usn = usn; }
 
-            errorEl.style.display = 'none';
             renderAllData(cUser);
-            try {
-                const auth = await window.RRDCH_BACKEND.request("/auth/login", {
-                    method: "POST",
-                    body: JSON.stringify({ identifier: usnRaw, password, role: "student" })
-                });
-                window.RRDCH_BACKEND.setToken(auth.token);
-                await hydrateStudentFromBackend();
-            } catch (e) {
-                // Keep local demo behavior if backend auth fails.
-            }
+            layoutEl.style.display = 'flex';
+            lucide.createIcons();
             
-            loginEl.classList.add('hidden');
-            setTimeout(() => {
-                loginEl.style.display = 'none';
-                layoutEl.style.display = 'flex';
-                lucide.createIcons();
-                initCalendar();
-            }, 500);
-        }
+            // initCalendar might be defined further below, so we delay it slightly if needed
+            setTimeout(() => { if (typeof initCalendar === 'function') initCalendar(); }, 100);
+        });
 
         function handleLogout() {
-            layoutEl.style.display = 'none';
-            loginEl.style.display = 'flex';
-            setTimeout(() => { loginEl.classList.remove('hidden'); }, 50);
-            document.querySelectorAll('.profile-dropdown, .notification-dropdown').forEach(e => e.classList.remove('show'));
-            document.getElementById('usnInput').value = '';
-            document.getElementById('passInput').value = '';
-            cUser = null;
+            sessionStorage.removeItem('rrdch_role');
+            sessionStorage.removeItem('rrdch_user');
+            if (window.RRDCH_BACKEND) window.RRDCH_BACKEND.setToken(null);
+            window.location.replace('portal.html#student');
         }
 
         // Dropdowns
@@ -1118,6 +1018,38 @@
             currDate.setMonth(currDate.getMonth() + shift);
             initCalendar();
         };
+
+        // Fetch Parking Widget Data
+        async function updateParkingWidget() {
+            let pData = null;
+            if (window.sb) {
+                try {
+                    const { data } = await window.sb.from('parking_slots').select('status');
+                    pData = data;
+                } catch(e) {}
+            }
+            if (!pData) pData = JSON.parse(localStorage.getItem('mock_parking'));
+            
+            if (pData) {
+                const free = pData.filter(s => s.status === 'free').length;
+                const occ = pData.filter(s => s.status === 'occupied').length;
+                document.getElementById('dashParkFree').textContent = free;
+                document.getElementById('dashParkOcc').textContent = occ;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            updateParkingWidget();
+            if (!window.sb) {
+                window.addEventListener('storage', (e) => {
+                    if (e.key === 'mock_parking') updateParkingWidget();
+                });
+            } else {
+                window.sb.channel('stu-park-live')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'parking_slots' }, () => updateParkingWidget())
+                    .subscribe();
+            }
+        });
     </script>
 
     <script src="js/config.js"></script>
